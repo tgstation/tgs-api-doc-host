@@ -1,0 +1,37 @@
+name: Update TGS API Spec
+on:
+  schedule:
+    cron: "0 0 * * *"
+  workflow_dispatch:
+jobs:
+  updateSwagger:
+    runs-on: ubuntu-latest
+    steps:
+      name: Update the TGS API Spec
+      steps:
+
+      - name: Setup dotnet 3.1.X
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+
+      - name: Clone
+        uses: actions/checkout@v2
+  
+      - name: Apply API update
+        uses: tgstation/tgs-dmapi-updater@v2
+        run: |
+          cd src/Tgstation.Server.ApiUpdater
+          dotnet run -- ${{ secrets.GITHUB_TOKEN }} ${{ github.workspace }}
+  
+      - name: Commit
+        run: |
+          git config user.name tgstation-server
+          git config user.email tgstation-server@users.noreply.github.com
+          git add .
+
+      - name: Push
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: master
