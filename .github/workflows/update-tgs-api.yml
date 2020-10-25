@@ -26,6 +26,7 @@ jobs:
           git config user.name tgstation-server
           git config user.email tgstation-server@users.noreply.github.com
           git add .
+          git commit -m 'Automatic update to latest TGS API'
 
       - name: Push
         uses: ad-m/github-push-action@master
