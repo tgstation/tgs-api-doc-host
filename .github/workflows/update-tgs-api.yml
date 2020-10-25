@@ -19,7 +19,6 @@ jobs:
         uses: actions/checkout@v2
   
       - name: Apply API update
-        uses: tgstation/tgs-dmapi-updater@v2
         run: |
           cd src/Tgstation.Server.ApiUpdater
           dotnet run -- ${{ secrets.GITHUB_TOKEN }} ${{ github.workspace }}
