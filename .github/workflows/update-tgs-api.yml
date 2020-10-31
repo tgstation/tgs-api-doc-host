@@ -22,6 +22,7 @@ jobs:
           dotnet run -- ${{ secrets.GITHUB_TOKEN }} ${{ github.workspace }}
   
       - name: Commit
+        continue-on-error: true
         run: |
           git config user.name tgstation-server
           git config user.email tgstation-server@users.noreply.github.com
@@ -30,6 +31,7 @@ jobs:
 
       - name: Push
         uses: ad-m/github-push-action@master
+        if: ${{ success() }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: master
