@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 7.3.2
+  version: 7.4.0
 paths:
   /Administration:
     get:
@@ -956,6 +956,44 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
+  /app/{appRoute}:
+    get:
+      tags:
+      - ControlPanel
+      summary: Handle a GET request to the control panel route. Route to static files if they exist, otherwise index.html.
+      operationId: ControlPanelController.Get
+      parameters:
+      - name: appRoute
+        in: path
+        description: The value of the route.
+        required: true
+        schema:
+          type: string
+          description: The value of the route.
+          nullable: true
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      responses:
+        200:
+          description: Success
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        409:
+          $ref: '#/components/responses/409'
+        406:
+          $ref: '#/components/responses/406'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+        501:
+          $ref: '#/components/responses/501'
+      security:
+      - Password_Login_Scheme: []
   /DreamDaemon:
     put:
       tags:
@@ -2802,6 +2840,8 @@ components:
       - 90
       - 91
       - 92
+      - 93
+      - 94
       type: integer
       description: Types of Tgstation.Server.Api.Models.ErrorMessages that the API may return.
       format: int32
@@ -2899,6 +2939,8 @@ components:
       - InstanceOffline
       - ChatCannotConnectProvider
       - ByondDreamDaemonFirewallFail
+      - NoPortsAvailable
+      - PortNotAvailable
     ErrorMessage:
       type: object
       properties:
@@ -3524,6 +3566,11 @@ components:
           description: The timeout for sending and receiving BYOND topics in milliseconds.
           format: int32
           nullable: true
+        additionalParameters:
+          maxLength: 10000
+          minLength: 0
+          type: string
+          description: Parameters string for DreamDaemon.
       additionalProperties: false
       description: Represents an instance of BYOND's DreamDaemon game server. Create action starts the server. Delete action shuts down the server
     DreamMaker:
@@ -3704,6 +3751,7 @@ components:
       - 4096
       - 8192
       - 16384
+      - 32768
       type: integer
       description: Rights for Tgstation.Server.Api.Models.DreamDaemon
       format: int64
@@ -3724,6 +3772,7 @@ components:
       - SetHeartbeatInterval
       - CreateDump
       - SetTopicTimeout
+      - SetAdditionalParameters
     DreamMakerRights:
       enum:
       - 0
@@ -4093,7 +4142,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/7.3.2
+      example: Tgstation.Server.Api/7.4.0
     User-Agent:
       name: User-Agent
       in: header
