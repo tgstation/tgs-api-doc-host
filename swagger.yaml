@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 7.4.0
+  version: 8.0.0
 paths:
   /Administration:
     get:
@@ -180,15 +180,29 @@ paths:
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - name: page
+        in: query
+        description: The current page.
+        schema:
+          type: integer
+          description: The current page.
+          format: int32
+          nullable: true
+      - name: pageSize
+        in: query
+        description: The page size.
+        schema:
+          type: integer
+          description: The page size.
+          format: int32
+          nullable: true
       responses:
         200:
           description: Listed logs successfully.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/LogFile'
+                $ref: '#/components/schemas/PaginatedLogFile'
         409:
           description: An IO error occurred while listing.
           content:
@@ -218,6 +232,8 @@ paths:
       summary: Download a Tgstation.Server.Api.Models.LogFile.
       operationId: AdministrationController.GetLog
       parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
       - name: path
         in: path
         description: The path to download.
@@ -226,8 +242,6 @@ paths:
           type: string
           description: The path to download.
           nullable: true
-      - $ref: '#/components/parameters/Api'
-      - $ref: '#/components/parameters/User-Agent'
       responses:
         200:
           description: Downloaded Tgstation.Server.Api.Models.LogFile successfully.
@@ -264,9 +278,9 @@ paths:
       summary: Gets the active Tgstation.Server.Api.Models.Byond version.
       operationId: ByondController.Read
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       responses:
         200:
           description: Retrieved version information successfully.
@@ -298,9 +312,9 @@ paths:
       summary: Changes the active BYOND version to the one specified in a given model.
       operationId: ByondController.Update
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       requestBody:
         description: The Tgstation.Server.Api.Models.Byond.Version to switch to.
         content:
@@ -308,22 +322,22 @@ paths:
             schema:
               allOf:
               - $ref: '#/components/schemas/Byond'
-              description: Represents a BYOND installation. Tgstation.Server.Api.Models.Internal.RawData.Content is used to upload custom BYOND version zip files, though Tgstation.Server.Api.Models.Byond.Version must still be set.
+              description: Represents a BYOND installation. Tgstation.Server.Api.Models.FileTicketResult.FileTicket is used to upload custom BYOND version zip files, though Tgstation.Server.Api.Models.Byond.Version must still be set.
           application/json:
             schema:
               allOf:
               - $ref: '#/components/schemas/Byond'
-              description: Represents a BYOND installation. Tgstation.Server.Api.Models.Internal.RawData.Content is used to upload custom BYOND version zip files, though Tgstation.Server.Api.Models.Byond.Version must still be set.
+              description: Represents a BYOND installation. Tgstation.Server.Api.Models.FileTicketResult.FileTicket is used to upload custom BYOND version zip files, though Tgstation.Server.Api.Models.Byond.Version must still be set.
           text/json:
             schema:
               allOf:
               - $ref: '#/components/schemas/Byond'
-              description: Represents a BYOND installation. Tgstation.Server.Api.Models.Internal.RawData.Content is used to upload custom BYOND version zip files, though Tgstation.Server.Api.Models.Byond.Version must still be set.
+              description: Represents a BYOND installation. Tgstation.Server.Api.Models.FileTicketResult.FileTicket is used to upload custom BYOND version zip files, though Tgstation.Server.Api.Models.Byond.Version must still be set.
           application/*+json:
             schema:
               allOf:
               - $ref: '#/components/schemas/Byond'
-              description: Represents a BYOND installation. Tgstation.Server.Api.Models.Internal.RawData.Content is used to upload custom BYOND version zip files, though Tgstation.Server.Api.Models.Byond.Version must still be set.
+              description: Represents a BYOND installation. Tgstation.Server.Api.Models.FileTicketResult.FileTicket is used to upload custom BYOND version zip files, though Tgstation.Server.Api.Models.Byond.Version must still be set.
       responses:
         200:
           description: Switched active version successfully.
@@ -362,18 +376,32 @@ paths:
       summary: Lists installed Tgstation.Server.Api.Models.Byond versions.
       operationId: ByondController.List
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
+      - name: page
+        in: query
+        description: The current page.
+        schema:
+          type: integer
+          description: The current page.
+          format: int32
+          nullable: true
+      - name: pageSize
+        in: query
+        description: The page size.
+        schema:
+          type: integer
+          description: The page size.
+          format: int32
+          nullable: true
       responses:
         200:
           description: Retrieved version information successfully.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Byond'
+                $ref: '#/components/schemas/PaginatedByond'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -399,9 +427,9 @@ paths:
       summary: Create a new chat bot model.
       operationId: ChatController.Create
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       requestBody:
         description: The Tgstation.Server.Api.Models.ChatBot to create.
         content:
@@ -456,9 +484,9 @@ paths:
       summary: Updates a chat bot model.
       operationId: ChatController.Update
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       requestBody:
         description: The Tgstation.Server.Api.Models.ChatBot update to apply.
         content:
@@ -522,6 +550,9 @@ paths:
       summary: Delete a Tgstation.Server.Api.Models.ChatBot.
       operationId: ChatController.Delete
       parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       - name: id
         in: path
         description: The Tgstation.Server.Api.Models.Internal.ChatBot.Id to delete.
@@ -530,9 +561,6 @@ paths:
           type: integer
           description: The Tgstation.Server.Api.Models.Internal.ChatBot.Id to delete.
           format: int64
-      - $ref: '#/components/parameters/Instance'
-      - $ref: '#/components/parameters/Api'
-      - $ref: '#/components/parameters/User-Agent'
       responses:
         204:
           description: Chat bot deleted or does not exist.
@@ -560,6 +588,9 @@ paths:
       summary: Get a specific Tgstation.Server.Api.Models.ChatBot.
       operationId: ChatController.GetId
       parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       - name: id
         in: path
         description: The Tgstation.Server.Api.Models.Internal.ChatBot.Id to retrieve.
@@ -568,9 +599,6 @@ paths:
           type: integer
           description: The Tgstation.Server.Api.Models.Internal.ChatBot.Id to retrieve.
           format: int64
-      - $ref: '#/components/parameters/Instance'
-      - $ref: '#/components/parameters/Api'
-      - $ref: '#/components/parameters/User-Agent'
       responses:
         200:
           description: Retrieved Tgstation.Server.Api.Models.ChatBot successfully.
@@ -609,18 +637,32 @@ paths:
       summary: List Tgstation.Server.Api.Models.ChatBots.
       operationId: ChatController.List
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
+      - name: page
+        in: query
+        description: The current page.
+        schema:
+          type: integer
+          description: The current page.
+          format: int32
+          nullable: true
+      - name: pageSize
+        in: query
+        description: The page size.
+        schema:
+          type: integer
+          description: The page size.
+          format: int32
+          nullable: true
       responses:
         200:
           description: Listed chat bots successfully.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ChatBot'
+                $ref: '#/components/schemas/PaginatedChatBot'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -646,9 +688,9 @@ paths:
       summary: Write to a configuration file.
       operationId: ConfigurationController.Update
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       requestBody:
         description: The Tgstation.Server.Api.Models.ConfigurationFile representing the file.
         content:
@@ -679,8 +721,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConfigurationFile'
-        201:
-          description: File created successfully.
+        202:
+          description: File upload ticket created successfully.
           content:
             application/json:
               schema:
@@ -709,9 +751,9 @@ paths:
       summary: Create a configuration directory.
       operationId: ConfigurationController.Create
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       requestBody:
         description: The Tgstation.Server.Api.Models.ConfigurationFile representing the directory.
         content:
@@ -772,9 +814,9 @@ paths:
       summary: Deletes an empty directory
       operationId: ConfigurationController.Delete
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       requestBody:
         description: A Tgstation.Server.Api.Models.ConfigurationFile representing the path to the directory to delete
         content:
@@ -826,6 +868,9 @@ paths:
       summary: Get the contents of a file at a filePath
       operationId: ConfigurationController.File
       parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       - name: filePath
         in: path
         description: The path of the file to get
@@ -834,9 +879,6 @@ paths:
           type: string
           description: The path of the file to get
           nullable: true
-      - $ref: '#/components/parameters/Instance'
-      - $ref: '#/components/parameters/Api'
-      - $ref: '#/components/parameters/User-Agent'
       responses:
         200:
           description: File read successfully.
@@ -875,6 +917,9 @@ paths:
       summary: Get the contents of a directory at a directoryPath
       operationId: ConfigurationController.Directory
       parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       - name: directoryPath
         in: path
         description: The path of the directory to get
@@ -883,18 +928,29 @@ paths:
           type: string
           description: The path of the directory to get
           nullable: true
-      - $ref: '#/components/parameters/Instance'
-      - $ref: '#/components/parameters/Api'
-      - $ref: '#/components/parameters/User-Agent'
+      - name: page
+        in: query
+        description: The current page.
+        schema:
+          type: integer
+          description: The current page.
+          format: int32
+          nullable: true
+      - name: pageSize
+        in: query
+        description: The page size.
+        schema:
+          type: integer
+          description: The page size.
+          format: int32
+          nullable: true
       responses:
         200:
           description: Directory listed successfully.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ConfigurationFile'
+                $ref: '#/components/schemas/PaginatedConfigurationFile'
         410:
           description: Directory does not currently exist.
           content:
@@ -926,18 +982,32 @@ paths:
       summary: Get the contents of the root configuration directory.
       operationId: ConfigurationController.List
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
+      - name: page
+        in: query
+        description: The current page.
+        schema:
+          type: integer
+          description: The current page.
+          format: int32
+          nullable: true
+      - name: pageSize
+        in: query
+        description: The page size.
+        schema:
+          type: integer
+          description: The page size.
+          format: int32
+          nullable: true
       responses:
         200:
           description: Success
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ConfigurationFile'
+                $ref: '#/components/schemas/PaginatedConfigurationFile'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -956,44 +1026,6 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /app/{appRoute}:
-    get:
-      tags:
-      - ControlPanel
-      summary: Handle a GET request to the control panel route. Route to static files if they exist, otherwise index.html.
-      operationId: ControlPanelController.Get
-      parameters:
-      - name: appRoute
-        in: path
-        description: The value of the route.
-        required: true
-        schema:
-          type: string
-          description: The value of the route.
-          nullable: true
-      - $ref: '#/components/parameters/Api'
-      - $ref: '#/components/parameters/User-Agent'
-      responses:
-        200:
-          description: Success
-        400:
-          $ref: '#/components/responses/400'
-        401:
-          $ref: '#/components/responses/401'
-        403:
-          $ref: '#/components/responses/403'
-        409:
-          $ref: '#/components/responses/409'
-        406:
-          $ref: '#/components/responses/406'
-        500:
-          $ref: '#/components/responses/500'
-        503:
-          $ref: '#/components/responses/503'
-        501:
-          $ref: '#/components/responses/501'
-      security:
-      - Password_Login_Scheme: []
   /DreamDaemon:
     put:
       tags:
@@ -1001,9 +1033,9 @@ paths:
       summary: Launches the watchdog.
       operationId: DreamDaemonController.Create
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       responses:
         202:
           description: Tgstation.Server.Api.Models.Job to launch the watchdog started successfully.
@@ -1035,9 +1067,9 @@ paths:
       summary: Get the watchdog status.
       operationId: DreamDaemonController.Read
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       responses:
         200:
           description: Read Tgstation.Server.Api.Models.DreamDaemon information successfully.
@@ -1075,9 +1107,9 @@ paths:
       summary: Stops the Watchdog if it's running.
       operationId: DreamDaemonController.Delete
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       responses:
         204:
           description: Watchdog terminated.
@@ -1105,9 +1137,9 @@ paths:
       summary: Update watchdog settings to be applied at next server reboot.
       operationId: DreamDaemonController.Update
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       requestBody:
         description: The updated Tgstation.Server.Api.Models.DreamDaemon settings.
         content:
@@ -1168,9 +1200,9 @@ paths:
       summary: Creates a Tgstation.Server.Api.Models.Job to restart the Watchdog. It will not start if it wasn't already running.
       operationId: DreamDaemonController.Restart
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       responses:
         202:
           description: Restart Tgstation.Server.Api.Models.Job started successfully.
@@ -1203,9 +1235,9 @@ paths:
       summary: Creates a Tgstation.Server.Api.Models.Job to generate a DreamDaemon process dump.
       operationId: DreamDaemonController.CreateDump
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       responses:
         202:
           description: Dump Tgstation.Server.Api.Models.Job started successfully.
@@ -1238,9 +1270,9 @@ paths:
       summary: Read current Tgstation.Server.Api.Models.DreamMaker status.
       operationId: DreamMakerController.Read
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       responses:
         200:
           description: Read Tgstation.Server.Api.Models.DreamMaker status successfully.
@@ -1272,9 +1304,9 @@ paths:
       summary: Begin deploying repository code.
       operationId: DreamMakerController.Create
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       responses:
         202:
           description: Created deployment Tgstation.Server.Api.Models.Job successfully.
@@ -1306,9 +1338,9 @@ paths:
       summary: Update deployment settings.
       operationId: DreamMakerController.Update
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       requestBody:
         description: The updated Tgstation.Server.Api.Models.DreamMaker settings.
         content:
@@ -1372,6 +1404,9 @@ paths:
       summary: Get a Tgstation.Server.Api.Models.CompileJob specified by a given id.
       operationId: DreamMakerController.GetId
       parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       - name: id
         in: path
         description: The Tgstation.Server.Api.Models.EntityId.Id.
@@ -1380,9 +1415,6 @@ paths:
           type: integer
           description: The Tgstation.Server.Api.Models.EntityId.Id.
           format: int64
-      - $ref: '#/components/parameters/Instance'
-      - $ref: '#/components/parameters/Api'
-      - $ref: '#/components/parameters/User-Agent'
       responses:
         200:
           description: Tgstation.Server.Api.Models.CompileJob retrieved successfully.
@@ -1421,18 +1453,32 @@ paths:
       summary: List all Tgstation.Server.Api.Models.CompileJobTgstation.Server.Api.Models.EntityIds for the instance.
       operationId: DreamMakerController.List
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
+      - name: page
+        in: query
+        description: The current page.
+        schema:
+          type: integer
+          description: The current page.
+          format: int32
+          nullable: true
+      - name: pageSize
+        in: query
+        description: The page size.
+        schema:
+          type: integer
+          description: The page size.
+          format: int32
+          nullable: true
       responses:
         200:
           description: Retrieved Tgstation.Server.Api.Models.EntityIds successfully.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/EntityId'
+                $ref: '#/components/schemas/PaginatedCompileJob'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -1483,8 +1529,6 @@ paths:
           $ref: '#/components/responses/503'
         501:
           $ref: '#/components/responses/501'
-      security:
-      - Token_Authorization_Scheme: []
     post:
       tags:
       - Home
@@ -1493,6 +1537,13 @@ paths:
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - name: OAuthProvider
+        in: header
+        description: The external OAuth service provider.
+        style: simple
+        schema:
+          type: string
+        example: Discord
       responses:
         200:
           description: User logged in and Tgstation.Server.Api.Models.Token generated successfully.
@@ -1500,6 +1551,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Token'
+        429:
+          description: OAuth authentication failed due to rate limiting.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
         401:
           description: User authentication failed.
         403:
@@ -1518,6 +1575,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Password_Login_Scheme: []
+        OAuth_Login_Scheme: []
   /Instance:
     put:
       tags:
@@ -1656,6 +1714,8 @@ paths:
       summary: Detach an Tgstation.Server.Api.Models.Instance with the given id.
       operationId: InstanceController.Delete
       parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
       - name: id
         in: path
         description: The Tgstation.Server.Api.Models.EntityId.Id of the instance to detach.
@@ -1664,8 +1724,6 @@ paths:
           type: integer
           description: The Tgstation.Server.Api.Models.EntityId.Id of the instance to detach.
           format: int64
-      - $ref: '#/components/parameters/Api'
-      - $ref: '#/components/parameters/User-Agent'
       responses:
         204:
           description: Instance detatched successfully.
@@ -1699,6 +1757,8 @@ paths:
       summary: Get a specific Tgstation.Server.Api.Models.Instance.
       operationId: InstanceController.GetId
       parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
       - name: id
         in: path
         description: The instance Tgstation.Server.Api.Models.EntityId.Id to retrieve.
@@ -1707,8 +1767,6 @@ paths:
           type: integer
           description: The instance Tgstation.Server.Api.Models.EntityId.Id to retrieve.
           format: int64
-      - $ref: '#/components/parameters/Api'
-      - $ref: '#/components/parameters/User-Agent'
       responses:
         200:
           description: Retrieved Tgstation.Server.Api.Models.Instance successfully.
@@ -1746,6 +1804,8 @@ paths:
       summary: Gives the current user full permissions on a given instance id.
       operationId: InstanceController.GrantPermissions
       parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
       - name: id
         in: path
         description: The instance Tgstation.Server.Api.Models.EntityId.Id to give permissions on.
@@ -1754,8 +1814,6 @@ paths:
           type: integer
           description: The instance Tgstation.Server.Api.Models.EntityId.Id to give permissions on.
           format: int64
-      - $ref: '#/components/parameters/Api'
-      - $ref: '#/components/parameters/User-Agent'
       responses:
         204:
           description: Granted permissions successfully.
@@ -1786,15 +1844,29 @@ paths:
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - name: page
+        in: query
+        description: The current page.
+        schema:
+          type: integer
+          description: The current page.
+          format: int32
+          nullable: true
+      - name: pageSize
+        in: query
+        description: The page size.
+        schema:
+          type: integer
+          description: The page size.
+          format: int32
+          nullable: true
       responses:
         200:
           description: Retrieved Tgstation.Server.Api.Models.Instances successfully.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Instance'
+                $ref: '#/components/schemas/PaginatedInstance'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -1813,46 +1885,46 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /InstanceUser:
+  /InstancePermissionSet:
     put:
       tags:
-      - InstanceUser
-      summary: Create an Tgstation.Server.Api.Models.InstanceUser.
-      operationId: InstanceUserController.Create
+      - InstancePermissionSet
+      summary: Create an Tgstation.Server.Api.Models.InstancePermissionSet.
+      operationId: InstancePermissionSetController.Create
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       requestBody:
-        description: The Tgstation.Server.Api.Models.InstanceUser to create.
+        description: The Tgstation.Server.Api.Models.InstancePermissionSet to create.
         content:
           application/json-patch+json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/InstanceUser'
-              description: Represents a Tgstation.Server.Api.Models.Users permissions in an Tgstation.Server.Api.Models.Instance
+              - $ref: '#/components/schemas/InstancePermissionSet'
+              description: Represents a Tgstation.Server.Api.Models.PermissionSets permissions in an Tgstation.Server.Api.Models.Instance
           application/json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/InstanceUser'
-              description: Represents a Tgstation.Server.Api.Models.Users permissions in an Tgstation.Server.Api.Models.Instance
+              - $ref: '#/components/schemas/InstancePermissionSet'
+              description: Represents a Tgstation.Server.Api.Models.PermissionSets permissions in an Tgstation.Server.Api.Models.Instance
           text/json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/InstanceUser'
-              description: Represents a Tgstation.Server.Api.Models.Users permissions in an Tgstation.Server.Api.Models.Instance
+              - $ref: '#/components/schemas/InstancePermissionSet'
+              description: Represents a Tgstation.Server.Api.Models.PermissionSets permissions in an Tgstation.Server.Api.Models.Instance
           application/*+json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/InstanceUser'
-              description: Represents a Tgstation.Server.Api.Models.Users permissions in an Tgstation.Server.Api.Models.Instance
+              - $ref: '#/components/schemas/InstancePermissionSet'
+              description: Represents a Tgstation.Server.Api.Models.PermissionSets permissions in an Tgstation.Server.Api.Models.Instance
       responses:
         201:
-          description: Tgstation.Server.Api.Models.InstanceUser created successfully.
+          description: Tgstation.Server.Api.Models.InstancePermissionSet created successfully.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InstanceUser'
+                $ref: '#/components/schemas/InstancePermissionSet'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -1873,45 +1945,45 @@ paths:
       - Token_Authorization_Scheme: []
     post:
       tags:
-      - InstanceUser
-      summary: Update the permissions for an Tgstation.Server.Api.Models.InstanceUser.
-      operationId: InstanceUserController.Update
+      - InstancePermissionSet
+      summary: Update the permissions for an Tgstation.Server.Api.Models.InstancePermissionSet.
+      operationId: InstancePermissionSetController.Update
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       requestBody:
-        description: The updated Tgstation.Server.Api.Models.InstanceUser.
+        description: The updated Tgstation.Server.Api.Models.InstancePermissionSet.
         content:
           application/json-patch+json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/InstanceUser'
-              description: Represents a Tgstation.Server.Api.Models.Users permissions in an Tgstation.Server.Api.Models.Instance
+              - $ref: '#/components/schemas/InstancePermissionSet'
+              description: Represents a Tgstation.Server.Api.Models.PermissionSets permissions in an Tgstation.Server.Api.Models.Instance
           application/json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/InstanceUser'
-              description: Represents a Tgstation.Server.Api.Models.Users permissions in an Tgstation.Server.Api.Models.Instance
+              - $ref: '#/components/schemas/InstancePermissionSet'
+              description: Represents a Tgstation.Server.Api.Models.PermissionSets permissions in an Tgstation.Server.Api.Models.Instance
           text/json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/InstanceUser'
-              description: Represents a Tgstation.Server.Api.Models.Users permissions in an Tgstation.Server.Api.Models.Instance
+              - $ref: '#/components/schemas/InstancePermissionSet'
+              description: Represents a Tgstation.Server.Api.Models.PermissionSets permissions in an Tgstation.Server.Api.Models.Instance
           application/*+json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/InstanceUser'
-              description: Represents a Tgstation.Server.Api.Models.Users permissions in an Tgstation.Server.Api.Models.Instance
+              - $ref: '#/components/schemas/InstancePermissionSet'
+              description: Represents a Tgstation.Server.Api.Models.PermissionSets permissions in an Tgstation.Server.Api.Models.Instance
       responses:
         200:
-          description: Tgstation.Server.Api.Models.InstanceUser updated successfully.
+          description: Tgstation.Server.Api.Models.InstancePermissionSet updated successfully.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InstanceUser'
+                $ref: '#/components/schemas/InstancePermissionSet'
         410:
-          description: The requested Tgstation.Server.Api.Models.InstanceUser does not currently exist.
+          description: The requested Tgstation.Server.Api.Models.InstancePermissionSet does not currently exist.
           content:
             application/json:
               schema:
@@ -1936,20 +2008,20 @@ paths:
       - Token_Authorization_Scheme: []
     get:
       tags:
-      - InstanceUser
-      summary: Read the active Tgstation.Server.Api.Models.InstanceUser.
-      operationId: InstanceUserController.Read
+      - InstancePermissionSet
+      summary: Read the active Tgstation.Server.Api.Models.InstancePermissionSet.
+      operationId: InstancePermissionSetController.Read
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       responses:
         200:
-          description: Tgstation.Server.Api.Models.InstanceUser retrieved successfully.
+          description: Tgstation.Server.Api.Models.InstancePermissionSet retrieved successfully.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InstanceUser'
+                $ref: '#/components/schemas/InstancePermissionSet'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -1968,25 +2040,39 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /InstanceUser/List:
+  /InstancePermissionSet/List:
     get:
       tags:
-      - InstanceUser
-      summary: Lists Tgstation.Server.Api.Models.InstanceUsers for the instance.
-      operationId: InstanceUserController.List
+      - InstancePermissionSet
+      summary: Lists Tgstation.Server.Api.Models.InstancePermissionSets for the instance.
+      operationId: InstancePermissionSetController.List
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
+      - name: page
+        in: query
+        description: The current page.
+        schema:
+          type: integer
+          description: The current page.
+          format: int32
+          nullable: true
+      - name: pageSize
+        in: query
+        description: The page size.
+        schema:
+          type: integer
+          description: The page size.
+          format: int32
+          nullable: true
       responses:
         200:
-          description: Retrieved Tgstation.Server.Api.Models.InstanceUsers successfully.
+          description: Retrieved Tgstation.Server.Api.Models.InstancePermissionSets successfully.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/InstanceUser'
+                $ref: '#/components/schemas/PaginatedInstancePermissionSet'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -2005,33 +2091,33 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /InstanceUser/{id}:
+  /InstancePermissionSet/{id}:
     get:
       tags:
-      - InstanceUser
-      summary: Gets a specific Tgstation.Server.Api.Models.InstanceUser.
-      operationId: InstanceUserController.GetId
+      - InstancePermissionSet
+      summary: Gets a specific Tgstation.Server.Api.Models.InstancePermissionSet.
+      operationId: InstancePermissionSetController.GetId
       parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       - name: id
         in: path
-        description: The Tgstation.Server.Api.Models.InstanceUser.UserId.
+        description: The Tgstation.Server.Api.Models.InstancePermissionSet.PermissionSetId.
         required: true
         schema:
           type: integer
-          description: The Tgstation.Server.Api.Models.InstanceUser.UserId.
+          description: The Tgstation.Server.Api.Models.InstancePermissionSet.PermissionSetId.
           format: int64
-      - $ref: '#/components/parameters/Instance'
-      - $ref: '#/components/parameters/Api'
-      - $ref: '#/components/parameters/User-Agent'
       responses:
         200:
-          description: Retrieve Tgstation.Server.Api.Models.InstanceUser successfully.
+          description: Retrieve Tgstation.Server.Api.Models.InstancePermissionSet successfully.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InstanceUser'
+                $ref: '#/components/schemas/InstancePermissionSet'
         410:
-          description: The requested Tgstation.Server.Api.Models.InstanceUser does not currently exist.
+          description: The requested Tgstation.Server.Api.Models.InstancePermissionSet does not currently exist.
           content:
             application/json:
               schema:
@@ -2056,24 +2142,30 @@ paths:
       - Token_Authorization_Scheme: []
     delete:
       tags:
-      - InstanceUser
-      summary: Delete an Tgstation.Server.Api.Models.InstanceUser.
-      operationId: InstanceUserController.Delete
+      - InstancePermissionSet
+      summary: Delete an Tgstation.Server.Api.Models.InstancePermissionSet.
+      operationId: InstancePermissionSetController.Delete
       parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       - name: id
         in: path
-        description: The Tgstation.Server.Api.Models.InstanceUser.UserId to delete.
+        description: The Tgstation.Server.Api.Models.InstancePermissionSet.PermissionSetId to delete.
         required: true
         schema:
           type: integer
-          description: The Tgstation.Server.Api.Models.InstanceUser.UserId to delete.
+          description: The Tgstation.Server.Api.Models.InstancePermissionSet.PermissionSetId to delete.
           format: int64
-      - $ref: '#/components/parameters/Instance'
-      - $ref: '#/components/parameters/Api'
-      - $ref: '#/components/parameters/User-Agent'
       responses:
         204:
-          description: Tgstation.Server.Api.Models.InstanceUser deleted or no longer exists.
+          description: Target Tgstation.Server.Api.Models.InstancePermissionSet deleted.
+        410:
+          description: Target Tgstation.Server.Api.Models.InstancePermissionSet or no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -2099,18 +2191,32 @@ paths:
       summary: Get active Tgstation.Server.Api.Models.Jobs for the instance.
       operationId: JobController.Read
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
+      - name: page
+        in: query
+        description: The current page.
+        schema:
+          type: integer
+          description: The current page.
+          format: int32
+          nullable: true
+      - name: pageSize
+        in: query
+        description: The page size.
+        schema:
+          type: integer
+          description: The page size.
+          format: int32
+          nullable: true
       responses:
         200:
           description: Retrieved active Tgstation.Server.Api.Models.Jobs successfully.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Job'
+                $ref: '#/components/schemas/PaginatedJob'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -2136,18 +2242,32 @@ paths:
       summary: List all Tgstation.Server.Api.Models.JobTgstation.Server.Api.Models.EntityIds for the instance in reverse creation order.
       operationId: JobController.List
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
+      - name: page
+        in: query
+        description: The current page.
+        schema:
+          type: integer
+          description: The current page.
+          format: int32
+          nullable: true
+      - name: pageSize
+        in: query
+        description: The page size.
+        schema:
+          type: integer
+          description: The page size.
+          format: int32
+          nullable: true
       responses:
         200:
           description: Retrieved Tgstation.Server.Api.Models.JobTgstation.Server.Api.Models.EntityIds successfully.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/EntityId'
+                $ref: '#/components/schemas/PaginatedJob'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -2173,6 +2293,9 @@ paths:
       summary: Cancel a running Tgstation.Server.Api.Models.Job.
       operationId: JobController.Delete
       parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       - name: id
         in: path
         description: The Tgstation.Server.Api.Models.EntityId.Id of the Tgstation.Server.Api.Models.Job to cancel.
@@ -2181,9 +2304,6 @@ paths:
           type: integer
           description: The Tgstation.Server.Api.Models.EntityId.Id of the Tgstation.Server.Api.Models.Job to cancel.
           format: int64
-      - $ref: '#/components/parameters/Instance'
-      - $ref: '#/components/parameters/Api'
-      - $ref: '#/components/parameters/User-Agent'
       responses:
         202:
           description: Tgstation.Server.Api.Models.Job cancellation requested successfully.
@@ -2223,6 +2343,9 @@ paths:
       summary: Get a specific Tgstation.Server.Api.Models.Job.
       operationId: JobController.GetId
       parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       - name: id
         in: path
         description: The Tgstation.Server.Api.Models.EntityId.Id of the Tgstation.Server.Api.Models.Job to retrieve.
@@ -2231,9 +2354,6 @@ paths:
           type: integer
           description: The Tgstation.Server.Api.Models.EntityId.Id of the Tgstation.Server.Api.Models.Job to retrieve.
           format: int64
-      - $ref: '#/components/parameters/Instance'
-      - $ref: '#/components/parameters/Api'
-      - $ref: '#/components/parameters/User-Agent'
       responses:
         200:
           description: Retrieved Tgstation.Server.Api.Models.Job successfully.
@@ -2272,9 +2392,9 @@ paths:
       summary: Begin cloning the repository if it doesn't exist.
       operationId: RepositoryController.Create
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       requestBody:
         description: Initial Tgstation.Server.Api.Models.Repository settings.
         content:
@@ -2335,9 +2455,9 @@ paths:
       summary: Delete the Tgstation.Server.Api.Models.Repository.
       operationId: RepositoryController.Delete
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       responses:
         202:
           description: Job to delete the repository created successfully.
@@ -2375,9 +2495,9 @@ paths:
       summary: Get Tgstation.Server.Api.Models.Repository status.
       operationId: RepositoryController.Read
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       responses:
         200:
           description: Retrieved the Tgstation.Server.Api.Models.Repository settings successfully.
@@ -2421,9 +2541,9 @@ paths:
       summary: Perform updats to the Tgstation.Server.Api.Models.Repository.
       operationId: RepositoryController.Update
       parameters:
-      - $ref: '#/components/parameters/Instance'
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       requestBody:
         description: The updated Tgstation.Server.Api.Models.Repository.
         content:
@@ -2484,11 +2604,108 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
+  /Transfer:
+    get:
+      tags:
+      - Transfer
+      summary: Downloads a file with a given ticket.
+      operationId: TransferController.Download
+      parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      - name: ticket
+        in: query
+        description: The Tgstation.Server.Api.Models.FileTicketResult.FileTicket for the download.
+        required: true
+        schema:
+          type: string
+          description: The Tgstation.Server.Api.Models.FileTicketResult.FileTicket for the download.
+      responses:
+        200:
+          description: Started streaming download successfully.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                description: Very similar to Microsoft.AspNetCore.Mvc.FileStreamResult except it's Microsoft.AspNetCore.Mvc.Infrastructure.IActionResultExecutor`1 contains a fix for https://github.com/dotnet/aspnetcore/issues/28189.
+                format: binary
+        410:
+          description: The ticket was no longer or was never valid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        409:
+          $ref: '#/components/responses/409'
+        406:
+          $ref: '#/components/responses/406'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+        501:
+          $ref: '#/components/responses/501'
+      security:
+      - Token_Authorization_Scheme: []
+    put:
+      tags:
+      - Transfer
+      summary: Uploads a file with a given ticket.
+      operationId: TransferController.Upload
+      parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      - name: ticket
+        in: query
+        description: The Tgstation.Server.Api.Models.FileTicketResult.FileTicket for the upload.
+        required: true
+        schema:
+          type: string
+          description: The Tgstation.Server.Api.Models.FileTicketResult.FileTicket for the upload.
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        204:
+          description: Uploaded file successfully.
+        410:
+          description: The ticket was no longer or was never valid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        409:
+          description: An error occurred during the upload.
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        406:
+          $ref: '#/components/responses/406'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+        501:
+          $ref: '#/components/responses/501'
+      security:
+      - Token_Authorization_Scheme: []
   /User:
     put:
       tags:
       - User
-      summary: Create a Tgstation.Server.Api.Models.User.
+      summary: Create a new Tgstation.Server.Api.Models.User.
       operationId: UserController.Create
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -2647,15 +2864,29 @@ paths:
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - name: page
+        in: query
+        description: The current page.
+        schema:
+          type: integer
+          description: The current page.
+          format: int32
+          nullable: true
+      - name: pageSize
+        in: query
+        description: The page size.
+        schema:
+          type: integer
+          description: The page size.
+          format: int32
+          nullable: true
       responses:
         200:
           description: Retrieved Tgstation.Server.Api.Models.Users successfully.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/PaginatedUser'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -2681,6 +2912,8 @@ paths:
       summary: Get a specific Tgstation.Server.Api.Models.User.
       operationId: UserController.GetId
       parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
       - name: id
         in: path
         description: The Tgstation.Server.Api.Models.Internal.User.Id to retrieve.
@@ -2689,8 +2922,6 @@ paths:
           type: integer
           description: The Tgstation.Server.Api.Models.Internal.User.Id to retrieve.
           format: int64
-      - $ref: '#/components/parameters/Api'
-      - $ref: '#/components/parameters/User-Agent'
       responses:
         200:
           description: The Tgstation.Server.Api.Models.User was retrieved successfully.
@@ -2722,14 +2953,271 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
+  /UserGroup:
+    put:
+      tags:
+      - UserGroup
+      summary: Create a new Tgstation.Server.Api.Models.UserGroup.
+      operationId: UserGroupController.Create
+      parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      requestBody:
+        description: The Tgstation.Server.Api.Models.UserGroup to create.
+        content:
+          application/json-patch+json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UserGroup'
+              description: The Tgstation.Server.Api.Models.UserGroup to create.
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UserGroup'
+              description: The Tgstation.Server.Api.Models.UserGroup to create.
+          text/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UserGroup'
+              description: The Tgstation.Server.Api.Models.UserGroup to create.
+          application/*+json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UserGroup'
+              description: The Tgstation.Server.Api.Models.UserGroup to create.
+      responses:
+        201:
+          description: Tgstation.Server.Api.Models.UserGroup created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGroup'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        409:
+          $ref: '#/components/responses/409'
+        406:
+          $ref: '#/components/responses/406'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+        501:
+          $ref: '#/components/responses/501'
+      security:
+      - Token_Authorization_Scheme: []
+    post:
+      tags:
+      - UserGroup
+      summary: Update a new Tgstation.Server.Api.Models.UserGroup.
+      operationId: UserGroupController.Update
+      parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      requestBody:
+        description: The Tgstation.Server.Api.Models.UserGroup to update.
+        content:
+          application/json-patch+json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UserGroup'
+              description: The Tgstation.Server.Api.Models.UserGroup to update.
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UserGroup'
+              description: The Tgstation.Server.Api.Models.UserGroup to update.
+          text/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UserGroup'
+              description: The Tgstation.Server.Api.Models.UserGroup to update.
+          application/*+json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UserGroup'
+              description: The Tgstation.Server.Api.Models.UserGroup to update.
+      responses:
+        200:
+          description: Tgstation.Server.Api.Models.UserGroup updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGroup'
+        410:
+          description: The requested Tgstation.Server.Api.Models.UserGroup does not currently exist.
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        409:
+          $ref: '#/components/responses/409'
+        406:
+          $ref: '#/components/responses/406'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+        501:
+          $ref: '#/components/responses/501'
+      security:
+      - Token_Authorization_Scheme: []
+  /UserGroup/{id}:
+    get:
+      tags:
+      - UserGroup
+      summary: Gets a specific Tgstation.Server.Api.Models.UserGroup.
+      operationId: UserGroupController.GetId
+      parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      - name: id
+        in: path
+        description: The Tgstation.Server.Api.Models.EntityId.Id of the Tgstation.Server.Api.Models.UserGroup.
+        required: true
+        schema:
+          type: integer
+          description: The Tgstation.Server.Api.Models.EntityId.Id of the Tgstation.Server.Api.Models.UserGroup.
+          format: int64
+      responses:
+        200:
+          description: Retrieve Tgstation.Server.Api.Models.UserGroup successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGroup'
+        410:
+          description: The requested Tgstation.Server.Api.Models.UserGroup does not currently exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        409:
+          $ref: '#/components/responses/409'
+        406:
+          $ref: '#/components/responses/406'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+        501:
+          $ref: '#/components/responses/501'
+      security:
+      - Token_Authorization_Scheme: []
+    delete:
+      tags:
+      - UserGroup
+      summary: Delete an Tgstation.Server.Api.Models.UserGroup.
+      operationId: UserGroupController.Delete
+      parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      - name: id
+        in: path
+        description: The Tgstation.Server.Api.Models.EntityId.Id of the Tgstation.Server.Api.Models.UserGroup to delete.
+        required: true
+        schema:
+          type: integer
+          description: The Tgstation.Server.Api.Models.EntityId.Id of the Tgstation.Server.Api.Models.UserGroup to delete.
+          format: int64
+      responses:
+        204:
+          description: Tgstation.Server.Api.Models.UserGroup was deleted.
+        409:
+          description: The Tgstation.Server.Api.Models.UserGroup is not empty.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        410:
+          description: The Tgstation.Server.Api.Models.UserGroup didn't exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        406:
+          $ref: '#/components/responses/406'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+        501:
+          $ref: '#/components/responses/501'
+      security:
+      - Token_Authorization_Scheme: []
+  /UserGroup/List:
+    get:
+      tags:
+      - UserGroup
+      summary: Lists Tgstation.Server.Api.Models.UserGroups for the instance.
+      operationId: UserGroupController.List
+      parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      - name: page
+        in: query
+        description: The current page.
+        schema:
+          type: integer
+          description: The current page.
+          format: int32
+          nullable: true
+      - name: pageSize
+        in: query
+        description: The page size.
+        schema:
+          type: integer
+          description: The page size.
+          format: int32
+          nullable: true
+      responses:
+        200:
+          description: Retrieved Tgstation.Server.Api.Models.UserGroups successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserGroup'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        409:
+          $ref: '#/components/responses/409'
+        406:
+          $ref: '#/components/responses/406'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+        501:
+          $ref: '#/components/responses/501'
+      security:
+      - Token_Authorization_Scheme: []
 components:
   schemas:
     Administration:
       type: object
       properties:
-        windowsHost:
-          type: boolean
-          description: If the server is running on a windows operating system
         trackedRepositoryUrl:
           type: string
           description: The GitHub repository the server is built to recieve updates from
@@ -2842,6 +3330,11 @@ components:
       - 92
       - 93
       - 94
+      - 95
+      - 96
+      - 97
+      - 98
+      - 99
       type: integer
       description: Types of Tgstation.Server.Api.Models.ErrorMessages that the API may return.
       format: int32
@@ -2855,7 +3348,7 @@ components:
       - DatabaseIntegrityConflict
       - MissingHostWatchdog
       - CannotChangeServerSuite
-      - GitHubApiError
+      - RemoteApiError
       - ServerUpdateInProgress
       - UserNameChange
       - UserSidChange
@@ -2886,13 +3379,13 @@ components:
       - RepoDuplicateTestMerge
       - RepoWhitespaceCommitterName
       - RepoWhitespaceCommitterEmail
-      - DEPRECATED_DreamDaemonDuplicatePorts
-      - DEPRECATED_InvalidSecurityLevel
+      - ApiPageTooLarge
+      - ApiInvalidPageOrPageSize
       - ChatBotWrongChannelType
       - ChatBotWhitespaceConnectionString
       - ChatBotWhitespaceName
       - ChatBotProviderMissing
-      - DEPRECATED_UserMissingId
+      - UserGroupControllerCantEditMembers
       - ChatBotMax
       - ChatBotMaxChannels
       - ByondDirectXInstallFail
@@ -2900,7 +3393,7 @@ components:
       - ByondNoVersionsInstalled
       - DreamMakerNeverValidated
       - DreamMakerInvalidValidation
-      - DEPRECATED_DreamMakerValidationTimeout
+      - CannotRemoveLastAuthenticationOption
       - DreamMakerNoDme
       - DreamMakerMissingDme
       - DreamMakerExitCode
@@ -2941,6 +3434,11 @@ components:
       - ByondDreamDaemonFirewallFail
       - NoPortsAvailable
       - PortNotAvailable
+      - AdminUserCannotOAuth
+      - OAuthProviderDisabled
+      - FileUploadExpired
+      - UserGroupAndPermissionSet
+      - UserGroupNotEmpty
     ErrorMessage:
       type: object
       properties:
@@ -2971,13 +3469,88 @@ components:
           type: string
           description: The System.DateTimeOffset of when the log file was modified.
           format: date-time
-        content:
+        fileTicket:
           type: string
-          description: The bytes of the Tgstation.Server.Api.Models.Internal.RawData.
-          format: byte
+          description: The ticket to use to access the Tgstation.Server.Api.Routes.Transfer controller.
           nullable: true
       additionalProperties: false
       description: Represents a server log file.
+    PaginatedLogFile:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/LogFile'
+          description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+        totalPages:
+          type: integer
+          description: The total number of pages in the query.
+          format: int32
+        pageSize:
+          type: integer
+          description: The current size of pages in the query.
+          format: int32
+      additionalProperties: false
+      description: Represents a paginated set of models.
+      nullable: true
+    ShallowUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ID of the Tgstation.Server.Api.Models.Internal.User
+          format: int64
+          nullable: true
+        enabled:
+          type: boolean
+          description: If the Tgstation.Server.Api.Models.Internal.User is enabled since users cannot be deleted. System users cannot be disabled
+          nullable: true
+        createdAt:
+          type: string
+          description: When the Tgstation.Server.Api.Models.Internal.User was created
+          format: date-time
+          nullable: true
+        systemIdentifier:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: The SID/UID of the Tgstation.Server.Api.Models.Internal.User on Windows/POSIX respectively
+          nullable: true
+        name:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: The name of the Tgstation.Server.Api.Models.Internal.User
+      additionalProperties: false
+      description: Represents a server Tgstation.Server.Api.Models.Internal.User
+    OAuthProvider:
+      enum:
+      - GitHub
+      - Discord
+      - TGForums
+      - Keycloak
+      type: string
+      description: List of OAuth providers supported by TGS
+      x-enum-varnames:
+      - GitHub
+      - Discord
+      - TGForums
+      - Keycloak
+    OAuthConnection:
+      type: object
+      properties:
+        provider:
+          allOf:
+          - $ref: '#/components/schemas/OAuthProvider'
+          description: The Tgstation.Server.Api.Models.OAuthProvider of the Tgstation.Server.Api.Models.OAuthConnection.
+        externalUserId:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: The ID of the user in the Tgstation.Server.Api.Models.OAuthConnection.Provider.
+      additionalProperties: false
+      description: Represents a valid OAuth connection.
     AdministrationRights:
       enum:
       - 0
@@ -2987,6 +3560,7 @@ components:
       - 8
       - 16
       - 32
+      - 64
       type: integer
       description: Rights for Tgstation.Server.Api.Models.Administration
       format: int64
@@ -2998,6 +3572,7 @@ components:
       - EditOwnPassword
       - ReadUsers
       - DownloadLogs
+      - EditOwnOAuthConnections
     InstanceManagerRights:
       enum:
       - 0
@@ -3028,44 +3603,40 @@ components:
       - SetAutoUpdate
       - SetChatBotLimit
       - GrantPermissions
-    ShallowUser:
+    PermissionSet:
       type: object
       properties:
         id:
           type: integer
-          description: The ID of the Tgstation.Server.Api.Models.Internal.User
+          description: The ID of the Tgstation.Server.Api.Models.PermissionSet.
           format: int64
           nullable: true
-        enabled:
-          type: boolean
-          description: If the Tgstation.Server.Api.Models.Internal.User is enabled since users cannot be deleted. System users cannot be disabled
-          nullable: true
-        createdAt:
-          type: string
-          description: When the Tgstation.Server.Api.Models.Internal.User was created
-          format: date-time
-          nullable: true
-        systemIdentifier:
-          type: string
-          description: The SID/UID of the Tgstation.Server.Api.Models.Internal.User on Windows/POSIX respectively
-          nullable: true
-        name:
-          maxLength: 10000
-          minLength: 0
-          type: string
-          description: The name of the Tgstation.Server.Api.Models.Internal.User
         administrationRights:
           allOf:
           - $ref: '#/components/schemas/AdministrationRights'
-          description: The Tgstation.Server.Api.Rights.AdministrationRights for the Tgstation.Server.Api.Models.Internal.User
+          description: The Tgstation.Server.Api.Rights.AdministrationRights for the Tgstation.Server.Api.Models.User
           nullable: true
         instanceManagerRights:
           allOf:
           - $ref: '#/components/schemas/InstanceManagerRights'
-          description: The Tgstation.Server.Api.Rights.InstanceManagerRights for the Tgstation.Server.Api.Models.Internal.User
+          description: The Tgstation.Server.Api.Rights.InstanceManagerRights for the Tgstation.Server.Api.Models.User
           nullable: true
       additionalProperties: false
-      description: Represents a server Tgstation.Server.Api.Models.Internal.User
+      description: Represents a set of server permissions.
+    ShallowUserGroup:
+      type: object
+      properties:
+        name:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: The name of the Tgstation.Server.Api.Models.Internal.UserGroup.
+        id:
+          type: integer
+          description: The ID of the entity.
+          format: int64
+      additionalProperties: false
+      description: Represents a group of Tgstation.Server.Api.Models.Users.
     User:
       type: object
       properties:
@@ -3073,6 +3644,21 @@ components:
           allOf:
           - $ref: '#/components/schemas/ShallowUser'
           description: The Tgstation.Server.Api.Models.User who created this Tgstation.Server.Api.Models.User
+        oAuthConnections:
+          type: array
+          items:
+            $ref: '#/components/schemas/OAuthConnection'
+          description: List of Tgstation.Server.Api.Models.OAuthConnections associated with the Tgstation.Server.Api.Models.User.
+          nullable: true
+        permissionSet:
+          allOf:
+          - $ref: '#/components/schemas/PermissionSet'
+          description: The Tgstation.Server.Api.Models.PermissionSet directly associated with the Tgstation.Server.Api.Models.User.
+          nullable: true
+        group:
+          allOf:
+          - $ref: '#/components/schemas/ShallowUserGroup'
+          description: The Tgstation.Server.Api.Models.UserGroup asociated with the Tgstation.Server.Api.Models.User, if any.
           nullable: true
         id:
           type: integer
@@ -3089,24 +3675,16 @@ components:
           format: date-time
           nullable: true
         systemIdentifier:
+          maxLength: 100
+          minLength: 1
           type: string
           description: The SID/UID of the Tgstation.Server.Api.Models.Internal.User on Windows/POSIX respectively
           nullable: true
         name:
-          maxLength: 10000
-          minLength: 0
+          maxLength: 100
+          minLength: 1
           type: string
           description: The name of the Tgstation.Server.Api.Models.Internal.User
-        administrationRights:
-          allOf:
-          - $ref: '#/components/schemas/AdministrationRights'
-          description: The Tgstation.Server.Api.Rights.AdministrationRights for the Tgstation.Server.Api.Models.Internal.User
-          nullable: true
-        instanceManagerRights:
-          allOf:
-          - $ref: '#/components/schemas/InstanceManagerRights'
-          description: The Tgstation.Server.Api.Rights.InstanceManagerRights for the Tgstation.Server.Api.Models.Internal.User
-          nullable: true
       additionalProperties: false
     RightsType:
       enum:
@@ -3131,7 +3709,7 @@ components:
       - DreamDaemon
       - ChatBots
       - Configuration
-      - InstanceUser
+      - InstancePermissionSet
     Job:
       type: object
       properties:
@@ -3204,19 +3782,41 @@ components:
           - $ref: '#/components/schemas/Job'
           description: The Tgstation.Server.Api.Models.Job being used to install a new Tgstation.Server.Api.Models.Byond.Version
           nullable: true
-        content:
+        uploadCustomZip:
+          type: boolean
+          description: If a custom BYOND version is to be uploaded.
+          nullable: true
+        fileTicket:
           type: string
-          description: The bytes of the Tgstation.Server.Api.Models.Internal.RawData.
-          format: byte
+          description: The ticket to use to access the Tgstation.Server.Api.Routes.Transfer controller.
           nullable: true
       additionalProperties: false
-      description: Represents a BYOND installation. Tgstation.Server.Api.Models.Internal.RawData.Content is used to upload custom BYOND version zip files, though Tgstation.Server.Api.Models.Byond.Version must still be set.
+      description: Represents a BYOND installation. Tgstation.Server.Api.Models.FileTicketResult.FileTicket is used to upload custom BYOND version zip files, though Tgstation.Server.Api.Models.Byond.Version must still be set.
+    PaginatedByond:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Byond'
+          description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+        totalPages:
+          type: integer
+          description: The total number of pages in the query.
+          format: int32
+        pageSize:
+          type: integer
+          description: The current size of pages in the query.
+          format: int32
+      additionalProperties: false
+      description: Represents a paginated set of models.
+      nullable: true
     ChatChannel:
       type: object
       properties:
         ircChannel:
           maxLength: 100
-          minLength: 0
+          minLength: 1
           type: string
           description: >-
             The IRC channel name. Also potentially contains the channel passsword (if separated by a colon).
@@ -3273,7 +3873,7 @@ components:
           format: int64
         name:
           maxLength: 100
-          minLength: 0
+          minLength: 1
           type: string
           description: The name of the connection
         enabled:
@@ -3303,6 +3903,25 @@ components:
           type: string
           description: The information used to connect to the Tgstation.Server.Api.Models.Internal.ChatBot.Provider
       additionalProperties: false
+    PaginatedChatBot:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatBot'
+          description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+        totalPages:
+          type: integer
+          description: The total number of pages in the query.
+          format: int32
+        pageSize:
+          type: integer
+          description: The current size of pages in the query.
+          format: int32
+      additionalProperties: false
+      description: Represents a paginated set of models.
+      nullable: true
     ConfigurationFile:
       type: object
       properties:
@@ -3324,13 +3943,31 @@ components:
           type: string
           description: The MD5 hash of the file when last read by the user. If this doesn't match during update actions, the write will be denied with System.Net.HttpStatusCode.Conflict
           nullable: true
-        content:
+        fileTicket:
           type: string
-          description: The bytes of the Tgstation.Server.Api.Models.Internal.RawData.
-          format: byte
+          description: The ticket to use to access the Tgstation.Server.Api.Routes.Transfer controller.
           nullable: true
       additionalProperties: false
       description: Represents a game configuration file. Create and delete actions uncerimonuously overwrite/delete files
+    PaginatedConfigurationFile:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigurationFile'
+          description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+        totalPages:
+          type: integer
+          description: The total number of pages in the query.
+          format: int32
+        pageSize:
+          type: integer
+          description: The current size of pages in the query.
+          format: int32
+      additionalProperties: false
+      description: Represents a paginated set of models.
+      nullable: true
     TestMerge:
       type: object
       properties:
@@ -3349,25 +3986,25 @@ components:
           format: date-time
         titleAtMerge:
           type: string
-          description: The title of the pull request
+          description: The title of the test merge source.
         bodyAtMerge:
           type: string
-          description: The body of the pull request
+          description: The body of the test merge source.
         url:
           type: string
-          description: The URL of the pull request
+          description: The URL of the test merge source.
         author:
           type: string
-          description: The author of the pull request
+          description: The author of the test merge source.
         number:
           type: integer
-          description: The number of the pull request
+          description: The number of the test merge source.
           format: int32
-        pullRequestRevision:
+        targetCommitSha:
           maxLength: 40
           minLength: 0
           type: string
-          description: The sha of the pull request revision to merge. If not specified, the latest commit shall be used (semi-unsafe)
+          description: The sha of the test merge revision to merge. If not specified, the latest commit shall be used (semi-unsafe)
         comment:
           maxLength: 10000
           minLength: 0
@@ -3443,6 +4080,11 @@ components:
         byondVersion:
           type: string
           description: The Tgstation.Server.Api.Models.Byond.Version the Tgstation.Server.Api.Models.CompileJob was made with
+          nullable: true
+        repositoryOrigin:
+          type: string
+          description: The origin System.Uri of the repository the compile job was built from.
+          format: uri
           nullable: true
         dmeName:
           type: string
@@ -3600,6 +4242,58 @@ components:
           nullable: true
       additionalProperties: false
       description: Represents the state of the DreamMaker compiler. Create action starts a new compile. Delete action cancels the current compile
+    PaginatedCompileJob:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompileJob'
+          description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+        totalPages:
+          type: integer
+          description: The total number of pages in the query.
+          format: int32
+        pageSize:
+          type: integer
+          description: The current size of pages in the query.
+          format: int32
+      additionalProperties: false
+      description: Represents a paginated set of models.
+      nullable: true
+    SwarmServer:
+      type: object
+      properties:
+        controller:
+          type: boolean
+          description: If the Tgstation.Server.Api.Models.SwarmServer is the controller.
+        address:
+          type: string
+          description: The public address of the server.
+          format: uri
+        identifier:
+          type: string
+          description: The server's identifier.
+      additionalProperties: false
+    OAuthProviderInfo:
+      type: object
+      properties:
+        clientId:
+          type: string
+          description: The client ID.
+          nullable: true
+        redirectUri:
+          type: string
+          description: The redirect URL.
+          format: uri
+          nullable: true
+        serverUrl:
+          type: string
+          description: The server URL.
+          format: uri
+          nullable: true
+      additionalProperties: false
+      description: Public information about a given Tgstation.Server.Api.Models.OAuthProvider.
     ServerInformation:
       type: object
       properties:
@@ -3614,6 +4308,31 @@ components:
         dmApiVersion:
           type: string
           description: The DMAPI version of the host.
+          nullable: true
+        windowsHost:
+          type: boolean
+          description: If the server is running on a windows operating system.
+        updateInProgress:
+          type: boolean
+          description: If there is a server update in progress.
+        swarmServers:
+          type: array
+          items:
+            $ref: '#/components/schemas/SwarmServer'
+          description: A System.Collections.Generic.ICollection`1 of connected Tgstation.Server.Api.Models.SwarmServers.
+          nullable: true
+        oAuthProviderInfos:
+          type: object
+          properties:
+            GitHub:
+              $ref: '#/components/schemas/OAuthProviderInfo'
+            Discord:
+              $ref: '#/components/schemas/OAuthProviderInfo'
+            TGForums:
+              $ref: '#/components/schemas/OAuthProviderInfo'
+            Keycloak:
+              $ref: '#/components/schemas/OAuthProviderInfo'
+          description: Map of Tgstation.Server.Api.Models.OAuthProvider to the Tgstation.Server.Api.Models.OAuthProviderInfo for them.
           nullable: true
         minimumPasswordLength:
           type: integer
@@ -3701,7 +4420,26 @@ components:
           format: int64
       additionalProperties: false
       description: Metadata about a server instance
-    InstanceUserRights:
+    PaginatedInstance:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Instance'
+          description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+        totalPages:
+          type: integer
+          description: The total number of pages in the query.
+          format: int32
+        pageSize:
+          type: integer
+          description: The current size of pages in the query.
+          format: int32
+      additionalProperties: false
+      description: Represents a paginated set of models.
+      nullable: true
+    InstancePermissionSetRights:
       enum:
       - 0
       - 1
@@ -3712,9 +4450,9 @@ components:
       format: int64
       x-enum-varnames:
       - None
-      - ReadUsers
-      - WriteUsers
-      - CreateUsers
+      - Read
+      - Write
+      - Create
     ByondRights:
       enum:
       - 0
@@ -3877,62 +4615,112 @@ components:
       - Write
       - List
       - Delete
-    InstanceUser:
+    InstancePermissionSet:
       type: object
       properties:
-        userId:
+        permissionSetId:
           type: integer
-          description: The Tgstation.Server.Api.Models.Internal.User.Id of the Tgstation.Server.Api.Models.User the Tgstation.Server.Api.Models.InstanceUser belongs to
+          description: The Tgstation.Server.Api.Models.EntityId.Id of the Tgstation.Server.Api.Models.PermissionSet the Tgstation.Server.Api.Models.InstancePermissionSet belongs to
           format: int64
-        instanceUserRights:
+        instancePermissionSetRights:
           allOf:
-          - $ref: '#/components/schemas/InstanceUserRights'
-          description: The Tgstation.Server.Api.Rights.InstanceUserRights of the Tgstation.Server.Api.Models.InstanceUser
+          - $ref: '#/components/schemas/InstancePermissionSetRights'
+          description: The Tgstation.Server.Api.Rights.InstancePermissionSetRights of the Tgstation.Server.Api.Models.InstancePermissionSet
           nullable: true
         byondRights:
           allOf:
           - $ref: '#/components/schemas/ByondRights'
-          description: The Tgstation.Server.Api.Rights.ByondRights of the Tgstation.Server.Api.Models.InstanceUser
+          description: The Tgstation.Server.Api.Rights.ByondRights of the Tgstation.Server.Api.Models.InstancePermissionSet
           nullable: true
         dreamDaemonRights:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonRights'
-          description: The Tgstation.Server.Api.Rights.DreamDaemonRights of the Tgstation.Server.Api.Models.InstanceUser
+          description: The Tgstation.Server.Api.Rights.DreamDaemonRights of the Tgstation.Server.Api.Models.InstancePermissionSet
           nullable: true
         dreamMakerRights:
           allOf:
           - $ref: '#/components/schemas/DreamMakerRights'
-          description: The Tgstation.Server.Api.Rights.DreamMakerRights of the Tgstation.Server.Api.Models.InstanceUser
+          description: The Tgstation.Server.Api.Rights.DreamMakerRights of the Tgstation.Server.Api.Models.InstancePermissionSet
           nullable: true
         repositoryRights:
           allOf:
           - $ref: '#/components/schemas/RepositoryRights'
-          description: The Tgstation.Server.Api.Rights.RepositoryRights of the Tgstation.Server.Api.Models.InstanceUser
+          description: The Tgstation.Server.Api.Rights.RepositoryRights of the Tgstation.Server.Api.Models.InstancePermissionSet
           nullable: true
         chatBotRights:
           allOf:
           - $ref: '#/components/schemas/ChatBotRights'
-          description: The Tgstation.Server.Api.Rights.ChatBotRights of the Tgstation.Server.Api.Models.InstanceUser
+          description: The Tgstation.Server.Api.Rights.ChatBotRights of the Tgstation.Server.Api.Models.InstancePermissionSet
           nullable: true
         configurationRights:
           allOf:
           - $ref: '#/components/schemas/ConfigurationRights'
-          description: The Tgstation.Server.Api.Rights.ConfigurationRights of the Tgstation.Server.Api.Models.InstanceUser
+          description: The Tgstation.Server.Api.Rights.ConfigurationRights of the Tgstation.Server.Api.Models.InstancePermissionSet
           nullable: true
       additionalProperties: false
-      description: Represents a Tgstation.Server.Api.Models.Users permissions in an Tgstation.Server.Api.Models.Instance
+      description: Represents a Tgstation.Server.Api.Models.PermissionSets permissions in an Tgstation.Server.Api.Models.Instance
+    PaginatedInstancePermissionSet:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstancePermissionSet'
+          description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+        totalPages:
+          type: integer
+          description: The total number of pages in the query.
+          format: int32
+        pageSize:
+          type: integer
+          description: The current size of pages in the query.
+          format: int32
+      additionalProperties: false
+      description: Represents a paginated set of models.
+      nullable: true
+    PaginatedJob:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Job'
+          description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+        totalPages:
+          type: integer
+          description: The total number of pages in the query.
+          format: int32
+        pageSize:
+          type: integer
+          description: The current size of pages in the query.
+          format: int32
+      additionalProperties: false
+      description: Represents a paginated set of models.
+      nullable: true
+    RemoteGitProvider:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      description: Indicates the remote git host.
+      format: int32
+      x-enum-varnames:
+      - Unknown
+      - GitHub
+      - GitLab
     TestMergeParameters:
       type: object
       properties:
         number:
           type: integer
-          description: The number of the pull request
+          description: The number of the test merge source.
           format: int32
-        pullRequestRevision:
+        targetCommitSha:
           maxLength: 40
           minLength: 0
           type: string
-          description: The sha of the pull request revision to merge. If not specified, the latest commit shall be used (semi-unsafe)
+          description: The sha of the test merge revision to merge. If not specified, the latest commit shall be used (semi-unsafe)
         comment:
           maxLength: 10000
           minLength: 0
@@ -3947,6 +4735,7 @@ components:
         origin:
           type: string
           description: The origin URL. If <see langword="null" />, the Tgstation.Server.Api.Models.Repository does not exist
+          format: uri
           nullable: true
         recurseSubmodules:
           type: boolean
@@ -3963,13 +4752,15 @@ components:
           - $ref: '#/components/schemas/RevisionInformation'
           description: The current Tgstation.Server.Api.Models.RevisionInformation for the Tgstation.Server.Api.Models.Repository
           nullable: true
-        gitHubOwner:
-          type: string
-          description: If the repository was cloned from GitHub.com this will be set with the owner of the repository
+        remoteGitProvider:
+          allOf:
+          - $ref: '#/components/schemas/RemoteGitProvider'
           nullable: true
-        gitHubName:
+        remoteRepositoryOwner:
           type: string
-          description: If the repository was cloned from GitHub.com this will be set with the name of the repository
+          nullable: true
+        remoteRepositoryName:
+          type: string
           nullable: true
         activeJob:
           allOf:
@@ -4041,6 +4832,39 @@ components:
           nullable: true
       additionalProperties: false
       description: Represents a git repository
+    SwarmRegistrationRequest:
+      type: object
+      properties:
+        serverVersion:
+          type: string
+          description: The TGS System.Version of the sending server.
+        address:
+          type: string
+          description: The public address of the server.
+          format: uri
+        identifier:
+          type: string
+          description: The server's identifier.
+      additionalProperties: false
+      description: A request to register with a swarm controller.
+    SwarmServersUpdateRequest:
+      type: object
+      properties:
+        swarmServers:
+          type: array
+          items:
+            $ref: '#/components/schemas/SwarmServer'
+          description: The System.Collections.Generic.ICollection`1 of updated Tgstation.Server.Api.Models.SwarmServers.
+      additionalProperties: false
+      description: A request to update a nodes list of Tgstation.Server.Host.Swarm.SwarmServersUpdateRequest.SwarmServers.
+    SwarmUpdateRequest:
+      type: object
+      properties:
+        updateVersion:
+          type: string
+          description: The TGS System.Version to update to.
+      additionalProperties: false
+      description: A request to update the swarm's TGS version.
     UserUpdate:
       type: object
       properties:
@@ -4051,6 +4875,21 @@ components:
           allOf:
           - $ref: '#/components/schemas/ShallowUser'
           description: The Tgstation.Server.Api.Models.User who created this Tgstation.Server.Api.Models.User
+        oAuthConnections:
+          type: array
+          items:
+            $ref: '#/components/schemas/OAuthConnection'
+          description: List of Tgstation.Server.Api.Models.OAuthConnections associated with the Tgstation.Server.Api.Models.User.
+          nullable: true
+        permissionSet:
+          allOf:
+          - $ref: '#/components/schemas/PermissionSet'
+          description: The Tgstation.Server.Api.Models.PermissionSet directly associated with the Tgstation.Server.Api.Models.User.
+          nullable: true
+        group:
+          allOf:
+          - $ref: '#/components/schemas/ShallowUserGroup'
+          description: The Tgstation.Server.Api.Models.UserGroup asociated with the Tgstation.Server.Api.Models.User, if any.
           nullable: true
         id:
           type: integer
@@ -4067,26 +4906,80 @@ components:
           format: date-time
           nullable: true
         systemIdentifier:
+          maxLength: 100
+          minLength: 1
           type: string
           description: The SID/UID of the Tgstation.Server.Api.Models.Internal.User on Windows/POSIX respectively
           nullable: true
         name:
-          maxLength: 10000
-          minLength: 0
+          maxLength: 100
+          minLength: 1
           type: string
           description: The name of the Tgstation.Server.Api.Models.Internal.User
-        administrationRights:
-          allOf:
-          - $ref: '#/components/schemas/AdministrationRights'
-          description: The Tgstation.Server.Api.Rights.AdministrationRights for the Tgstation.Server.Api.Models.Internal.User
-          nullable: true
-        instanceManagerRights:
-          allOf:
-          - $ref: '#/components/schemas/InstanceManagerRights'
-          description: The Tgstation.Server.Api.Rights.InstanceManagerRights for the Tgstation.Server.Api.Models.Internal.User
-          nullable: true
       additionalProperties: false
       description: For editing a given Tgstation.Server.Api.Models.User. Will never be returned by the API
+    PaginatedUser:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+        totalPages:
+          type: integer
+          description: The total number of pages in the query.
+          format: int32
+        pageSize:
+          type: integer
+          description: The current size of pages in the query.
+          format: int32
+      additionalProperties: false
+      description: Represents a paginated set of models.
+      nullable: true
+    UserGroup:
+      type: object
+      properties:
+        permissionSet:
+          allOf:
+          - $ref: '#/components/schemas/PermissionSet'
+          description: The Tgstation.Server.Api.Models.PermissionSet of the Tgstation.Server.Api.Models.UserGroup.
+          nullable: true
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShallowUser'
+          description: The Tgstation.Server.Api.Models.Users the Tgstation.Server.Api.Models.UserGroup has.
+          nullable: true
+        name:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: The name of the Tgstation.Server.Api.Models.Internal.UserGroup.
+        id:
+          type: integer
+          description: The ID of the entity.
+          format: int64
+      additionalProperties: false
+    PaginatedUserGroup:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserGroup'
+          description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+        totalPages:
+          type: integer
+          description: The total number of pages in the query.
+          format: int32
+        pageSize:
+          type: integer
+          description: The current size of pages in the query.
+          format: int32
+      additionalProperties: false
+      description: Represents a paginated set of models.
+      nullable: true
   responses:
     400:
       description: A badly formatted request was made. See error message for details.
@@ -4142,7 +5035,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/7.4.0
+      example: Tgstation.Server.Api/8.0.0
     User-Agent:
       name: User-Agent
       in: header
@@ -4156,8 +5049,11 @@ components:
   securitySchemes:
     Password_Login_Scheme:
       type: http
-      scheme: basic
+      scheme: Basic
+    OAuth_Login_Scheme:
+      type: http
+      scheme: OAuth
     Token_Authorization_Scheme:
       type: http
-      scheme: bearer
+      scheme: Bearer
       bearerFormat: JWT
