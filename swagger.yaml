@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 8.0.0
+  version: 8.1.0
 paths:
   /Administration:
     get:
@@ -2804,6 +2804,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessage'
+        410:
+          description: Requested Tgstation.Server.Api.Models.User.Group does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -3335,6 +3341,8 @@ components:
       - 97
       - 98
       - 99
+      - 100
+      - 101
       type: integer
       description: Types of Tgstation.Server.Api.Models.ErrorMessages that the API may return.
       format: int32
@@ -3439,6 +3447,8 @@ components:
       - FileUploadExpired
       - UserGroupAndPermissionSet
       - UserGroupNotEmpty
+      - UserLimitReached
+      - UserGroupLimitReached
     ErrorMessage:
       type: object
       properties:
@@ -4346,6 +4356,10 @@ components:
           type: integer
           description: The maximum number of Tgstation.Server.Api.Models.Users allowed.
           format: int32
+        userGroupLimit:
+          type: integer
+          description: The maximum number of Tgstation.Server.Api.Models.UserGroups allowed.
+          format: int32
         validInstancePaths:
           type: array
           items:
@@ -5035,7 +5049,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/8.0.0
+      example: Tgstation.Server.Api/8.1.0
     User-Agent:
       name: User-Agent
       in: header
