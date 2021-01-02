@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 8.1.0
+  version: 8.1.1
 paths:
   /Administration:
     get:
@@ -2799,7 +2799,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         404:
-          description: Requested Tgstation.Server.Api.Models.Internal.User.Id does not exist.
+          description: Requested Tgstation.Server.Api.Models.Internal.UserBase.Id does not exist.
           content:
             application/json:
               schema:
@@ -2922,11 +2922,11 @@ paths:
       - $ref: '#/components/parameters/User-Agent'
       - name: id
         in: path
-        description: The Tgstation.Server.Api.Models.Internal.User.Id to retrieve.
+        description: The Tgstation.Server.Api.Models.Internal.UserBase.Id to retrieve.
         required: true
         schema:
           type: integer
-          description: The Tgstation.Server.Api.Models.Internal.User.Id to retrieve.
+          description: The Tgstation.Server.Api.Models.Internal.UserBase.Id to retrieve.
           format: int64
       responses:
         200:
@@ -3019,7 +3019,7 @@ paths:
     post:
       tags:
       - UserGroup
-      summary: Update a new Tgstation.Server.Api.Models.UserGroup.
+      summary: Update a Tgstation.Server.Api.Models.UserGroup.
       operationId: UserGroupController.Update
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -3173,7 +3173,7 @@ paths:
     get:
       tags:
       - UserGroup
-      summary: Lists Tgstation.Server.Api.Models.UserGroups for the instance.
+      summary: Lists all Tgstation.Server.Api.Models.UserGroups.
       operationId: UserGroupController.List
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -3512,28 +3512,13 @@ components:
           description: The ID of the Tgstation.Server.Api.Models.Internal.User
           format: int64
           nullable: true
-        enabled:
-          type: boolean
-          description: If the Tgstation.Server.Api.Models.Internal.User is enabled since users cannot be deleted. System users cannot be disabled
-          nullable: true
-        createdAt:
-          type: string
-          description: When the Tgstation.Server.Api.Models.Internal.User was created
-          format: date-time
-          nullable: true
-        systemIdentifier:
-          maxLength: 100
-          minLength: 1
-          type: string
-          description: The SID/UID of the Tgstation.Server.Api.Models.Internal.User on Windows/POSIX respectively
-          nullable: true
         name:
           maxLength: 100
           minLength: 1
           type: string
           description: The name of the Tgstation.Server.Api.Models.Internal.User
       additionalProperties: false
-      description: Represents a server Tgstation.Server.Api.Models.Internal.User
+      description: Base class for Tgstation.Server.Api.Models.Internal.User.
     OAuthProvider:
       enum:
       - GitHub
@@ -3636,6 +3621,11 @@ components:
     ShallowUserGroup:
       type: object
       properties:
+        permissionSet:
+          allOf:
+          - $ref: '#/components/schemas/PermissionSet'
+          description: The Tgstation.Server.Api.Models.PermissionSet of the Tgstation.Server.Api.Models.Internal.UserGroup.
+          nullable: true
         name:
           maxLength: 100
           minLength: 1
@@ -3668,12 +3658,7 @@ components:
         group:
           allOf:
           - $ref: '#/components/schemas/ShallowUserGroup'
-          description: The Tgstation.Server.Api.Models.UserGroup asociated with the Tgstation.Server.Api.Models.User, if any.
-          nullable: true
-        id:
-          type: integer
-          description: The ID of the Tgstation.Server.Api.Models.Internal.User
-          format: int64
+          description: The Tgstation.Server.Api.Models.Internal.UserGroup asociated with the Tgstation.Server.Api.Models.User, if any.
           nullable: true
         enabled:
           type: boolean
@@ -3689,6 +3674,11 @@ components:
           minLength: 1
           type: string
           description: The SID/UID of the Tgstation.Server.Api.Models.Internal.User on Windows/POSIX respectively
+          nullable: true
+        id:
+          type: integer
+          description: The ID of the Tgstation.Server.Api.Models.Internal.User
+          format: int64
           nullable: true
         name:
           maxLength: 100
@@ -4903,12 +4893,7 @@ components:
         group:
           allOf:
           - $ref: '#/components/schemas/ShallowUserGroup'
-          description: The Tgstation.Server.Api.Models.UserGroup asociated with the Tgstation.Server.Api.Models.User, if any.
-          nullable: true
-        id:
-          type: integer
-          description: The ID of the Tgstation.Server.Api.Models.Internal.User
-          format: int64
+          description: The Tgstation.Server.Api.Models.Internal.UserGroup asociated with the Tgstation.Server.Api.Models.User, if any.
           nullable: true
         enabled:
           type: boolean
@@ -4924,6 +4909,11 @@ components:
           minLength: 1
           type: string
           description: The SID/UID of the Tgstation.Server.Api.Models.Internal.User on Windows/POSIX respectively
+          nullable: true
+        id:
+          type: integer
+          description: The ID of the Tgstation.Server.Api.Models.Internal.User
+          format: int64
           nullable: true
         name:
           maxLength: 100
@@ -4954,16 +4944,16 @@ components:
     UserGroup:
       type: object
       properties:
-        permissionSet:
-          allOf:
-          - $ref: '#/components/schemas/PermissionSet'
-          description: The Tgstation.Server.Api.Models.PermissionSet of the Tgstation.Server.Api.Models.UserGroup.
-          nullable: true
         users:
           type: array
           items:
             $ref: '#/components/schemas/ShallowUser'
           description: The Tgstation.Server.Api.Models.Users the Tgstation.Server.Api.Models.UserGroup has.
+          nullable: true
+        permissionSet:
+          allOf:
+          - $ref: '#/components/schemas/PermissionSet'
+          description: The Tgstation.Server.Api.Models.PermissionSet of the Tgstation.Server.Api.Models.Internal.UserGroup.
           nullable: true
         name:
           maxLength: 100
@@ -5049,7 +5039,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/8.1.0
+      example: Tgstation.Server.Api/8.1.1
     User-Agent:
       name: User-Agent
       in: header
