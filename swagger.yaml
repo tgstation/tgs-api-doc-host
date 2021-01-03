@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 8.1.1
+  version: 8.1.2
 paths:
   /Administration:
     get:
@@ -1925,6 +1925,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InstancePermissionSet'
+        410:
+          description: The Tgstation.Server.Api.Models.PermissionSet does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -5039,7 +5045,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/8.1.1
+      example: Tgstation.Server.Api/8.1.2
     User-Agent:
       name: User-Agent
       in: header
