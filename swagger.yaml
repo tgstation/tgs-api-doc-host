@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 8.1.2
+  version: 8.3.0
 paths:
   /Administration:
     get:
@@ -555,11 +555,11 @@ paths:
       - $ref: '#/components/parameters/Instance'
       - name: id
         in: path
-        description: The Tgstation.Server.Api.Models.Internal.ChatBot.Id to delete.
+        description: The Tgstation.Server.Api.Models.EntityId.Id to delete.
         required: true
         schema:
           type: integer
-          description: The Tgstation.Server.Api.Models.Internal.ChatBot.Id to delete.
+          description: The Tgstation.Server.Api.Models.EntityId.Id to delete.
           format: int64
       responses:
         204:
@@ -593,11 +593,11 @@ paths:
       - $ref: '#/components/parameters/Instance'
       - name: id
         in: path
-        description: The Tgstation.Server.Api.Models.Internal.ChatBot.Id to retrieve.
+        description: The Tgstation.Server.Api.Models.EntityId.Id to retrieve.
         required: true
         schema:
           type: integer
-          description: The Tgstation.Server.Api.Models.Internal.ChatBot.Id to retrieve.
+          description: The Tgstation.Server.Api.Models.EntityId.Id to retrieve.
           format: int64
       responses:
         200:
@@ -1817,6 +1817,12 @@ paths:
       responses:
         204:
           description: Granted permissions successfully.
+        410:
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -3873,10 +3879,6 @@ components:
             $ref: '#/components/schemas/ChatChannel'
           description: Channels the Discord bot should listen/announce in
           nullable: true
-        id:
-          type: integer
-          description: The settings id
-          format: int64
         name:
           maxLength: 100
           minLength: 1
@@ -3908,6 +3910,10 @@ components:
           minLength: 0
           type: string
           description: The information used to connect to the Tgstation.Server.Api.Models.Internal.ChatBot.Provider
+        id:
+          type: integer
+          description: The ID of the entity.
+          format: int64
       additionalProperties: false
     PaginatedChatBot:
       type: object
@@ -4051,12 +4057,16 @@ components:
           maxLength: 40
           minLength: 0
           type: string
-          description: The revision sha
+          description: The revision SHA.
+        timestamp:
+          type: string
+          description: The timestamp of the revision.
+          format: date-time
         originCommitSha:
           maxLength: 40
           minLength: 0
           type: string
-          description: The sha of the most recent remote commit
+          description: The SHA of the most recent remote commit.
       additionalProperties: false
     DreamDaemonSecurity:
       enum:
@@ -4313,7 +4323,7 @@ components:
           nullable: true
         dmApiVersion:
           type: string
-          description: The DMAPI version of the host.
+          description: The DMAPI interop version the server uses.
           nullable: true
         windowsHost:
           type: boolean
@@ -5045,7 +5055,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/8.1.2
+      example: Tgstation.Server.Api/8.3.0
     User-Agent:
       name: User-Agent
       in: header
