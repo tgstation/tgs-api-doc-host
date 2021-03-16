@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 9.0.0
+  version: 9.0.1
 servers:
 - url: http://localhost:5010
 paths:
@@ -5042,6 +5042,7 @@ components:
           minLength: 0
           type: string
           description: The sha of the test merge revision to merge. If not specified, the latest commit shall be used (semi-unsafe)
+          nullable: true
         comment:
           maxLength: 10000
           minLength: 0
@@ -5329,7 +5330,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/9.0.0
+      example: Tgstation.Server.Api/9.0.1
     User-Agent:
       name: User-Agent
       in: header
