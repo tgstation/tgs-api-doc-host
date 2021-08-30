@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 9.1.0
+  version: 9.2.0
 paths:
   /Administration:
     get:
@@ -3593,7 +3593,12 @@ components:
         currentSecurity:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonSecurity'
-          description: The current Tgstation.Server.Api.Models.DreamDaemonSecurity of Tgstation.Server.Api.Models.Response.DreamDaemonResponse. May be downgraded due to requirements of Tgstation.Server.Api.Models.Response.DreamDaemonResponse.ActiveCompileJob.
+          description: The current Tgstation.Server.Api.Models.DreamDaemonSecurity. May be upgraded. due to requirements of Tgstation.Server.Api.Models.Response.DreamDaemonResponse.ActiveCompileJob.
+          nullable: true
+        currentVisibility:
+          allOf:
+          - $ref: '#/components/schemas/DreamDaemonVisibility'
+          description: The current Tgstation.Server.Api.Models.DreamDaemonVisibility.
           nullable: true
         currentPort:
           type: integer
@@ -3619,6 +3624,11 @@ components:
         allowWebClient:
           type: boolean
           description: If the BYOND web client can be used to connect to the game server.
+          nullable: true
+        visibility:
+          allOf:
+          - $ref: '#/components/schemas/DreamDaemonVisibility'
+          description: The Tgstation.Server.Api.Models.DreamDaemonVisibility level of DreamDaemon.
           nullable: true
         securityLevel:
           allOf:
@@ -3678,6 +3688,7 @@ components:
       - 8192
       - 16384
       - 32768
+      - 65536
       type: integer
       description: Rights for managing DreamDaemon.
       format: int64
@@ -3699,6 +3710,7 @@ components:
       - CreateDump
       - SetTopicTimeout
       - SetAdditionalParameters
+      - SetVisibility
     DreamDaemonSecurity:
       enum:
       - 0
@@ -3711,6 +3723,18 @@ components:
       - Trusted
       - Safe
       - Ultrasafe
+    DreamDaemonVisibility:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      description: The visibility setting for DreamDaemon.
+      format: int32
+      x-enum-varnames:
+      - Public
+      - Private
+      - Invisible
     DreamMakerRequest:
       type: object
       properties:
@@ -3736,6 +3760,11 @@ components:
           type: boolean
           description: If API validation should be required for a deployment to succeed.
           nullable: true
+        timeout:
+          type: string
+          description: Amount of time before an in-progress deployment is cancelled.
+          format: date-span
+          nullable: true
       additionalProperties: false
       description: A request to the DreamMaker controller.
     DreamMakerResponse:
@@ -3760,6 +3789,10 @@ components:
         requireDMApiValidation:
           type: boolean
           description: If API validation should be required for a deployment to succeed.
+        timeout:
+          type: string
+          description: Amount of time before an in-progress deployment is cancelled.
+          format: date-span
       additionalProperties: false
       description: A request to the DreamMaker controller.
     DreamMakerRights:
@@ -3773,6 +3806,7 @@ components:
       - 32
       - 64
       - 128
+      - 256
       type: integer
       description: Rights for deployment.
       format: int64
@@ -3786,6 +3820,7 @@ components:
       - CompileJobs
       - SetSecurityLevel
       - SetApiValidationRequirement
+      - SetTimeout
     EntityId:
       type: object
       properties:
@@ -3900,6 +3935,7 @@ components:
       - 99
       - 100
       - 101
+      - 102
       type: integer
       description: Types of Tgstation.Server.Api.Models.Response.ErrorMessageResponses that the API may return.
       format: int32
@@ -4006,6 +4042,7 @@ components:
       - UserGroupNotEmpty
       - UserLimitReached
       - UserGroupLimitReached
+      - DeploymentTimeout
     ErrorMessageResponse:
       type: object
       properties:
@@ -4591,8 +4628,9 @@ components:
           format: uri
         recurseSubmodules:
           type: boolean
-          description: If submodules should be recursively cloned.
+          description: If submodules should be recursively cloned. Note that further updates are not recursive.
           nullable: true
+          deprecated: true
         reference:
           maxLength: 10000
           minLength: 0
@@ -4647,6 +4685,10 @@ components:
         postTestMergeComment:
           type: boolean
           description: If test merging should create a comment. Requires Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessToken to be set to function.
+          nullable: true
+        updateSubmodules:
+          type: boolean
+          description: Do the equivalent of a `git submodule update --init` alongside any resets to origin, checkouts, or test merge additions. Note that this action is recursive ONLY during cloning.
           nullable: true
       additionalProperties: false
       description: Represents a request to clone the repository.
@@ -4719,6 +4761,9 @@ components:
         postTestMergeComment:
           type: boolean
           description: If test merging should create a comment. Requires Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessToken to be set to function.
+        updateSubmodules:
+          type: boolean
+          description: Do the equivalent of a `git submodule update --init` alongside any resets to origin, checkouts, or test merge additions. Note that this action is recursive ONLY during cloning.
       additionalProperties: false
       description: Represents a git repository.
     RepositoryRights:
@@ -4737,6 +4782,7 @@ components:
       - 1024
       - 2048
       - 4096
+      - 8192
       type: integer
       description: Rights for the git repository.
       format: int64
@@ -4755,6 +4801,7 @@ components:
       - ChangeAutoUpdateSettings
       - Delete
       - CancelClone
+      - ChangeSubmoduleUpdate
     RepositoryUpdateRequest:
       type: object
       properties:
@@ -4767,10 +4814,6 @@ components:
         updateFromOrigin:
           type: boolean
           description: Do the equivalent of a `git pull`. Will attempt to merge unless Tgstation.Server.Api.Models.Internal.RepositoryApiBase.Reference is also specified in which case a hard reset will be performed after checking out.
-          nullable: true
-        updateSubmodules:
-          type: boolean
-          description: Do the equivalent of a `git submodule update --init --recursive` alongside any resets to origin, checkouts, or test merge additions.
           nullable: true
         newTestMerges:
           type: array
@@ -4832,6 +4875,10 @@ components:
         postTestMergeComment:
           type: boolean
           description: If test merging should create a comment. Requires Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessToken to be set to function.
+          nullable: true
+        updateSubmodules:
+          type: boolean
+          description: Do the equivalent of a `git submodule update --init` alongside any resets to origin, checkouts, or test merge additions. Note that this action is recursive ONLY during cloning.
           nullable: true
       additionalProperties: false
       description: Represents a request to change the repository.
@@ -5335,7 +5382,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/9.1.0
+      example: Tgstation.Server.Api/9.2.0
     User-Agent:
       name: User-Agent
       in: header
