@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 9.2.0
+  version: 9.3.0
 paths:
   /Administration:
     get:
@@ -4310,6 +4310,10 @@ components:
           description: Optional progress between 0 and 100 inclusive.
           format: int32
           nullable: true
+        stage:
+          type: string
+          description: Optional description of the job's current .
+          nullable: true
         description:
           type: string
           description: English description of the Tgstation.Server.Api.Models.Internal.Job.
@@ -5382,7 +5386,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/9.2.0
+      example: Tgstation.Server.Api/9.3.0
     User-Agent:
       name: User-Agent
       in: header
