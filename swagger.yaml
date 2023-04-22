@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 9.3.0
+  version: 9.9.0
 paths:
   /Administration:
     get:
@@ -1116,28 +1116,28 @@ paths:
       - $ref: '#/components/parameters/User-Agent'
       - $ref: '#/components/parameters/Instance'
       requestBody:
-        description: The updated Tgstation.Server.Api.Models.Response.DreamDaemonResponse settings.
+        description: The Tgstation.Server.Api.Models.Request.DreamDaemonRequest with updated settings.
         content:
           application/json-patch+json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/DreamDaemonResponse'
-              description: Represents an instance of BYOND's DreamDaemon game server. Create action starts the server. Delete action shuts down the server.
+              - $ref: '#/components/schemas/DreamDaemonRequest'
+              description: A request to update Tgstation.Server.Api.Models.Internal.DreamDaemonSettings.
           application/json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/DreamDaemonResponse'
-              description: Represents an instance of BYOND's DreamDaemon game server. Create action starts the server. Delete action shuts down the server.
+              - $ref: '#/components/schemas/DreamDaemonRequest'
+              description: A request to update Tgstation.Server.Api.Models.Internal.DreamDaemonSettings.
           text/json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/DreamDaemonResponse'
-              description: Represents an instance of BYOND's DreamDaemon game server. Create action starts the server. Delete action shuts down the server.
+              - $ref: '#/components/schemas/DreamDaemonRequest'
+              description: A request to update Tgstation.Server.Api.Models.Internal.DreamDaemonSettings.
           application/*+json:
             schema:
               allOf:
-              - $ref: '#/components/schemas/DreamDaemonResponse'
-              description: Represents an instance of BYOND's DreamDaemon game server. Create action starts the server. Delete action shuts down the server.
+              - $ref: '#/components/schemas/DreamDaemonRequest'
+              description: A request to update Tgstation.Server.Api.Models.Internal.DreamDaemonSettings.
         required: true
       responses:
         200:
@@ -2766,7 +2766,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserResponse'
         204:
-          description: Success
+          description: No Content
         404:
           description: Requested Tgstation.Server.Api.Models.EntityId.Id does not exist.
           content:
@@ -3431,6 +3431,16 @@ components:
     ChatChannel:
       type: object
       properties:
+        channelData:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: >-
+            The channel identifier. Supercedes Tgstation.Server.Api.Models.ChatChannel.IrcChannel and Tgstation.Server.Api.Models.ChatChannel.DiscordChannelId.
+
+            For Tgstation.Server.Api.Models.ChatProvider.Irc, it's the IRC channel name and optional password colon separated.
+
+            For Tgstation.Server.Api.Models.ChatProvider.Discord, it's the stringified Discord channel snowflake.
         ircChannel:
           maxLength: 100
           minLength: 1
@@ -3440,11 +3450,13 @@ components:
 
             If multiple copies of the same channel with different keys are added to the server, the one that will be used is undefined.
           nullable: true
+          deprecated: true
         discordChannelId:
           type: integer
           description: The Discord channel ID.
           format: int64
           nullable: true
+          deprecated: true
         isAdminChannel:
           type: boolean
           description: If the Tgstation.Server.Api.Models.ChatChannel is an admin channel.
@@ -3491,9 +3503,11 @@ components:
           description: The origin System.Uri of the repository the compile job was built from.
           format: uri
         dmeName:
+          minLength: 1
           type: string
           description: The .dme file used for compilation.
         output:
+          minLength: 1
           type: string
           description: Textual output of DM.
         directoryName:
@@ -3572,6 +3586,81 @@ components:
       - Disallowed
       - HostWrite
       - SystemIdentityWrite
+    DreamDaemonRequest:
+      type: object
+      properties:
+        softRestart:
+          type: boolean
+          description: If the server is undergoing a soft reset. This may be automatically set by changes to other fields.
+          nullable: true
+        softShutdown:
+          type: boolean
+          description: If the server is undergoing a soft shutdown.
+          nullable: true
+        autoStart:
+          type: boolean
+          description: If the watchdog starts when it's Tgstation.Server.Api.Models.Instance starts.
+          nullable: true
+        allowWebClient:
+          type: boolean
+          description: If the BYOND web client can be used to connect to the game server.
+          nullable: true
+        startProfiler:
+          type: boolean
+          description: If -profile is passed in on the DreamDaemon command line.
+          nullable: true
+        visibility:
+          allOf:
+          - $ref: '#/components/schemas/DreamDaemonVisibility'
+          description: The Tgstation.Server.Api.Models.DreamDaemonVisibility level of DreamDaemon.
+          nullable: true
+        securityLevel:
+          allOf:
+          - $ref: '#/components/schemas/DreamDaemonSecurity'
+          description: The Tgstation.Server.Api.Models.DreamDaemonSecurity level of DreamDaemon.
+          nullable: true
+        port:
+          maximum: 65535
+          minimum: 1
+          type: integer
+          description: The port DreamDaemon uses. This should be publically accessible.
+          format: int32
+          nullable: true
+        startupTimeout:
+          maximum: 4294967295
+          minimum: 1
+          type: integer
+          description: The DreamDaemon startup timeout in seconds.
+          format: int32
+          nullable: true
+        heartbeatSeconds:
+          type: integer
+          description: The number of seconds between each watchdog heartbeat. 0 disables.
+          format: int32
+          nullable: true
+        dumpOnHeartbeatRestart:
+          type: boolean
+          description: If a process core dump should be created prior to restarting the watchdog due to heartbeat failure.
+          nullable: true
+        topicRequestTimeout:
+          maximum: 4294967295
+          minimum: 1
+          type: integer
+          description: The timeout for sending and receiving BYOND topics in milliseconds.
+          format: int32
+          nullable: true
+        additionalParameters:
+          maxLength: 10000
+          minLength: 0
+          type: string
+          description: Parameters string for DreamDaemon.
+          nullable: true
+        logOutput:
+          type: boolean
+          description: If process output/error text should be logged.
+          nullable: true
+      additionalProperties: false
+      description: A request to update Tgstation.Server.Api.Models.Internal.DreamDaemonSettings.
     DreamDaemonResponse:
       type: object
       properties:
@@ -3625,6 +3714,10 @@ components:
           type: boolean
           description: If the BYOND web client can be used to connect to the game server.
           nullable: true
+        startProfiler:
+          type: boolean
+          description: If -profile is passed in on the DreamDaemon command line.
+          nullable: true
         visibility:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonVisibility'
@@ -3654,6 +3747,10 @@ components:
           description: The number of seconds between each watchdog heartbeat. 0 disables.
           format: int32
           nullable: true
+        dumpOnHeartbeatRestart:
+          type: boolean
+          description: If a process core dump should be created prior to restarting the watchdog due to heartbeat failure.
+          nullable: true
         topicRequestTimeout:
           maximum: 4294967295
           minimum: 1
@@ -3666,6 +3763,10 @@ components:
           minLength: 0
           type: string
           description: Parameters string for DreamDaemon.
+          nullable: true
+        logOutput:
+          type: boolean
+          description: If process output/error text should be logged.
           nullable: true
       additionalProperties: false
       description: Represents an instance of BYOND's DreamDaemon game server. Create action starts the server. Delete action shuts down the server.
@@ -3689,6 +3790,8 @@ components:
       - 16384
       - 32768
       - 65536
+      - 131072
+      - 262144
       type: integer
       description: Rights for managing DreamDaemon.
       format: int64
@@ -3711,6 +3814,8 @@ components:
       - SetTopicTimeout
       - SetAdditionalParameters
       - SetVisibility
+      - SetProfiler
+      - SetLogOutput
     DreamDaemonSecurity:
       enum:
       - 0
@@ -4066,6 +4171,7 @@ components:
       type: object
       properties:
         path:
+          minLength: 1
           type: string
           description: The path to where the Tgstation.Server.Api.Models.Instance is located. Can only be changed while the Tgstation.Server.Api.Models.Instance is offline. Must not exist when the instance is created.
         configurationType:
@@ -4227,6 +4333,7 @@ components:
           type: boolean
           description: If the querying user may access this instance.
         path:
+          minLength: 1
           type: string
           description: The path to where the Tgstation.Server.Api.Models.Instance is located. Can only be changed while the Tgstation.Server.Api.Models.Instance is offline. Must not exist when the instance is created.
         online:
@@ -4259,6 +4366,7 @@ components:
       type: object
       properties:
         path:
+          minLength: 1
           type: string
           description: The path to where the Tgstation.Server.Api.Models.Instance is located. Can only be changed while the Tgstation.Server.Api.Models.Instance is offline. Must not exist when the instance is created.
           nullable: true
@@ -4315,6 +4423,7 @@ components:
           description: Optional description of the job's current .
           nullable: true
         description:
+          minLength: 1
           type: string
           description: English description of the Tgstation.Server.Api.Models.Internal.Job.
         errorCode:
@@ -4389,6 +4498,7 @@ components:
       - Discord
       - TGForums
       - Keycloak
+      - InvisionCommunity
       type: string
       description: List of OAuth providers supported by TGS.
       x-enum-varnames:
@@ -4396,6 +4506,7 @@ components:
       - Discord
       - TGForums
       - Keycloak
+      - InvisionCommunity
     OAuthProviderInfo:
       type: object
       properties:
@@ -4429,6 +4540,10 @@ components:
           type: integer
           description: The current size of pages in the query.
           format: int32
+        totalItems:
+          type: integer
+          description: The total items across all pages.
+          format: int32
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedChatBotResponse:
@@ -4446,6 +4561,10 @@ components:
         pageSize:
           type: integer
           description: The current size of pages in the query.
+          format: int32
+        totalItems:
+          type: integer
+          description: The total items across all pages.
           format: int32
       additionalProperties: false
       description: Represents a paginated set of models.
@@ -4465,6 +4584,10 @@ components:
           type: integer
           description: The current size of pages in the query.
           format: int32
+        totalItems:
+          type: integer
+          description: The total items across all pages.
+          format: int32
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedConfigurationFileResponse:
@@ -4482,6 +4605,10 @@ components:
         pageSize:
           type: integer
           description: The current size of pages in the query.
+          format: int32
+        totalItems:
+          type: integer
+          description: The total items across all pages.
           format: int32
       additionalProperties: false
       description: Represents a paginated set of models.
@@ -4501,6 +4628,10 @@ components:
           type: integer
           description: The current size of pages in the query.
           format: int32
+        totalItems:
+          type: integer
+          description: The total items across all pages.
+          format: int32
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedInstanceResponse:
@@ -4518,6 +4649,10 @@ components:
         pageSize:
           type: integer
           description: The current size of pages in the query.
+          format: int32
+        totalItems:
+          type: integer
+          description: The total items across all pages.
           format: int32
       additionalProperties: false
       description: Represents a paginated set of models.
@@ -4537,6 +4672,10 @@ components:
           type: integer
           description: The current size of pages in the query.
           format: int32
+        totalItems:
+          type: integer
+          description: The total items across all pages.
+          format: int32
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedLogFileResponse:
@@ -4554,6 +4693,10 @@ components:
         pageSize:
           type: integer
           description: The current size of pages in the query.
+          format: int32
+        totalItems:
+          type: integer
+          description: The total items across all pages.
           format: int32
       additionalProperties: false
       description: Represents a paginated set of models.
@@ -4573,6 +4716,10 @@ components:
           type: integer
           description: The current size of pages in the query.
           format: int32
+        totalItems:
+          type: integer
+          description: The total items across all pages.
+          format: int32
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedUserResponse:
@@ -4590,6 +4737,10 @@ components:
         pageSize:
           type: integer
           description: The current size of pages in the query.
+          format: int32
+        totalItems:
+          type: integer
+          description: The total items across all pages.
           format: int32
       additionalProperties: false
       description: Represents a paginated set of models.
@@ -4701,7 +4852,7 @@ components:
       properties:
         origin:
           type: string
-          description: The origin URL. If <see langword="null" />, the git repository does not currently exist on the server.
+          description: The origin URL. If null, the git repository does not currently exist on the server.
           format: uri
           nullable: true
         revisionInformation:
@@ -4978,6 +5129,8 @@ components:
               $ref: '#/components/schemas/OAuthProviderInfo'
             Keycloak:
               $ref: '#/components/schemas/OAuthProviderInfo'
+            InvisionCommunity:
+              $ref: '#/components/schemas/OAuthProviderInfo'
           additionalProperties: false
           description: Map of Tgstation.Server.Api.Models.OAuthProvider to the Tgstation.Server.Api.Models.OAuthProviderInfo for them.
         minimumPasswordLength:
@@ -5040,6 +5193,7 @@ components:
           description: The public address of the server.
           format: uri
         identifier:
+          minLength: 1
           type: string
           description: The server's identifier.
       additionalProperties: false
@@ -5059,15 +5213,19 @@ components:
           description: When the Tgstation.Server.Api.Models.Internal.TestMergeApiBase was created.
           format: date-time
         titleAtMerge:
+          minLength: 1
           type: string
           description: The title of the test merge source.
         bodyAtMerge:
+          minLength: 1
           type: string
           description: The body of the test merge source.
         url:
+          minLength: 1
           type: string
           description: The URL of the test merge source.
         author:
+          minLength: 1
           type: string
           description: The author of the test merge source.
         number:
@@ -5123,6 +5281,7 @@ components:
       type: object
       properties:
         password:
+          minLength: 1
           type: string
           description: Cleartext password of the user.
           nullable: true
@@ -5279,6 +5438,7 @@ components:
       type: object
       properties:
         password:
+          minLength: 1
           type: string
           description: Cleartext password of the user.
           nullable: true
@@ -5386,7 +5546,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/9.3.0
+      example: Tgstation.Server.Api/9.9.0
     User-Agent:
       name: User-Agent
       in: header
