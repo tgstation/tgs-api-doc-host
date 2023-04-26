@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 9.9.0
+  version: 9.10.0
 paths:
   /Administration:
     get:
@@ -104,7 +104,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         424:
-          description: A GitHub rate limit was encountered.
+          description: A GitHub rate limit was encountered or the swarm integrity check failed.
           content:
             application/json:
               schema:
@@ -307,28 +307,28 @@ paths:
       - $ref: '#/components/parameters/User-Agent'
       - $ref: '#/components/parameters/Instance'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.ByondVersionRequest.Version to switch to.
+        description: The Tgstation.Server.Api.Models.Request.ByondVersionRequest containing the System.Version to switch to.
         content:
           application/json-patch+json:
             schema:
               allOf:
               - $ref: '#/components/schemas/ByondVersionRequest'
-              description: A request to install a BYOND Tgstation.Server.Api.Models.Request.ByondVersionRequest.Version.
+              description: A request to install a BYOND Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
           application/json:
             schema:
               allOf:
               - $ref: '#/components/schemas/ByondVersionRequest'
-              description: A request to install a BYOND Tgstation.Server.Api.Models.Request.ByondVersionRequest.Version.
+              description: A request to install a BYOND Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
           text/json:
             schema:
               allOf:
               - $ref: '#/components/schemas/ByondVersionRequest'
-              description: A request to install a BYOND Tgstation.Server.Api.Models.Request.ByondVersionRequest.Version.
+              description: A request to install a BYOND Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
           application/*+json:
             schema:
               allOf:
               - $ref: '#/components/schemas/ByondVersionRequest'
-              description: A request to install a BYOND Tgstation.Server.Api.Models.Request.ByondVersionRequest.Version.
+              description: A request to install a BYOND Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
         required: true
       responses:
         200:
@@ -351,6 +351,74 @@ paths:
           $ref: '#/components/responses/403'
         409:
           $ref: '#/components/responses/409'
+        406:
+          $ref: '#/components/responses/406'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+        501:
+          $ref: '#/components/responses/501'
+      security:
+      - Token_Authorization_Scheme: []
+    delete:
+      tags:
+      - Byond
+      summary: Changes the active BYOND version to the one specified in a given model.
+      operationId: ByondController.Delete
+      parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
+      requestBody:
+        description: The Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest containing the System.Version to delete.
+        content:
+          application/json-patch+json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/ByondVersionDeleteRequest'
+              description: A request to delete a specific Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/ByondVersionDeleteRequest'
+              description: A request to delete a specific Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
+          text/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/ByondVersionDeleteRequest'
+              description: A request to delete a specific Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
+          application/*+json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/ByondVersionDeleteRequest'
+              description: A request to delete a specific Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
+        required: true
+      responses:
+        202:
+          description: Created Tgstation.Server.Host.Models.Job to delete target version successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+        409:
+          description: Attempted to delete the active BYOND System.Version.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        410:
+          description: The Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version specified was not installed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
         406:
           $ref: '#/components/responses/406'
         500:
@@ -3245,6 +3313,7 @@ components:
       - 4
       - 8
       - 16
+      - 32
       type: integer
       description: Rights for BYOND version management.
       format: int64
@@ -3255,18 +3324,27 @@ components:
       - InstallOfficialOrChangeActiveVersion
       - CancelInstall
       - InstallCustomVersion
-    ByondVersionRequest:
+      - DeleteInstall
+    ByondVersionDeleteRequest:
       type: object
       properties:
         version:
           type: string
           description: The BYOND version to install.
+      additionalProperties: false
+      description: A request to delete a specific Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
+    ByondVersionRequest:
+      type: object
+      properties:
         uploadCustomZip:
           type: boolean
           description: If a custom BYOND version is to be uploaded.
           nullable: true
+        version:
+          type: string
+          description: The BYOND version to install.
       additionalProperties: false
-      description: A request to install a BYOND Tgstation.Server.Api.Models.Request.ByondVersionRequest.Version.
+      description: A request to install a BYOND Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
     ChatBotCreateRequest:
       type: object
       properties:
@@ -4073,7 +4151,7 @@ components:
       - RequiresPosixSystemIdentity
       - ConfigurationFileUpdated
       - ConfigurationDirectoryNotEmpty
-      - DEPRECATED_UnusedErrorCode1
+      - SwarmIntegrityCheckFailed
       - RepoMismatchUserAndAccessToken
       - RepoCloning
       - RepoBusy
@@ -4081,7 +4159,7 @@ components:
       - RepoMissing
       - RepoMismatchShaAndReference
       - RepoMismatchShaAndUpdate
-      - DEPRECATED_UnusedErrorCode2
+      - ByondCannotDeleteActiveVersion
       - RepoDuplicateTestMerge
       - RepoWhitespaceCommitterName
       - RepoWhitespaceCommitterEmail
@@ -5546,7 +5624,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/9.9.0
+      example: Tgstation.Server.Api/9.10.0
     User-Agent:
       name: User-Agent
       in: header
