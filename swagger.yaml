@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 9.10.0
+  version: 9.10.2
 paths:
   /Administration:
     get:
@@ -364,7 +364,7 @@ paths:
     delete:
       tags:
       - Byond
-      summary: Changes the active BYOND version to the one specified in a given model.
+      summary: Attempts to delete the BYOND version specified in a given model from the instance.
       operationId: ByondController.Delete
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -3301,7 +3301,7 @@ components:
       properties:
         version:
           type: string
-          description: The installed BYOND System.Version. If there is no BYOND version installed. Only considers the System.Version.Major and System.Version.Minor numbers.
+          description: The installed BYOND System.Version. BYOND itself only considers the System.Version.Major and System.Version.Minor numbers. TGS uses the System.Version.Build number to represent installed custom versions.
           nullable: true
       additionalProperties: false
       description: Represents an installed BYOND Tgstation.Server.Api.Models.Response.ByondResponse.Version.
@@ -5624,7 +5624,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/9.10.0
+      example: Tgstation.Server.Api/9.10.2
     User-Agent:
       name: User-Agent
       in: header
