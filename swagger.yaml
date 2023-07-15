@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 9.10.2
+  version: 9.11.0
 paths:
   /Administration:
     get:
@@ -71,18 +71,22 @@ paths:
             schema:
               allOf:
               - $ref: '#/components/schemas/ServerUpdateRequest'
+              description: Represents a request to update TGS.
           application/json:
             schema:
               allOf:
               - $ref: '#/components/schemas/ServerUpdateRequest'
+              description: Represents a request to update TGS.
           text/json:
             schema:
               allOf:
               - $ref: '#/components/schemas/ServerUpdateRequest'
+              description: Represents a request to update TGS.
           application/*+json:
             schema:
               allOf:
               - $ref: '#/components/schemas/ServerUpdateRequest'
+              description: Represents a request to update TGS.
         required: true
       responses:
         202:
@@ -844,14 +848,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConfigurationFileResponse'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         400:
           $ref: '#/components/responses/400'
         401:
           $ref: '#/components/responses/401'
         403:
           $ref: '#/components/responses/403'
-        409:
-          $ref: '#/components/responses/409'
         406:
           $ref: '#/components/responses/406'
         500:
@@ -898,14 +906,18 @@ paths:
       responses:
         204:
           description: Empty directory deleted successfully.
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         400:
           $ref: '#/components/responses/400'
         401:
           $ref: '#/components/responses/401'
         403:
           $ref: '#/components/responses/403'
-        409:
-          $ref: '#/components/responses/409'
         406:
           $ref: '#/components/responses/406'
         500:
@@ -939,6 +951,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConfigurationFileResponse'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         410:
           description: File does not currently exist.
           content:
@@ -951,8 +969,6 @@ paths:
           $ref: '#/components/responses/401'
         403:
           $ref: '#/components/responses/403'
-        409:
-          $ref: '#/components/responses/409'
         406:
           $ref: '#/components/responses/406'
         500:
@@ -998,6 +1014,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedConfigurationFileResponse'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         410:
           description: Directory does not currently exist.
           content:
@@ -1010,8 +1032,6 @@ paths:
           $ref: '#/components/responses/401'
         403:
           $ref: '#/components/responses/403'
-        409:
-          $ref: '#/components/responses/409'
         406:
           $ref: '#/components/responses/406'
         500:
@@ -3271,6 +3291,7 @@ components:
       - 16
       - 32
       - 64
+      - 128
       type: integer
       description: Administration rights for the server.
       format: int64
@@ -3283,6 +3304,7 @@ components:
       - ReadUsers
       - DownloadLogs
       - EditOwnOAuthConnections
+      - UploadVersion
     ByondInstallResponse:
       type: object
       properties:
@@ -3544,6 +3566,9 @@ components:
         isUpdatesChannel:
           type: boolean
           description: If the Tgstation.Server.Api.Models.ChatChannel is an updates channel.
+        isSystemChannel:
+          type: boolean
+          description: If the Tgstation.Server.Api.Models.ChatChannel received system messages.
         tag:
           maxLength: 10000
           minLength: 0
@@ -3675,6 +3700,17 @@ components:
           type: boolean
           description: If the server is undergoing a soft shutdown.
           nullable: true
+        heartbeatSeconds:
+          type: integer
+          description: Deprecated, use Tgstation.Server.Api.Models.Internal.DreamDaemonLaunchParameters.HealthCheckSeconds.
+          format: int32
+          nullable: true
+          deprecated: true
+        dumpOnHeartbeatRestart:
+          type: boolean
+          description: Deprecated, use Tgstation.Server.Api.Models.Internal.DreamDaemonLaunchParameters.DumpOnHealthCheckRestart.
+          nullable: true
+          deprecated: true
         autoStart:
           type: boolean
           description: If the watchdog starts when it's Tgstation.Server.Api.Models.Instance starts.
@@ -3711,14 +3747,14 @@ components:
           description: The DreamDaemon startup timeout in seconds.
           format: int32
           nullable: true
-        heartbeatSeconds:
+        healthCheckSeconds:
           type: integer
-          description: The number of seconds between each watchdog heartbeat. 0 disables.
+          description: The number of seconds between each watchdog health check. 0 disables.
           format: int32
           nullable: true
-        dumpOnHeartbeatRestart:
+        dumpOnHealthCheckRestart:
           type: boolean
-          description: If a process core dump should be created prior to restarting the watchdog due to heartbeat failure.
+          description: If a process core dump should be created prior to restarting the watchdog due to health check failure.
           nullable: true
         topicRequestTimeout:
           maximum: 4294967295
@@ -3736,6 +3772,11 @@ components:
         logOutput:
           type: boolean
           description: If process output/error text should be logged.
+          nullable: true
+        mapThreads:
+          type: integer
+          description: If DreamDaemon supports it, the value added as the -map-threads parameter. 0 uses the default BYOND value.
+          format: int32
           nullable: true
       additionalProperties: false
       description: A request to update Tgstation.Server.Api.Models.Internal.DreamDaemonSettings.
@@ -3784,6 +3825,17 @@ components:
           type: boolean
           description: If the server is undergoing a soft shutdown.
           nullable: true
+        heartbeatSeconds:
+          type: integer
+          description: Deprecated, use Tgstation.Server.Api.Models.Internal.DreamDaemonLaunchParameters.HealthCheckSeconds.
+          format: int32
+          nullable: true
+          deprecated: true
+        dumpOnHeartbeatRestart:
+          type: boolean
+          description: Deprecated, use Tgstation.Server.Api.Models.Internal.DreamDaemonLaunchParameters.DumpOnHealthCheckRestart.
+          nullable: true
+          deprecated: true
         autoStart:
           type: boolean
           description: If the watchdog starts when it's Tgstation.Server.Api.Models.Instance starts.
@@ -3820,14 +3872,14 @@ components:
           description: The DreamDaemon startup timeout in seconds.
           format: int32
           nullable: true
-        heartbeatSeconds:
+        healthCheckSeconds:
           type: integer
-          description: The number of seconds between each watchdog heartbeat. 0 disables.
+          description: The number of seconds between each watchdog health check. 0 disables.
           format: int32
           nullable: true
-        dumpOnHeartbeatRestart:
+        dumpOnHealthCheckRestart:
           type: boolean
-          description: If a process core dump should be created prior to restarting the watchdog due to heartbeat failure.
+          description: If a process core dump should be created prior to restarting the watchdog due to health check failure.
           nullable: true
         topicRequestTimeout:
           maximum: 4294967295
@@ -3845,6 +3897,11 @@ components:
         logOutput:
           type: boolean
           description: If process output/error text should be logged.
+          nullable: true
+        mapThreads:
+          type: integer
+          description: If DreamDaemon supports it, the value added as the -map-threads parameter. 0 uses the default BYOND value.
+          format: int32
           nullable: true
       additionalProperties: false
       description: Represents an instance of BYOND's DreamDaemon game server. Create action starts the server. Delete action shuts down the server.
@@ -3870,6 +3927,7 @@ components:
       - 65536
       - 131072
       - 262144
+      - 524288
       type: integer
       description: Rights for managing DreamDaemon.
       format: int64
@@ -3887,13 +3945,14 @@ components:
       - Shutdown
       - Start
       - SetStartupTimeout
-      - SetHeartbeatInterval
+      - SetHealthCheckInterval
       - CreateDump
       - SetTopicTimeout
       - SetAdditionalParameters
       - SetVisibility
       - SetProfiler
       - SetLogOutput
+      - SetMapThreads
     DreamDaemonSecurity:
       enum:
       - 0
@@ -4169,7 +4228,7 @@ components:
       - ChatBotWhitespaceConnectionString
       - ChatBotWhitespaceName
       - ChatBotProviderMissing
-      - DEPRECATED_UnusedErrorCode3
+      - ConfigurationContendedAccess
       - ChatBotMax
       - ChatBotMaxChannels
       - ByondDirectXInstallFail
@@ -5241,14 +5300,23 @@ components:
         newVersion:
           type: string
           description: Changes the version of tgstation-server to the given version from the upstream repository.
+        uploadZip:
+          type: boolean
+          description: If the user will provide the server update package .zip file via file transfer as opposed to TGS retrieving it from GitHub.
+          nullable: true
       additionalProperties: false
+      description: Represents a request to update TGS.
     ServerUpdateResponse:
       type: object
       properties:
         newVersion:
           type: string
-          description: Changes the version of tgstation-server to the given version from the upstream repository.
+          description: The version of tgstation-server pending update.
+        fileTicket:
+          type: string
+          description: The ticket to use to access the Tgstation.Server.Api.Routes.Transfer controller.
       additionalProperties: false
+      description: A response to a Tgstation.Server.Api.Models.Request.ServerUpdateRequest.
     ShallowUserResponse:
       type: object
       properties:
@@ -5269,6 +5337,10 @@ components:
         address:
           type: string
           description: The public address of the server.
+          format: uri
+        publicAddress:
+          type: string
+          description: The address the swarm server can be publically accessed.
           format: uri
         identifier:
           minLength: 1
@@ -5624,7 +5696,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/9.10.2
+      example: Tgstation.Server.Api/9.11.0
     User-Agent:
       name: User-Agent
       in: header
