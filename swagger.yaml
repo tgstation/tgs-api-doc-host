@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 9.11.0
+  version: 9.12.0
 paths:
   /Administration:
     get:
@@ -5696,7 +5696,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/9.11.0
+      example: Tgstation.Server.Api/9.12.0
     User-Agent:
       name: User-Agent
       in: header
