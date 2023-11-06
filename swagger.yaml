@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 9.12.0
+  version: 9.13.0
 paths:
   /Administration:
     get:
@@ -4538,9 +4538,53 @@ components:
           format: int64
       additionalProperties: false
       description: A request to update an Tgstation.Server.Api.Models.Instance.
+    JobCode:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+      type: integer
+      description: The different types of Tgstation.Server.Api.Models.Response.JobResponse.
+      format: int32
+      x-enum-varnames:
+      - Unknown
+      - Move
+      - RepositoryClone
+      - RepositoryUpdate
+      - RepositoryAutoUpdate
+      - RepositoryDelete
+      - ByondOfficialInstall
+      - ByondCustomInstall
+      - ByondDelete
+      - Deployment
+      - AutomaticDeployment
+      - WatchdogLaunch
+      - WatchdogRestart
+      - WatchdogDump
+      - StartupWatchdogLaunch
+      - StartupWatchdogReattach
+      - ReconnectChatBot
     JobResponse:
       type: object
       properties:
+        instanceId:
+          type: integer
+          description: The Tgstation.Server.Api.Models.EntityId.Id of the Tgstation.Server.Api.Models.Instance.
+          format: int64
         startedBy:
           allOf:
           - $ref: '#/components/schemas/ShallowUserResponse'
@@ -4559,6 +4603,10 @@ components:
           type: string
           description: Optional description of the job's current .
           nullable: true
+        jobCode:
+          allOf:
+          - $ref: '#/components/schemas/JobCode'
+          description: The Tgstation.Server.Api.Models.JobCode.
         description:
           minLength: 1
           type: string
@@ -5425,6 +5473,7 @@ components:
           type: string
           description: When the Tgstation.Server.Api.Models.Response.TokenResponse expires.
           format: date-time
+          deprecated: true
       additionalProperties: false
       description: Represents a JWT returned by the API.
     UserCreateRequest:
@@ -5696,7 +5745,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/9.12.0
+      example: Tgstation.Server.Api/9.13.0
     User-Agent:
       name: User-Agent
       in: header
