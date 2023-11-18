@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 9.13.0
+  version: 9.14.0
 paths:
   /Administration:
     get:
@@ -3692,6 +3692,10 @@ components:
     DreamDaemonRequest:
       type: object
       properties:
+        broadcastMessage:
+          type: string
+          description: A System.String to send to the running server's DMAPI for broadcasting. How this is displayed is up to how the DMAPI is integrated in the codebase. Requires interop version >=5.7.0.
+          nullable: true
         softRestart:
           type: boolean
           description: If the server is undergoing a soft reset. This may be automatically set by changes to other fields.
@@ -3928,6 +3932,7 @@ components:
       - 131072
       - 262144
       - 524288
+      - 1048576
       type: integer
       description: Rights for managing DreamDaemon.
       format: int64
@@ -3953,6 +3958,7 @@ components:
       - SetProfiler
       - SetLogOutput
       - SetMapThreads
+      - BroadcastMessage
     DreamDaemonSecurity:
       enum:
       - 0
@@ -4178,6 +4184,7 @@ components:
       - 100
       - 101
       - 102
+      - 103
       type: integer
       description: Types of Tgstation.Server.Api.Models.Response.ErrorMessageResponses that the API may return.
       format: int32
@@ -4285,6 +4292,7 @@ components:
       - UserLimitReached
       - UserGroupLimitReached
       - DeploymentTimeout
+      - BroadcastFailure
     ErrorMessageResponse:
       type: object
       properties:
@@ -5745,7 +5753,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/9.13.0
+      example: Tgstation.Server.Api/9.14.0
     User-Agent:
       name: User-Agent
       in: header
