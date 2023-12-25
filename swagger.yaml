@@ -8,9 +8,9 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 9.14.0
+  version: 10.0.0
 paths:
-  /Administration:
+  /api/Administration:
     get:
       tags:
       - Administration
@@ -172,7 +172,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /Administration/Logs:
+  /api/Administration/Logs:
     get:
       tags:
       - Administration
@@ -222,7 +222,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /Administration/Logs/{path}:
+  /api/Administration/Logs/{path}:
     get:
       tags:
       - Administration
@@ -266,23 +266,22 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /Byond:
+  /api:
     get:
       tags:
-      - Byond
-      summary: Gets the active Tgstation.Server.Api.Models.Response.ByondResponse.Version.
-      operationId: ByondController.Read
+      - ApiRoot
+      summary: Main page of the Tgstation.Server.Host.Core.Application.
+      operationId: ApiRootController.ServerInfo
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
-      - $ref: '#/components/parameters/Instance'
       responses:
         200:
-          description: Retrieved version information successfully.
+          description: Tgstation.Server.Api.Models.Response.ServerInformationResponse retrieved successfully.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ByondResponse'
+                $ref: '#/components/schemas/ServerInformationResponse'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -299,60 +298,40 @@ paths:
           $ref: '#/components/responses/503'
         501:
           $ref: '#/components/responses/501'
-      security:
-      - Token_Authorization_Scheme: []
     post:
       tags:
-      - Byond
-      summary: Changes the active BYOND version to the one specified in a given model.
-      operationId: ByondController.Update
+      - ApiRoot
+      summary: Attempt to authenticate a Tgstation.Server.Host.Models.User using Tgstation.Server.Host.Controllers.ApiController.ApiHeaders.
+      operationId: ApiRootController.CreateToken
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
-      - $ref: '#/components/parameters/Instance'
-      requestBody:
-        description: The Tgstation.Server.Api.Models.Request.ByondVersionRequest containing the System.Version to switch to.
-        content:
-          application/json-patch+json:
-            schema:
-              allOf:
-              - $ref: '#/components/schemas/ByondVersionRequest'
-              description: A request to install a BYOND Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
-          application/json:
-            schema:
-              allOf:
-              - $ref: '#/components/schemas/ByondVersionRequest'
-              description: A request to install a BYOND Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
-          text/json:
-            schema:
-              allOf:
-              - $ref: '#/components/schemas/ByondVersionRequest'
-              description: A request to install a BYOND Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
-          application/*+json:
-            schema:
-              allOf:
-              - $ref: '#/components/schemas/ByondVersionRequest'
-              description: A request to install a BYOND Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
-        required: true
+      - name: OAuthProvider
+        in: header
+        description: The external OAuth service provider.
+        style: simple
+        schema:
+          type: string
+        example: Discord
       responses:
         200:
-          description: Switched active version successfully.
+          description: User logged in and Tgstation.Server.Api.Models.Response.TokenResponse generated successfully.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ByondInstallResponse'
-        202:
-          description: Created Tgstation.Server.Host.Models.Job to install and switch active version successfully.
+                $ref: '#/components/schemas/TokenResponse'
+        429:
+          description: OAuth authentication failed due to rate limiting.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ByondInstallResponse'
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        401:
+          description: User authentication failed.
+        403:
+          description: User authenticated but is disabled by an administrator.
         400:
           $ref: '#/components/responses/400'
-        401:
-          $ref: '#/components/responses/401'
-        403:
-          $ref: '#/components/responses/403'
         409:
           $ref: '#/components/responses/409'
         406:
@@ -364,123 +343,9 @@ paths:
         501:
           $ref: '#/components/responses/501'
       security:
-      - Token_Authorization_Scheme: []
-    delete:
-      tags:
-      - Byond
-      summary: Attempts to delete the BYOND version specified in a given model from the instance.
-      operationId: ByondController.Delete
-      parameters:
-      - $ref: '#/components/parameters/Api'
-      - $ref: '#/components/parameters/User-Agent'
-      - $ref: '#/components/parameters/Instance'
-      requestBody:
-        description: The Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest containing the System.Version to delete.
-        content:
-          application/json-patch+json:
-            schema:
-              allOf:
-              - $ref: '#/components/schemas/ByondVersionDeleteRequest'
-              description: A request to delete a specific Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
-          application/json:
-            schema:
-              allOf:
-              - $ref: '#/components/schemas/ByondVersionDeleteRequest'
-              description: A request to delete a specific Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
-          text/json:
-            schema:
-              allOf:
-              - $ref: '#/components/schemas/ByondVersionDeleteRequest'
-              description: A request to delete a specific Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
-          application/*+json:
-            schema:
-              allOf:
-              - $ref: '#/components/schemas/ByondVersionDeleteRequest'
-              description: A request to delete a specific Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
-        required: true
-      responses:
-        202:
-          description: Created Tgstation.Server.Host.Models.Job to delete target version successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JobResponse'
-        409:
-          description: Attempted to delete the active BYOND System.Version.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        410:
-          description: The Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version specified was not installed.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        400:
-          $ref: '#/components/responses/400'
-        401:
-          $ref: '#/components/responses/401'
-        403:
-          $ref: '#/components/responses/403'
-        406:
-          $ref: '#/components/responses/406'
-        500:
-          $ref: '#/components/responses/500'
-        503:
-          $ref: '#/components/responses/503'
-        501:
-          $ref: '#/components/responses/501'
-      security:
-      - Token_Authorization_Scheme: []
-  /Byond/List:
-    get:
-      tags:
-      - Byond
-      summary: Lists installed Tgstation.Server.Api.Models.Response.ByondResponse.Versions.
-      operationId: ByondController.List
-      parameters:
-      - $ref: '#/components/parameters/Api'
-      - $ref: '#/components/parameters/User-Agent'
-      - $ref: '#/components/parameters/Instance'
-      - name: page
-        in: query
-        description: The current page.
-        schema:
-          type: integer
-          format: int32
-      - name: pageSize
-        in: query
-        description: The page size.
-        schema:
-          type: integer
-          format: int32
-      responses:
-        200:
-          description: Retrieved version information successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedByondResponse'
-        400:
-          $ref: '#/components/responses/400'
-        401:
-          $ref: '#/components/responses/401'
-        403:
-          $ref: '#/components/responses/403'
-        409:
-          $ref: '#/components/responses/409'
-        406:
-          $ref: '#/components/responses/406'
-        500:
-          $ref: '#/components/responses/500'
-        503:
-          $ref: '#/components/responses/503'
-        501:
-          $ref: '#/components/responses/501'
-      security:
-      - Token_Authorization_Scheme: []
-  /Chat:
+      - Password_Login_Scheme: []
+        OAuth_Login_Scheme: []
+  /api/Chat:
     put:
       tags:
       - Chat
@@ -605,7 +470,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /Chat/{id}:
+  /api/Chat/{id}:
     delete:
       tags:
       - Chat
@@ -690,7 +555,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /Chat/List:
+  /api/Chat/List:
     get:
       tags:
       - Chat
@@ -737,7 +602,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /Config:
+  /api/Config:
     post:
       tags:
       - Configuration
@@ -928,7 +793,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /Config/File/{filePath}:
+  /api/Config/File/{filePath}:
     get:
       tags:
       - Configuration
@@ -979,7 +844,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /Config/List/{directoryPath}:
+  /api/Config/List/{directoryPath}:
     get:
       tags:
       - Configuration
@@ -1042,7 +907,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /Config/List:
+  /api/Config/List:
     get:
       tags:
       - Configuration
@@ -1089,7 +954,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /DreamDaemon:
+  /api/DreamDaemon:
     put:
       tags:
       - DreamDaemon
@@ -1292,7 +1157,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /DreamDaemon/Diagnostics:
+  /api/DreamDaemon/Diagnostics:
     patch:
       tags:
       - DreamDaemon
@@ -1327,7 +1192,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /DreamMaker:
+  /api/DreamMaker:
     get:
       tags:
       - DreamMaker
@@ -1462,7 +1327,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /DreamMaker/{id}:
+  /api/DreamMaker/{id}:
     get:
       tags:
       - DreamMaker
@@ -1510,7 +1375,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /DreamMaker/List:
+  /api/DreamMaker/List:
     get:
       tags:
       - DreamMaker
@@ -1557,22 +1422,91 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /:
+  /api/Engine:
     get:
       tags:
-      - Home
-      summary: Main page of the Tgstation.Server.Host.Core.Application.
-      operationId: HomeController.Home
+      - Engine
+      summary: Gets the active Tgstation.Server.Api.Models.EngineVersion.
+      operationId: EngineController.Read
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
       responses:
         200:
-          description: Tgstation.Server.Api.Models.Response.ServerInformationResponse retrieved successfully.
+          description: Retrieved version information successfully.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ServerInformationResponse'
+                $ref: '#/components/schemas/EngineResponse'
+        409:
+          description: No engine versions installed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        406:
+          $ref: '#/components/responses/406'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+        501:
+          $ref: '#/components/responses/501'
+      security:
+      - Token_Authorization_Scheme: []
+    post:
+      tags:
+      - Engine
+      summary: Changes the active engine version to the one specified in a given model.
+      operationId: EngineController.Update
+      parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
+      requestBody:
+        description: The Tgstation.Server.Api.Models.Request.EngineVersionRequest containing the System.Version to switch to.
+        content:
+          application/json-patch+json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/EngineVersionRequest'
+              description: A request to switch to a given Tgstation.Server.Api.Models.Request.EngineVersionRequest.EngineVersion.
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/EngineVersionRequest'
+              description: A request to switch to a given Tgstation.Server.Api.Models.Request.EngineVersionRequest.EngineVersion.
+          text/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/EngineVersionRequest'
+              description: A request to switch to a given Tgstation.Server.Api.Models.Request.EngineVersionRequest.EngineVersion.
+          application/*+json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/EngineVersionRequest'
+              description: A request to switch to a given Tgstation.Server.Api.Models.Request.EngineVersionRequest.EngineVersion.
+        required: true
+      responses:
+        200:
+          description: Switched active engine version successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EngineInstallResponse'
+        202:
+          description: Created Tgstation.Server.Host.Models.Job to install and switch active engine version successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EngineInstallResponse'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -1589,40 +1523,111 @@ paths:
           $ref: '#/components/responses/503'
         501:
           $ref: '#/components/responses/501'
-    post:
+      security:
+      - Token_Authorization_Scheme: []
+    delete:
       tags:
-      - Home
-      summary: Attempt to authenticate a Tgstation.Server.Host.Models.User using Tgstation.Server.Host.Controllers.ApiController.ApiHeaders.
-      operationId: HomeController.CreateToken
+      - Engine
+      summary: Attempts to delete the BYOND version specified in a given model from the instance.
+      operationId: EngineController.Delete
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
-      - name: OAuthProvider
-        in: header
-        description: The external OAuth service provider.
-        style: simple
-        schema:
-          type: string
-        example: Discord
+      - $ref: '#/components/parameters/Instance'
+      requestBody:
+        description: The Tgstation.Server.Api.Models.Request.EngineVersionDeleteRequest containing the System.Version to delete.
+        content:
+          application/json-patch+json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/EngineVersionDeleteRequest'
+              description: A request to delete a specific Tgstation.Server.Api.Models.Request.EngineVersionDeleteRequest.EngineVersion.
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/EngineVersionDeleteRequest'
+              description: A request to delete a specific Tgstation.Server.Api.Models.Request.EngineVersionDeleteRequest.EngineVersion.
+          text/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/EngineVersionDeleteRequest'
+              description: A request to delete a specific Tgstation.Server.Api.Models.Request.EngineVersionDeleteRequest.EngineVersion.
+          application/*+json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/EngineVersionDeleteRequest'
+              description: A request to delete a specific Tgstation.Server.Api.Models.Request.EngineVersionDeleteRequest.EngineVersion.
+        required: true
       responses:
-        200:
-          description: User logged in and Tgstation.Server.Api.Models.Response.TokenResponse generated successfully.
+        202:
+          description: Created Tgstation.Server.Host.Models.Job to delete target version successfully.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokenResponse'
-        429:
-          description: OAuth authentication failed due to rate limiting.
+                $ref: '#/components/schemas/JobResponse'
+        409:
+          description: Attempted to delete the active BYOND System.Version.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
-        401:
-          description: User authentication failed.
-        403:
-          description: User authenticated but is disabled by an administrator.
+        410:
+          description: The Tgstation.Server.Api.Models.EngineVersion specified was not installed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         400:
           $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        406:
+          $ref: '#/components/responses/406'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+        501:
+          $ref: '#/components/responses/501'
+      security:
+      - Token_Authorization_Scheme: []
+  /api/Engine/List:
+    get:
+      tags:
+      - Engine
+      summary: Lists installed Tgstation.Server.Api.Models.EngineVersions.
+      operationId: EngineController.List
+      parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
+      - name: page
+        in: query
+        description: The current page.
+        schema:
+          type: integer
+          format: int32
+      - name: pageSize
+        in: query
+        description: The page size.
+        schema:
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: Retrieved version information successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEngineResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
         409:
           $ref: '#/components/responses/409'
         406:
@@ -1634,9 +1639,8 @@ paths:
         501:
           $ref: '#/components/responses/501'
       security:
-      - Password_Login_Scheme: []
-        OAuth_Login_Scheme: []
-  /Instance:
+      - Token_Authorization_Scheme: []
+  /api/Instance:
     put:
       tags:
       - Instance
@@ -1769,7 +1773,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /Instance/{id}:
+  /api/Instance/{id}:
     delete:
       tags:
       - Instance
@@ -1900,7 +1904,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /Instance/List:
+  /api/Instance/List:
     get:
       tags:
       - Instance
@@ -1946,7 +1950,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /InstancePermissionSet:
+  /api/InstancePermissionSet:
     put:
       tags:
       - InstancePermissionSet
@@ -2109,7 +2113,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /InstancePermissionSet/List:
+  /api/InstancePermissionSet/List:
     get:
       tags:
       - InstancePermissionSet
@@ -2156,7 +2160,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /InstancePermissionSet/{id}:
+  /api/InstancePermissionSet/{id}:
     get:
       tags:
       - InstancePermissionSet
@@ -2247,7 +2251,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /Job:
+  /api/Job:
     get:
       tags:
       - Job
@@ -2294,7 +2298,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /Job/List:
+  /api/Job/List:
     get:
       tags:
       - Job
@@ -2341,7 +2345,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /Job/{id}:
+  /api/Job/{id}:
     delete:
       tags:
       - Job
@@ -2438,7 +2442,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /Repository:
+  /api/Repository:
     put:
       tags:
       - Repository
@@ -2659,7 +2663,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /Transfer:
+  /api/Transfer:
     get:
       tags:
       - Transfer
@@ -2754,7 +2758,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /User:
+  /api/User:
     put:
       tags:
       - User
@@ -2918,7 +2922,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /User/List:
+  /api/User/List:
     get:
       tags:
       - User
@@ -2964,7 +2968,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /User/{id}:
+  /api/User/{id}:
     get:
       tags:
       - User
@@ -3011,7 +3015,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /UserGroup:
+  /api/UserGroup:
     put:
       tags:
       - UserGroup
@@ -3128,7 +3132,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /UserGroup/{id}:
+  /api/UserGroup/{id}:
     get:
       tags:
       - UserGroup
@@ -3221,7 +3225,7 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
-  /UserGroup/List:
+  /api/UserGroup/List:
     get:
       tags:
       - UserGroup
@@ -3274,7 +3278,7 @@ components:
       properties:
         trackedRepositoryUrl:
           type: string
-          description: The GitHub repository the server is built to recieve updates from.
+          description: The GitHub repository the server is built to receive updates from.
           format: uri
         latestVersion:
           type: string
@@ -3305,68 +3309,6 @@ components:
       - DownloadLogs
       - EditOwnOAuthConnections
       - UploadVersion
-    ByondInstallResponse:
-      type: object
-      properties:
-        installJob:
-          allOf:
-          - $ref: '#/components/schemas/JobResponse'
-          description: The Tgstation.Server.Api.Models.Response.JobResponse being used to install a new System.Version.
-          nullable: true
-        fileTicket:
-          type: string
-          nullable: true
-      additionalProperties: false
-      description: Represents a BYOND installation. Tgstation.Server.Api.Models.Response.FileTicketResponse.FileTicket is used to upload custom BYOND version zip files, though System.Version must still be set.
-    ByondResponse:
-      type: object
-      properties:
-        version:
-          type: string
-          description: The installed BYOND System.Version. BYOND itself only considers the System.Version.Major and System.Version.Minor numbers. TGS uses the System.Version.Build number to represent installed custom versions.
-          nullable: true
-      additionalProperties: false
-      description: Represents an installed BYOND Tgstation.Server.Api.Models.Response.ByondResponse.Version.
-    ByondRights:
-      enum:
-      - 0
-      - 1
-      - 2
-      - 4
-      - 8
-      - 16
-      - 32
-      type: integer
-      description: Rights for BYOND version management.
-      format: int64
-      x-enum-varnames:
-      - None
-      - ReadActive
-      - ListInstalled
-      - InstallOfficialOrChangeActiveVersion
-      - CancelInstall
-      - InstallCustomVersion
-      - DeleteInstall
-    ByondVersionDeleteRequest:
-      type: object
-      properties:
-        version:
-          type: string
-          description: The BYOND version to install.
-      additionalProperties: false
-      description: A request to delete a specific Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
-    ByondVersionRequest:
-      type: object
-      properties:
-        uploadCustomZip:
-          type: boolean
-          description: If a custom BYOND version is to be uploaded.
-          nullable: true
-        version:
-          type: string
-          description: The BYOND version to install.
-      additionalProperties: false
-      description: A request to install a BYOND Tgstation.Server.Api.Models.Request.ByondVersionDeleteRequest.Version.
     ChatBotCreateRequest:
       type: object
       properties:
@@ -3536,27 +3478,11 @@ components:
           minLength: 1
           type: string
           description: >-
-            The channel identifier. Supercedes Tgstation.Server.Api.Models.ChatChannel.IrcChannel and Tgstation.Server.Api.Models.ChatChannel.DiscordChannelId.
+            The channel identifier.
 
             For Tgstation.Server.Api.Models.ChatProvider.Irc, it's the IRC channel name and optional password colon separated.
 
             For Tgstation.Server.Api.Models.ChatProvider.Discord, it's the stringified Discord channel snowflake.
-        ircChannel:
-          maxLength: 100
-          minLength: 1
-          type: string
-          description: >-
-            The IRC channel name. Also potentially contains the channel passsword (if separated by a colon).
-
-            If multiple copies of the same channel with different keys are added to the server, the one that will be used is undefined.
-          nullable: true
-          deprecated: true
-        discordChannelId:
-          type: integer
-          description: The Discord channel ID.
-          format: int64
-          nullable: true
-          deprecated: true
         isAdminChannel:
           type: boolean
           description: If the Tgstation.Server.Api.Models.ChatChannel is an admin channel.
@@ -3598,9 +3524,10 @@ components:
           allOf:
           - $ref: '#/components/schemas/RevisionInformation'
           description: Git revision the compiler ran on.
-        byondVersion:
-          type: string
-          description: The Tgstation.Server.Api.Models.Response.ByondResponse.Version the Tgstation.Server.Api.Models.Response.CompileJobResponse was made with.
+        engineVersion:
+          allOf:
+          - $ref: '#/components/schemas/EngineVersion'
+          description: The Tgstation.Server.Api.Models.Response.CompileJobResponse.EngineVersion the Tgstation.Server.Api.Models.Response.CompileJobResponse was made with.
         repositoryOrigin:
           type: string
           description: The origin System.Uri of the repository the compile job was built from.
@@ -3696,6 +3623,11 @@ components:
           type: string
           description: A System.String to send to the running server's DMAPI for broadcasting. How this is displayed is up to how the DMAPI is integrated in the codebase. Requires interop version >=5.7.0.
           nullable: true
+        sessionId:
+          type: integer
+          description: An incrementing ID for representing current server execution.
+          format: int64
+          nullable: true
         softRestart:
           type: boolean
           description: If the server is undergoing a soft reset. This may be automatically set by changes to other fields.
@@ -3704,38 +3636,27 @@ components:
           type: boolean
           description: If the server is undergoing a soft shutdown.
           nullable: true
-        heartbeatSeconds:
-          type: integer
-          description: Deprecated, use Tgstation.Server.Api.Models.Internal.DreamDaemonLaunchParameters.HealthCheckSeconds.
-          format: int32
-          nullable: true
-          deprecated: true
-        dumpOnHeartbeatRestart:
-          type: boolean
-          description: Deprecated, use Tgstation.Server.Api.Models.Internal.DreamDaemonLaunchParameters.DumpOnHealthCheckRestart.
-          nullable: true
-          deprecated: true
         autoStart:
           type: boolean
           description: If the watchdog starts when it's Tgstation.Server.Api.Models.Instance starts.
           nullable: true
         allowWebClient:
           type: boolean
-          description: If the BYOND web client can be used to connect to the game server.
+          description: If the BYOND web client can be used to connect to the game server. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
         startProfiler:
           type: boolean
-          description: If -profile is passed in on the DreamDaemon command line.
+          description: If -profile is passed in on the DreamDaemon command line. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
         visibility:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonVisibility'
-          description: The Tgstation.Server.Api.Models.DreamDaemonVisibility level of DreamDaemon.
+          description: The Tgstation.Server.Api.Models.DreamDaemonVisibility level of DreamDaemon. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
         securityLevel:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonSecurity'
-          description: The Tgstation.Server.Api.Models.DreamDaemonSecurity level of DreamDaemon.
+          description: The Tgstation.Server.Api.Models.DreamDaemonSecurity level of DreamDaemon. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
         port:
           maximum: 65535
@@ -3779,7 +3700,7 @@ components:
           nullable: true
         mapThreads:
           type: integer
-          description: If DreamDaemon supports it, the value added as the -map-threads parameter. 0 uses the default BYOND value.
+          description: If DreamDaemon supports it, the value added as the -map-threads parameter. 0 uses the default BYOND value. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           format: int32
           nullable: true
       additionalProperties: false
@@ -3821,6 +3742,11 @@ components:
           type: boolean
           description: The webclient status the running Tgstation.Server.Api.Models.Response.DreamDaemonResponse instance is set to.
           nullable: true
+        sessionId:
+          type: integer
+          description: An incrementing ID for representing current server execution.
+          format: int64
+          nullable: true
         softRestart:
           type: boolean
           description: If the server is undergoing a soft reset. This may be automatically set by changes to other fields.
@@ -3829,38 +3755,27 @@ components:
           type: boolean
           description: If the server is undergoing a soft shutdown.
           nullable: true
-        heartbeatSeconds:
-          type: integer
-          description: Deprecated, use Tgstation.Server.Api.Models.Internal.DreamDaemonLaunchParameters.HealthCheckSeconds.
-          format: int32
-          nullable: true
-          deprecated: true
-        dumpOnHeartbeatRestart:
-          type: boolean
-          description: Deprecated, use Tgstation.Server.Api.Models.Internal.DreamDaemonLaunchParameters.DumpOnHealthCheckRestart.
-          nullable: true
-          deprecated: true
         autoStart:
           type: boolean
           description: If the watchdog starts when it's Tgstation.Server.Api.Models.Instance starts.
           nullable: true
         allowWebClient:
           type: boolean
-          description: If the BYOND web client can be used to connect to the game server.
+          description: If the BYOND web client can be used to connect to the game server. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
         startProfiler:
           type: boolean
-          description: If -profile is passed in on the DreamDaemon command line.
+          description: If -profile is passed in on the DreamDaemon command line. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
         visibility:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonVisibility'
-          description: The Tgstation.Server.Api.Models.DreamDaemonVisibility level of DreamDaemon.
+          description: The Tgstation.Server.Api.Models.DreamDaemonVisibility level of DreamDaemon. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
         securityLevel:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonSecurity'
-          description: The Tgstation.Server.Api.Models.DreamDaemonSecurity level of DreamDaemon.
+          description: The Tgstation.Server.Api.Models.DreamDaemonSecurity level of DreamDaemon. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
         port:
           maximum: 65535
@@ -3904,7 +3819,7 @@ components:
           nullable: true
         mapThreads:
           type: integer
-          description: If DreamDaemon supports it, the value added as the -map-threads parameter. 0 uses the default BYOND value.
+          description: If DreamDaemon supports it, the value added as the -map-threads parameter. 0 uses the default BYOND value. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           format: int32
           nullable: true
       additionalProperties: false
@@ -4069,6 +3984,110 @@ components:
       - SetSecurityLevel
       - SetApiValidationRequirement
       - SetTimeout
+    EngineInstallResponse:
+      type: object
+      properties:
+        installJob:
+          allOf:
+          - $ref: '#/components/schemas/JobResponse'
+          description: The Tgstation.Server.Api.Models.Response.JobResponse being used to install a new Tgstation.Server.Api.Models.EngineVersion.
+          nullable: true
+        fileTicket:
+          type: string
+          nullable: true
+      additionalProperties: false
+      description: Represents an engine installation job. Tgstation.Server.Api.Models.Response.FileTicketResponse.FileTicket is used to upload custom version zip files.
+    EngineResponse:
+      type: object
+      properties:
+        engineVersion:
+          allOf:
+          - $ref: '#/components/schemas/EngineVersion'
+          description: The represented Tgstation.Server.Api.Models.EngineVersion. If null that indicates none were found.
+      additionalProperties: false
+      description: Represents an installed Tgstation.Server.Api.Models.EngineVersion.
+    EngineRights:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 4
+      - 8
+      - 16
+      - 32
+      - 64
+      - 128
+      type: integer
+      description: Rights for engine version management.
+      format: int64
+      x-enum-varnames:
+      - None
+      - ReadActive
+      - ListInstalled
+      - InstallOfficialOrChangeActiveByondVersion
+      - CancelInstall
+      - InstallCustomByondVersion
+      - DeleteInstall
+      - InstallOfficialOrChangeActiveOpenDreamVersion
+      - InstallCustomOpenDreamVersion
+    EngineType:
+      enum:
+      - 0
+      - 1
+      type: integer
+      description: The type of engine the codebase is using.
+      format: int32
+      x-enum-varnames:
+      - Byond
+      - OpenDream
+    EngineVersion:
+      type: object
+      properties:
+        engine:
+          allOf:
+          - $ref: '#/components/schemas/EngineType'
+          description: The Tgstation.Server.Api.Models.EngineType.
+        version:
+          type: string
+          description: The System.Version of the engine. Currently only valid when Tgstation.Server.Api.Models.EngineVersion.Engine is Tgstation.Server.Api.Models.EngineType.Byond.
+          nullable: true
+        sourceSHA:
+          maxLength: 40
+          minLength: 40
+          type: string
+          description: The git commit SHA of the engine. Currently only valid when Tgstation.Server.Api.Models.EngineVersion.Engine is Tgstation.Server.Api.Models.EngineType.OpenDream.
+          nullable: true
+        customIteration:
+          type: integer
+          description: The revision of the custom build.
+          format: int32
+          nullable: true
+      additionalProperties: false
+      description: Information about an engine installation.
+    EngineVersionDeleteRequest:
+      type: object
+      properties:
+        engineVersion:
+          allOf:
+          - $ref: '#/components/schemas/EngineVersion'
+          description: The Tgstation.Server.Api.Models.EngineVersion to delete.
+          nullable: true
+      additionalProperties: false
+      description: A request to delete a specific Tgstation.Server.Api.Models.Request.EngineVersionDeleteRequest.EngineVersion.
+    EngineVersionRequest:
+      type: object
+      properties:
+        engineVersion:
+          allOf:
+          - $ref: '#/components/schemas/EngineVersion'
+          description: The Tgstation.Server.Api.Models.EngineVersion to switch to.
+          nullable: true
+        uploadCustomZip:
+          type: boolean
+          description: If a custom BYOND version is to be uploaded.
+          nullable: true
+      additionalProperties: false
+      description: A request to switch to a given Tgstation.Server.Api.Models.Request.EngineVersionRequest.EngineVersion.
     EntityId:
       type: object
       properties:
@@ -4185,6 +4204,8 @@ components:
       - 101
       - 102
       - 103
+      - 104
+      - 105
       type: integer
       description: Types of Tgstation.Server.Api.Models.Response.ErrorMessageResponses that the API may return.
       format: int32
@@ -4212,7 +4233,7 @@ components:
       - InstanceDetachOnline
       - InstanceAtConflictingPath
       - InstanceLimitReached
-      - InstanceWhitespaceName
+      - InstanceWhitespaceNameOrPath
       - InstanceHeaderRequired
       - RequiresPosixSystemIdentity
       - ConfigurationFileUpdated
@@ -4225,7 +4246,7 @@ components:
       - RepoMissing
       - RepoMismatchShaAndReference
       - RepoMismatchShaAndUpdate
-      - ByondCannotDeleteActiveVersion
+      - EngineCannotDeleteActiveVersion
       - RepoDuplicateTestMerge
       - RepoWhitespaceCommitterName
       - RepoWhitespaceCommitterEmail
@@ -4239,15 +4260,15 @@ components:
       - ChatBotMax
       - ChatBotMaxChannels
       - ByondDirectXInstallFail
-      - ByondDownloadFail
-      - ByondNoVersionsInstalled
-      - DreamMakerNeverValidated
-      - DreamMakerInvalidValidation
+      - EngineDownloadFail
+      - EngineNoVersionsInstalled
+      - DeploymentNeverValidated
+      - DeploymentInvalidValidation
       - CannotRemoveLastAuthenticationOption
-      - DreamMakerNoDme
-      - DreamMakerMissingDme
-      - DreamMakerExitCode
-      - DreamMakerCompileJobInProgress
+      - DeploymentNoDme
+      - DeploymentMissingDme
+      - DeploymentExitCode
+      - DeploymentInProgress
       - InstanceMissingDreamDaemonSettings
       - InstanceMissingDreamMakerSettings
       - InstanceMissingRepositorySettings
@@ -4265,9 +4286,9 @@ components:
       - RepoReferenceNotTracking
       - RepoTestMergeConflict
       - InstanceNotAtWhitelistedPath
-      - DreamDaemonDoubleSoft
-      - DeploymentPagerRunning
-      - DreamDaemonPortInUse
+      - GameServerDoubleSoft
+      - DreamDaemonPagerRunning
+      - GameServerPortInUse
       - PostDeployFailure
       - WatchdogNotRunning
       - ResourceNotPresent
@@ -4277,11 +4298,11 @@ components:
       - MissingGCore
       - GCoreFailure
       - RepoTestMergeInvalidRemote
-      - ByondNonExistentCustomVersion
-      - DreamDaemonOffline
+      - EngineNonExistentCustomVersion
+      - GameServerOffline
       - InstanceOffline
       - ChatCannotConnectProvider
-      - ByondDreamDaemonFirewallFail
+      - EngineFirewallFail
       - NoPortsAvailable
       - PortNotAvailable
       - AdminUserCannotOAuth
@@ -4293,6 +4314,8 @@ components:
       - UserGroupLimitReached
       - DeploymentTimeout
       - BroadcastFailure
+      - OpenDreamCantFindDotnet
+      - OpenDreamTooOld
     ErrorMessageResponse:
       type: object
       properties:
@@ -4383,10 +4406,10 @@ components:
           - $ref: '#/components/schemas/InstancePermissionSetRights'
           description: The Tgstation.Server.Api.Rights.InstancePermissionSetRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
           nullable: true
-        byondRights:
+        engineRights:
           allOf:
-          - $ref: '#/components/schemas/ByondRights'
-          description: The Tgstation.Server.Api.Rights.ByondRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
+          - $ref: '#/components/schemas/EngineRights'
+          description: The Tgstation.Server.Api.Rights.EngineRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
           nullable: true
         dreamDaemonRights:
           allOf:
@@ -4426,10 +4449,10 @@ components:
           allOf:
           - $ref: '#/components/schemas/InstancePermissionSetRights'
           description: The Tgstation.Server.Api.Rights.InstancePermissionSetRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
-        byondRights:
+        engineRights:
           allOf:
-          - $ref: '#/components/schemas/ByondRights'
-          description: The Tgstation.Server.Api.Rights.ByondRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
+          - $ref: '#/components/schemas/EngineRights'
+          description: The Tgstation.Server.Api.Rights.EngineRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
         dreamDaemonRights:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonRights'
@@ -4575,9 +4598,9 @@ components:
       - RepositoryUpdate
       - RepositoryAutoUpdate
       - RepositoryDelete
-      - ByondOfficialInstall
-      - ByondCustomInstall
-      - ByondDelete
+      - EngineOfficialInstall
+      - EngineCustomInstall
+      - EngineDelete
       - Deployment
       - AutomaticDeployment
       - WatchdogLaunch
@@ -4717,28 +4740,6 @@ components:
           nullable: true
       additionalProperties: false
       description: Public information about a given Tgstation.Server.Api.Models.OAuthProvider.
-    PaginatedByondResponse:
-      type: object
-      properties:
-        content:
-          type: array
-          items:
-            $ref: '#/components/schemas/ByondResponse'
-          description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
-        totalPages:
-          type: integer
-          description: The total number of pages in the query.
-          format: int32
-        pageSize:
-          type: integer
-          description: The current size of pages in the query.
-          format: int32
-        totalItems:
-          type: integer
-          description: The total items across all pages.
-          format: int32
-      additionalProperties: false
-      description: Represents a paginated set of models.
     PaginatedChatBotResponse:
       type: object
       properties:
@@ -4790,6 +4791,28 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ConfigurationFileResponse'
+          description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+        totalPages:
+          type: integer
+          description: The total number of pages in the query.
+          format: int32
+        pageSize:
+          type: integer
+          description: The current size of pages in the query.
+          format: int32
+        totalItems:
+          type: integer
+          description: The total items across all pages.
+          format: int32
+      additionalProperties: false
+      description: Represents a paginated set of models.
+    PaginatedEngineResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/EngineResponse'
           description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
         totalPages:
           type: integer
@@ -4974,11 +4997,6 @@ components:
           type: string
           description: The origin URL to clone.
           format: uri
-        recurseSubmodules:
-          type: boolean
-          description: If submodules should be recursively cloned. Note that further updates are not recursive.
-          nullable: true
-          deprecated: true
         reference:
           maxLength: 10000
           minLength: 0
@@ -5281,7 +5299,7 @@ components:
       - Administration
       - InstanceManager
       - Repository
-      - Byond
+      - Engine
       - DreamMaker
       - DreamDaemon
       - ChatBots
@@ -5477,11 +5495,6 @@ components:
         bearer:
           type: string
           description: The value of the JWT.
-        expiresAt:
-          type: string
-          description: When the Tgstation.Server.Api.Models.Response.TokenResponse expires.
-          format: date-time
-          deprecated: true
       additionalProperties: false
       description: Represents a JWT returned by the API.
     UserCreateRequest:
@@ -5753,7 +5766,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/9.14.0
+      example: Tgstation.Server.Api/10.0.0
     User-Agent:
       name: User-Agent
       in: header
