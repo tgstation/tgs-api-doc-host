@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 10.0.0
+  version: 10.1.0
 paths:
   /api/Administration:
     get:
@@ -3703,6 +3703,10 @@ components:
           description: If DreamDaemon supports it, the value added as the -map-threads parameter. 0 uses the default BYOND value. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           format: int32
           nullable: true
+        minidumps:
+          type: boolean
+          description: If minidumps should be taken instead of full dumps.
+          nullable: true
       additionalProperties: false
       description: A request to update Tgstation.Server.Api.Models.Internal.DreamDaemonSettings.
     DreamDaemonResponse:
@@ -3822,6 +3826,10 @@ components:
           description: If DreamDaemon supports it, the value added as the -map-threads parameter. 0 uses the default BYOND value. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           format: int32
           nullable: true
+        minidumps:
+          type: boolean
+          description: If minidumps should be taken instead of full dumps.
+          nullable: true
       additionalProperties: false
       description: Represents an instance of BYOND's DreamDaemon game server. Create action starts the server. Delete action shuts down the server.
     DreamDaemonRights:
@@ -3848,6 +3856,7 @@ components:
       - 262144
       - 524288
       - 1048576
+      - 2097152
       type: integer
       description: Rights for managing DreamDaemon.
       format: int64
@@ -3874,6 +3883,7 @@ components:
       - SetLogOutput
       - SetMapThreads
       - BroadcastMessage
+      - SetMinidumps
     DreamDaemonSecurity:
       enum:
       - 0
@@ -5766,7 +5776,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/10.0.0
+      example: Tgstation.Server.Api/10.1.0
     User-Agent:
       name: User-Agent
       in: header
