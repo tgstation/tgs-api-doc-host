@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 10.2.0
+  version: 10.3.0
 paths:
   /api/Administration:
     get:
@@ -3938,6 +3938,12 @@ components:
           description: Amount of time before an in-progress deployment is cancelled.
           format: date-span
           nullable: true
+        compilerAdditionalArguments:
+          maxLength: 10000
+          minLength: 0
+          type: string
+          description: Additional arguments added to the compiler command line.
+          nullable: true
       additionalProperties: false
       description: A request to the DreamMaker controller.
     DreamMakerResponse:
@@ -3966,6 +3972,12 @@ components:
           type: string
           description: Amount of time before an in-progress deployment is cancelled.
           format: date-span
+        compilerAdditionalArguments:
+          maxLength: 10000
+          minLength: 0
+          type: string
+          description: Additional arguments added to the compiler command line.
+          nullable: true
       additionalProperties: false
       description: A request to the DreamMaker controller.
     DreamMakerRights:
@@ -3980,6 +3992,7 @@ components:
       - 64
       - 128
       - 256
+      - 512
       type: integer
       description: Rights for deployment.
       format: int64
@@ -3994,6 +4007,7 @@ components:
       - SetSecurityLevel
       - SetApiValidationRequirement
       - SetTimeout
+      - SetCompilerArguments
     EngineInstallResponse:
       type: object
       properties:
@@ -5778,7 +5792,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/10.2.0
+      example: Tgstation.Server.Api/10.3.0
     User-Agent:
       name: User-Agent
       in: header
