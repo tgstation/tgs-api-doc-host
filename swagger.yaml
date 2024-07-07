@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 10.3.0
+  version: 10.4.0
 paths:
   /api/Administration:
     get:
@@ -931,7 +931,7 @@ paths:
           format: int32
       responses:
         200:
-          description: Success
+          description: OK
           content:
             application/json:
               schema:
@@ -1881,7 +1881,7 @@ paths:
         204:
           description: Granted permissions successfully.
         410:
-          description: Client Error
+          description: Gone
           content:
             application/json:
               schema:
@@ -4378,6 +4378,12 @@ components:
           description: The time interval in minutes the repository is automatically pulled and compiles. 0 disables.
           format: int32
           nullable: true
+        autoUpdateCron:
+          maxLength: 10000
+          minLength: 0
+          type: string
+          description: A cron expression indicating when auto-updates should trigger. Must be a valid 6 part cron schedule (SECONDS MINUTES HOURS DAY/MONTH MONTH DAY/WEEK). Empty System.String disables.
+          nullable: true
         chatBotLimit:
           type: integer
           description: The maximum number of chat bots the Tgstation.Server.Api.Models.Instance may contain.
@@ -4541,6 +4547,11 @@ components:
           type: integer
           description: The time interval in minutes the repository is automatically pulled and compiles. 0 disables.
           format: int32
+        autoUpdateCron:
+          maxLength: 10000
+          minLength: 0
+          type: string
+          description: A cron expression indicating when auto-updates should trigger. Must be a valid 6 part cron schedule (SECONDS MINUTES HOURS DAY/MONTH MONTH DAY/WEEK). Empty System.String disables.
         chatBotLimit:
           type: integer
           description: The maximum number of chat bots the Tgstation.Server.Api.Models.Instance may contain.
@@ -4577,6 +4588,12 @@ components:
           type: integer
           description: The time interval in minutes the repository is automatically pulled and compiles. 0 disables.
           format: int32
+          nullable: true
+        autoUpdateCron:
+          maxLength: 10000
+          minLength: 0
+          type: string
+          description: A cron expression indicating when auto-updates should trigger. Must be a valid 6 part cron schedule (SECONDS MINUTES HOURS DAY/MONTH MONTH DAY/WEEK). Empty System.String disables.
           nullable: true
         chatBotLimit:
           type: integer
@@ -5792,7 +5809,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/10.3.0
+      example: Tgstation.Server.Api/10.4.0
     User-Agent:
       name: User-Agent
       in: header
