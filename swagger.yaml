@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 10.4.0
+  version: 10.5.0
 paths:
   /api/Administration:
     get:
@@ -3665,6 +3665,11 @@ components:
           description: The port DreamDaemon uses. This should be publically accessible.
           format: int32
           nullable: true
+        openDreamTopicPort:
+          type: integer
+          description: The port used by Tgstation.Server.Api.Models.EngineType.OpenDream for its topic port.
+          format: int32
+          nullable: true
         startupTimeout:
           maximum: 4294967295
           minimum: 1
@@ -3742,6 +3747,11 @@ components:
           description: The port the running Tgstation.Server.Api.Models.Response.DreamDaemonResponse instance is set to.
           format: int32
           nullable: true
+        currentTopicPort:
+          type: integer
+          description: The Tgstation.Server.Api.Models.EngineType.OpenDream topic port the running Tgstation.Server.Api.Models.Response.DreamDaemonResponse instance is set to.
+          format: int32
+          nullable: true
         currentAllowWebclient:
           type: boolean
           description: The webclient status the running Tgstation.Server.Api.Models.Response.DreamDaemonResponse instance is set to.
@@ -3786,6 +3796,11 @@ components:
           minimum: 1
           type: integer
           description: The port DreamDaemon uses. This should be publically accessible.
+          format: int32
+          nullable: true
+        openDreamTopicPort:
+          type: integer
+          description: The port used by Tgstation.Server.Api.Models.EngineType.OpenDream for its topic port.
           format: int32
           nullable: true
         startupTimeout:
@@ -5809,7 +5824,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/10.4.0
+      example: Tgstation.Server.Api/10.5.0
     User-Agent:
       name: User-Agent
       in: header
