@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 10.6.0
+  version: 10.7.0
 paths:
   /api/Administration:
     get:
@@ -19,6 +19,11 @@ paths:
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
+      - name: fresh
+        in: query
+        description: If true, the cache should be bypassed.
+        schema:
+          type: boolean
       responses:
         200:
           description: Retrieved Tgstation.Server.Api.Models.Response.AdministrationResponse data successfully.
@@ -2547,6 +2552,46 @@ paths:
           $ref: '#/components/responses/501'
       security:
       - Token_Authorization_Scheme: []
+    patch:
+      tags:
+      - Repository
+      summary: Delete the repository.
+      operationId: RepositoryController.Reclone
+      parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      - $ref: '#/components/parameters/Instance'
+      responses:
+        202:
+          description: Job to delete the repository created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepositoryResponse'
+        410:
+          description: The database entity for the requested instance could not be retrieved. The instance was likely detached.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        409:
+          $ref: '#/components/responses/409'
+        406:
+          $ref: '#/components/responses/406'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+        501:
+          $ref: '#/components/responses/501'
+      security:
+      - Token_Authorization_Scheme: []
     get:
       tags:
       - Repository
@@ -3283,6 +3328,10 @@ components:
         latestVersion:
           type: string
           description: The latest available version of the Tgstation.Server.Host assembly from the upstream repository. If System.Version.Major is not equal to 4 the update cannot be applied due to API changes.
+        generatedAt:
+          type: string
+          description: This response is cached. This field indicates the System.DateTimeOffset when it was generated.
+          format: date-time
       additionalProperties: false
       description: Represents administrative server information.
     AdministrationRights:
@@ -3755,6 +3804,11 @@ components:
         currentAllowWebclient:
           type: boolean
           description: The webclient status the running Tgstation.Server.Api.Models.Response.DreamDaemonResponse instance is set to.
+          nullable: true
+        immediateMemoryUsage:
+          type: integer
+          description: The amount of RAM in use by the game server in bytes.
+          format: int64
           nullable: true
         sessionId:
           type: integer
@@ -4648,6 +4702,7 @@ components:
       - 14
       - 15
       - 16
+      - 17
       type: integer
       description: The different types of Tgstation.Server.Api.Models.Response.JobResponse.
       format: int32
@@ -4669,6 +4724,7 @@ components:
       - StartupWatchdogLaunch
       - StartupWatchdogReattach
       - ReconnectChatBot
+      - RepositoryReclone
     JobResponse:
       type: object
       properties:
@@ -5209,6 +5265,7 @@ components:
       - 2048
       - 4096
       - 8192
+      - 16384
       type: integer
       description: Rights for the git repository.
       format: int64
@@ -5228,6 +5285,7 @@ components:
       - Delete
       - CancelClone
       - ChangeSubmoduleUpdate
+      - Reclone
     RepositoryUpdateRequest:
       type: object
       properties:
@@ -5826,7 +5884,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/10.6.0
+      example: Tgstation.Server.Api/10.7.0
     User-Agent:
       name: User-Agent
       in: header
