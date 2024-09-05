@@ -1,14 +1,14 @@
 openapi: 3.0.1
 info:
   title: TGS API
-  description: A production scale tool for BYOND server management
+  description: A production scale tool for DreamMaker server management
   contact:
     name: /tg/station 13
     url: https://github.com/tgstation
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 10.7.0
+  version: 10.8.0
 paths:
   /api/Administration:
     get:
@@ -3677,6 +3677,16 @@ components:
           description: An incrementing ID for representing current server execution.
           format: int64
           nullable: true
+        launchTime:
+          type: string
+          description: When the current server execution was started.
+          format: date-time
+          nullable: true
+        clientCount:
+          type: integer
+          description: The last known count of connected players. Requires Tgstation.Server.Api.Models.Internal.DreamDaemonLaunchParameters.HealthCheckSeconds to not be 0 and a game server interop version >= 5.10.0 to populate.
+          format: int32
+          nullable: true
         softRestart:
           type: boolean
           description: If the server is undergoing a soft reset. This may be automatically set by changes to other fields.
@@ -3814,6 +3824,16 @@ components:
           type: integer
           description: An incrementing ID for representing current server execution.
           format: int64
+          nullable: true
+        launchTime:
+          type: string
+          description: When the current server execution was started.
+          format: date-time
+          nullable: true
+        clientCount:
+          type: integer
+          description: The last known count of connected players. Requires Tgstation.Server.Api.Models.Internal.DreamDaemonLaunchParameters.HealthCheckSeconds to not be 0 and a game server interop version >= 5.10.0 to populate.
+          format: int32
           nullable: true
         softRestart:
           type: boolean
@@ -4301,6 +4321,7 @@ components:
       - 105
       - 106
       - 107
+      - 108
       type: integer
       description: Types of Tgstation.Server.Api.Models.Response.ErrorMessageResponses that the API may return.
       format: int32
@@ -4413,6 +4434,7 @@ components:
       - OpenDreamTooOld
       - DotnetDiagnosticsFailure
       - DeploymentWrongDme
+      - RepoTokenUsernameMismatch
     ErrorMessageResponse:
       type: object
       properties:
@@ -5136,21 +5158,21 @@ components:
           maxLength: 10000
           minLength: 0
           type: string
-          description: The username to access the git repository with.
+          description: The username to access the git repository with. If using a TGS encoded app private key for Tgstation.Server.Api.Models.RepositorySettings.AccessToken, this should be the app's name.
           nullable: true
         accessToken:
           maxLength: 10000
           minLength: 0
           type: string
-          description: The token/password to access the git repository with.
+          description: The token/password to access the git repository with. Can also be a TGS encoded app private key. Tgstation.Server.Api.Models.RepositorySettings.TgsAppPrivateKeyPrefix for details.
           nullable: true
         pushTestMergeCommits:
           type: boolean
-          description: If commits created from testmerges are pushed to the remote. Requires Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessUser and Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessToken to be set to function.
+          description: If commits created from testmerges are pushed to the remote. Requires Tgstation.Server.Api.Models.RepositorySettings.AccessUser and Tgstation.Server.Api.Models.RepositorySettings.AccessToken to be set to function.
           nullable: true
         createGitHubDeployments:
           type: boolean
-          description: If GitHub deployments should be created. Requires Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessUser, Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessToken, and Tgstation.Server.Api.Models.Internal.RepositorySettings.PushTestMergeCommits to be set to function.
+          description: If GitHub deployments should be created. Requires Tgstation.Server.Api.Models.RepositorySettings.AccessUser, Tgstation.Server.Api.Models.RepositorySettings.AccessToken, and Tgstation.Server.Api.Models.RepositorySettings.PushTestMergeCommits to be set to function.
           nullable: true
         showTestMergeCommitters:
           type: boolean
@@ -5162,11 +5184,11 @@ components:
           nullable: true
         autoUpdatesSynchronize:
           type: boolean
-          description: If synchronization should occur when auto updating. Requries Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessUser and Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessToken to be set to function.
+          description: If synchronization should occur when auto updating. Requries Tgstation.Server.Api.Models.RepositorySettings.AccessUser and Tgstation.Server.Api.Models.RepositorySettings.AccessToken to be set to function.
           nullable: true
         postTestMergeComment:
           type: boolean
-          description: If test merging should create a comment. Requires Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessToken to be set to function.
+          description: If test merging should create a comment. Requires Tgstation.Server.Api.Models.RepositorySettings.AccessToken to be set to function.
           nullable: true
         updateSubmodules:
           type: boolean
@@ -5223,14 +5245,14 @@ components:
           maxLength: 10000
           minLength: 0
           type: string
-          description: The username to access the git repository with.
+          description: The username to access the git repository with. If using a TGS encoded app private key for Tgstation.Server.Api.Models.RepositorySettings.AccessToken, this should be the app's name.
           nullable: true
         pushTestMergeCommits:
           type: boolean
-          description: If commits created from testmerges are pushed to the remote. Requires Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessUser and Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessToken to be set to function.
+          description: If commits created from testmerges are pushed to the remote. Requires Tgstation.Server.Api.Models.RepositorySettings.AccessUser and Tgstation.Server.Api.Models.RepositorySettings.AccessToken to be set to function.
         createGitHubDeployments:
           type: boolean
-          description: If GitHub deployments should be created. Requires Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessUser, Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessToken, and Tgstation.Server.Api.Models.Internal.RepositorySettings.PushTestMergeCommits to be set to function.
+          description: If GitHub deployments should be created. Requires Tgstation.Server.Api.Models.RepositorySettings.AccessUser, Tgstation.Server.Api.Models.RepositorySettings.AccessToken, and Tgstation.Server.Api.Models.RepositorySettings.PushTestMergeCommits to be set to function.
         showTestMergeCommitters:
           type: boolean
           description: If test merge commits are signed with the username of the person who merged it. Note this only affects future commits.
@@ -5239,10 +5261,10 @@ components:
           description: If test merge commits should be kept when auto updating. May cause merge conflicts which will block the update.
         autoUpdatesSynchronize:
           type: boolean
-          description: If synchronization should occur when auto updating. Requries Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessUser and Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessToken to be set to function.
+          description: If synchronization should occur when auto updating. Requries Tgstation.Server.Api.Models.RepositorySettings.AccessUser and Tgstation.Server.Api.Models.RepositorySettings.AccessToken to be set to function.
         postTestMergeComment:
           type: boolean
-          description: If test merging should create a comment. Requires Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessToken to be set to function.
+          description: If test merging should create a comment. Requires Tgstation.Server.Api.Models.RepositorySettings.AccessToken to be set to function.
         updateSubmodules:
           type: boolean
           description: Do the equivalent of a `git submodule update --init` alongside any resets to origin, checkouts, or test merge additions. Note that this action is recursive ONLY during cloning.
@@ -5328,21 +5350,21 @@ components:
           maxLength: 10000
           minLength: 0
           type: string
-          description: The username to access the git repository with.
+          description: The username to access the git repository with. If using a TGS encoded app private key for Tgstation.Server.Api.Models.RepositorySettings.AccessToken, this should be the app's name.
           nullable: true
         accessToken:
           maxLength: 10000
           minLength: 0
           type: string
-          description: The token/password to access the git repository with.
+          description: The token/password to access the git repository with. Can also be a TGS encoded app private key. Tgstation.Server.Api.Models.RepositorySettings.TgsAppPrivateKeyPrefix for details.
           nullable: true
         pushTestMergeCommits:
           type: boolean
-          description: If commits created from testmerges are pushed to the remote. Requires Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessUser and Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessToken to be set to function.
+          description: If commits created from testmerges are pushed to the remote. Requires Tgstation.Server.Api.Models.RepositorySettings.AccessUser and Tgstation.Server.Api.Models.RepositorySettings.AccessToken to be set to function.
           nullable: true
         createGitHubDeployments:
           type: boolean
-          description: If GitHub deployments should be created. Requires Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessUser, Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessToken, and Tgstation.Server.Api.Models.Internal.RepositorySettings.PushTestMergeCommits to be set to function.
+          description: If GitHub deployments should be created. Requires Tgstation.Server.Api.Models.RepositorySettings.AccessUser, Tgstation.Server.Api.Models.RepositorySettings.AccessToken, and Tgstation.Server.Api.Models.RepositorySettings.PushTestMergeCommits to be set to function.
           nullable: true
         showTestMergeCommitters:
           type: boolean
@@ -5354,11 +5376,11 @@ components:
           nullable: true
         autoUpdatesSynchronize:
           type: boolean
-          description: If synchronization should occur when auto updating. Requries Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessUser and Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessToken to be set to function.
+          description: If synchronization should occur when auto updating. Requries Tgstation.Server.Api.Models.RepositorySettings.AccessUser and Tgstation.Server.Api.Models.RepositorySettings.AccessToken to be set to function.
           nullable: true
         postTestMergeComment:
           type: boolean
-          description: If test merging should create a comment. Requires Tgstation.Server.Api.Models.Internal.RepositorySettings.AccessToken to be set to function.
+          description: If test merging should create a comment. Requires Tgstation.Server.Api.Models.RepositorySettings.AccessToken to be set to function.
           nullable: true
         updateSubmodules:
           type: boolean
@@ -5884,7 +5906,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/10.7.0
+      example: Tgstation.Server.Api/10.8.0
     User-Agent:
       name: User-Agent
       in: header
