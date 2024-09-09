@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 10.8.0
+  version: 10.9.0
 paths:
   /api/Administration:
     get:
@@ -3665,6 +3665,18 @@ components:
       - Disallowed
       - HostWrite
       - SystemIdentityWrite
+    DMApiValidationMode:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      description: The DMAPI validation setting for deployments.
+      format: int32
+      x-enum-varnames:
+      - Optional
+      - Required
+      - Skipped
     DreamDaemonRequest:
       type: object
       properties:
@@ -4020,7 +4032,13 @@ components:
           nullable: true
         requireDMApiValidation:
           type: boolean
-          description: If API validation should be required for a deployment to succeed.
+          description: If API validation should be required for a deployment to succeed. Must not be set on mutation if Tgstation.Server.Api.Models.Internal.DreamMakerSettings.DMApiValidationMode is set.
+          nullable: true
+          deprecated: true
+        dmApiValidationMode:
+          allOf:
+          - $ref: '#/components/schemas/DMApiValidationMode'
+          description: The current Tgstation.Server.Api.Models.DMApiValidationMode. Must not be set on mutation if Tgstation.Server.Api.Models.Internal.DreamMakerSettings.RequireDMApiValidation is set.
           nullable: true
         timeout:
           type: string
@@ -4056,7 +4074,12 @@ components:
           description: The Tgstation.Server.Api.Models.DreamDaemonSecurity level used to validate the DMAPI.
         requireDMApiValidation:
           type: boolean
-          description: If API validation should be required for a deployment to succeed.
+          description: If API validation should be required for a deployment to succeed. Must not be set on mutation if Tgstation.Server.Api.Models.Internal.DreamMakerSettings.DMApiValidationMode is set.
+          deprecated: true
+        dmApiValidationMode:
+          allOf:
+          - $ref: '#/components/schemas/DMApiValidationMode'
+          description: The current Tgstation.Server.Api.Models.DMApiValidationMode. Must not be set on mutation if Tgstation.Server.Api.Models.Internal.DreamMakerSettings.RequireDMApiValidation is set.
         timeout:
           type: string
           description: Amount of time before an in-progress deployment is cancelled.
@@ -5906,7 +5929,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/10.8.0
+      example: Tgstation.Server.Api/10.9.0
     User-Agent:
       name: User-Agent
       in: header
