@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 10.9.0
+  version: 10.10.0
 paths:
   /api/Administration:
     get:
@@ -2861,8 +2861,6 @@ paths:
           $ref: '#/components/responses/503'
         501:
           $ref: '#/components/responses/501'
-      security:
-      - Token_Authorization_Scheme: []
     post:
       tags:
       - User
@@ -2872,7 +2870,7 @@ paths:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Response.UserResponse to update.
+        description: The Tgstation.Server.Api.Models.Request.UserUpdateRequest.
         content:
           application/json-patch+json:
             schema:
@@ -2932,8 +2930,6 @@ paths:
           $ref: '#/components/responses/503'
         501:
           $ref: '#/components/responses/501'
-      security:
-      - Token_Authorization_Scheme: []
     get:
       tags:
       - User
@@ -2965,8 +2961,6 @@ paths:
           $ref: '#/components/responses/503'
         501:
           $ref: '#/components/responses/501'
-      security:
-      - Token_Authorization_Scheme: []
   /api/User/List:
     get:
       tags:
@@ -3011,8 +3005,6 @@ paths:
           $ref: '#/components/responses/503'
         501:
           $ref: '#/components/responses/501'
-      security:
-      - Token_Authorization_Scheme: []
   /api/User/{id}:
     get:
       tags:
@@ -3222,8 +3214,6 @@ paths:
           $ref: '#/components/responses/503'
         501:
           $ref: '#/components/responses/501'
-      security:
-      - Token_Authorization_Scheme: []
     delete:
       tags:
       - UserGroup
@@ -3314,8 +3304,6 @@ paths:
           $ref: '#/components/responses/503'
         501:
           $ref: '#/components/responses/501'
-      security:
-      - Token_Authorization_Scheme: []
 components:
   schemas:
     AdministrationResponse:
@@ -3325,13 +3313,16 @@ components:
           type: string
           description: The GitHub repository the server is built to receive updates from.
           format: uri
+          readOnly: true
         latestVersion:
           type: string
-          description: The latest available version of the Tgstation.Server.Host assembly from the upstream repository. If System.Version.Major is not equal to 4 the update cannot be applied due to API changes.
+          description: The latest available version of the Tgstation.Server.Host assembly from the upstream repository. If System.Version.Major is less than 4 the update cannot be applied due to API changes.
+          readOnly: true
         generatedAt:
           type: string
-          description: This response is cached. This field indicates the System.DateTimeOffset when it was generated.
+          description: This response is cached. This field indicates the System.DateTimeOffset the Tgstation.Server.Api.Models.Internal.UpdateInformation was generated.
           format: date-time
+          readOnly: true
       additionalProperties: false
       description: Represents administrative server information.
     AdministrationRights:
@@ -3367,10 +3358,12 @@ components:
             $ref: '#/components/schemas/ChatChannel'
           description: Channels the Discord bot should listen/announce in.
           nullable: true
+          readOnly: true
         enabled:
           type: boolean
           description: If the connection is enabled.
           nullable: true
+          readOnly: true
         reconnectionInterval:
           maximum: 4294967295
           minimum: 1
@@ -3378,11 +3371,13 @@ components:
           description: The time interval in minutes the chat bot attempts to reconnect if Tgstation.Server.Api.Models.Internal.ChatBotSettings.Enabled and disconnected. Must not be zero.
           format: int32
           nullable: true
+          readOnly: true
         channelLimit:
           type: integer
           description: The maximum number of Tgstation.Server.Api.Models.ChatChannels the Tgstation.Server.Api.Models.Internal.ChatBotSettings may contain.
           format: int32
           nullable: true
+          readOnly: true
         provider:
           allOf:
           - $ref: '#/components/schemas/ChatProvider'
@@ -3407,19 +3402,23 @@ components:
           items:
             $ref: '#/components/schemas/ChatChannel'
           description: Channels the Discord bot should listen/announce in.
+          readOnly: true
         enabled:
           type: boolean
           description: If the connection is enabled.
+          readOnly: true
         reconnectionInterval:
           maximum: 4294967295
           minimum: 1
           type: integer
           description: The time interval in minutes the chat bot attempts to reconnect if Tgstation.Server.Api.Models.Internal.ChatBotSettings.Enabled and disconnected. Must not be zero.
           format: int32
+          readOnly: true
         channelLimit:
           type: integer
           description: The maximum number of Tgstation.Server.Api.Models.ChatChannels the Tgstation.Server.Api.Models.Internal.ChatBotSettings may contain.
           format: int32
+          readOnly: true
         provider:
           allOf:
           - $ref: '#/components/schemas/ChatProvider'
@@ -3480,10 +3479,12 @@ components:
             $ref: '#/components/schemas/ChatChannel'
           description: Channels the Discord bot should listen/announce in.
           nullable: true
+          readOnly: true
         enabled:
           type: boolean
           description: If the connection is enabled.
           nullable: true
+          readOnly: true
         reconnectionInterval:
           maximum: 4294967295
           minimum: 1
@@ -3491,11 +3492,13 @@ components:
           description: The time interval in minutes the chat bot attempts to reconnect if Tgstation.Server.Api.Models.Internal.ChatBotSettings.Enabled and disconnected. Must not be zero.
           format: int32
           nullable: true
+          readOnly: true
         channelLimit:
           type: integer
           description: The maximum number of Tgstation.Server.Api.Models.ChatChannels the Tgstation.Server.Api.Models.Internal.ChatBotSettings may contain.
           format: int32
           nullable: true
+          readOnly: true
         provider:
           allOf:
           - $ref: '#/components/schemas/ChatProvider'
@@ -3532,24 +3535,30 @@ components:
             For Tgstation.Server.Api.Models.ChatProvider.Irc, it's the IRC channel name and optional password colon separated.
 
             For Tgstation.Server.Api.Models.ChatProvider.Discord, it's the stringified Discord channel snowflake.
+          readOnly: true
         isAdminChannel:
           type: boolean
           description: If the Tgstation.Server.Api.Models.ChatChannel is an admin channel.
+          readOnly: true
         isWatchdogChannel:
           type: boolean
           description: If the Tgstation.Server.Api.Models.ChatChannel is a watchdog channel.
+          readOnly: true
         isUpdatesChannel:
           type: boolean
           description: If the Tgstation.Server.Api.Models.ChatChannel is an updates channel.
+          readOnly: true
         isSystemChannel:
           type: boolean
           description: If the Tgstation.Server.Api.Models.ChatChannel received system messages.
+          readOnly: true
         tag:
           maxLength: 10000
           minLength: 0
           type: string
           description: A custom tag users can define to group channels together.
           nullable: true
+          readOnly: true
       additionalProperties: false
       description: Indicates a chat channel.
     ChatProvider:
@@ -3569,39 +3578,48 @@ components:
           allOf:
           - $ref: '#/components/schemas/JobResponse'
           description: The Tgstation.Server.Api.Models.Response.CompileJobResponse.Job relating to this job.
+          readOnly: true
         revisionInformation:
           allOf:
           - $ref: '#/components/schemas/RevisionInformation'
           description: Git revision the compiler ran on.
+          readOnly: true
         engineVersion:
           allOf:
           - $ref: '#/components/schemas/EngineVersion'
           description: The Tgstation.Server.Api.Models.Response.CompileJobResponse.EngineVersion the Tgstation.Server.Api.Models.Response.CompileJobResponse was made with.
+          readOnly: true
         repositoryOrigin:
           type: string
           description: The origin System.Uri of the repository the compile job was built from.
           format: uri
+          readOnly: true
         dmeName:
           minLength: 1
           type: string
           description: The .dme file used for compilation.
+          readOnly: true
         output:
           minLength: 1
           type: string
           description: Textual output of DM.
+          readOnly: true
         directoryName:
           type: string
           description: The Game folder the results were compiled into.
           format: uuid
+          readOnly: true
         minimumSecurityLevel:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonSecurity'
           description: The minimum Tgstation.Server.Api.Models.DreamDaemonSecurity required to run the Tgstation.Server.Api.Models.Internal.CompileJob's output.
           nullable: true
+          readOnly: true
         dmApiVersion:
           type: string
           description: The DMAPI System.Version.
           nullable: true
+          readOnly: true
         id:
           type: integer
           description: The ID of the entity.
@@ -3615,6 +3633,7 @@ components:
         lastReadHash:
           type: string
           nullable: true
+          readOnly: true
       additionalProperties: false
       description: Represents a request to update a configuration file.
     ConfigurationFileResponse:
@@ -3622,19 +3641,24 @@ components:
       properties:
         path:
           type: string
+          readOnly: true
         lastReadHash:
           type: string
           nullable: true
+          readOnly: true
         isDirectory:
           type: boolean
           description: If Tgstation.Server.Api.Models.Response.ConfigurationFileResponse.Path represents a directory.
+          readOnly: true
         accessDenied:
           type: boolean
           description: If access to the Tgstation.Server.Api.Models.IConfigurationFile file was denied for the operation.
           nullable: true
+          readOnly: true
         fileTicket:
           type: string
           description: The ticket to use to access the Tgstation.Server.Api.Routes.Transfer controller.
+          readOnly: true
       additionalProperties: false
       description: Response when reading configuration files.
     ConfigurationRights:
@@ -3684,51 +3708,62 @@ components:
           type: string
           description: A System.String to send to the running server's DMAPI for broadcasting. How this is displayed is up to how the DMAPI is integrated in the codebase. Requires interop version >=5.7.0.
           nullable: true
+          readOnly: true
         sessionId:
           type: integer
           description: An incrementing ID for representing current server execution.
           format: int64
           nullable: true
+          readOnly: true
         launchTime:
           type: string
           description: When the current server execution was started.
           format: date-time
           nullable: true
+          readOnly: true
         clientCount:
           type: integer
           description: The last known count of connected players. Requires Tgstation.Server.Api.Models.Internal.DreamDaemonLaunchParameters.HealthCheckSeconds to not be 0 and a game server interop version >= 5.10.0 to populate.
           format: int32
           nullable: true
+          readOnly: true
         softRestart:
           type: boolean
           description: If the server is undergoing a soft reset. This may be automatically set by changes to other fields.
           nullable: true
+          readOnly: true
         softShutdown:
           type: boolean
           description: If the server is undergoing a soft shutdown.
           nullable: true
+          readOnly: true
         autoStart:
           type: boolean
           description: If the watchdog starts when it's Tgstation.Server.Api.Models.Instance starts.
           nullable: true
+          readOnly: true
         allowWebClient:
           type: boolean
           description: If the BYOND web client can be used to connect to the game server. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
+          readOnly: true
         startProfiler:
           type: boolean
           description: If -profile is passed in on the DreamDaemon command line. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
+          readOnly: true
         visibility:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonVisibility'
           description: The Tgstation.Server.Api.Models.DreamDaemonVisibility level of DreamDaemon. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
+          readOnly: true
         securityLevel:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonSecurity'
           description: The Tgstation.Server.Api.Models.DreamDaemonSecurity level of DreamDaemon. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
+          readOnly: true
         port:
           maximum: 65535
           minimum: 1
@@ -3736,11 +3771,13 @@ components:
           description: The port DreamDaemon uses. This should be publically accessible.
           format: int32
           nullable: true
+          readOnly: true
         openDreamTopicPort:
           type: integer
           description: The port used by Tgstation.Server.Api.Models.EngineType.OpenDream for its topic port.
           format: int32
           nullable: true
+          readOnly: true
         startupTimeout:
           maximum: 4294967295
           minimum: 1
@@ -3748,15 +3785,18 @@ components:
           description: The DreamDaemon startup timeout in seconds.
           format: int32
           nullable: true
+          readOnly: true
         healthCheckSeconds:
           type: integer
           description: The number of seconds between each watchdog health check. 0 disables.
           format: int32
           nullable: true
+          readOnly: true
         dumpOnHealthCheckRestart:
           type: boolean
           description: If a process core dump should be created prior to restarting the watchdog due to health check failure.
           nullable: true
+          readOnly: true
         topicRequestTimeout:
           maximum: 4294967295
           minimum: 1
@@ -3764,25 +3804,30 @@ components:
           description: The timeout for sending and receiving BYOND topics in milliseconds.
           format: int32
           nullable: true
+          readOnly: true
         additionalParameters:
           maxLength: 10000
           minLength: 0
           type: string
           description: Parameters string for DreamDaemon.
           nullable: true
+          readOnly: true
         logOutput:
           type: boolean
           description: If process output/error text should be logged.
           nullable: true
+          readOnly: true
         mapThreads:
           type: integer
           description: If DreamDaemon supports it, the value added as the -map-threads parameter. 0 uses the default BYOND value. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           format: int32
           nullable: true
+          readOnly: true
         minidumps:
           type: boolean
           description: If minidumps should be taken instead of full dumps.
           nullable: true
+          readOnly: true
       additionalProperties: false
       description: A request to update Tgstation.Server.Api.Models.Internal.DreamDaemonSettings.
     DreamDaemonResponse:
@@ -3793,90 +3838,109 @@ components:
           - $ref: '#/components/schemas/CompileJobResponse'
           description: The live revision.
           nullable: true
+          readOnly: true
         stagedCompileJob:
           allOf:
           - $ref: '#/components/schemas/CompileJobResponse'
           description: The next revision to go live.
           nullable: true
+          readOnly: true
         status:
           allOf:
           - $ref: '#/components/schemas/WatchdogStatus'
           description: The current Tgstation.Server.Api.Models.WatchdogStatus.
           nullable: true
+          readOnly: true
         currentSecurity:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonSecurity'
           description: The current Tgstation.Server.Api.Models.DreamDaemonSecurity. May be upgraded. due to requirements of Tgstation.Server.Api.Models.Response.DreamDaemonResponse.ActiveCompileJob.
           nullable: true
+          readOnly: true
         currentVisibility:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonVisibility'
           description: The current Tgstation.Server.Api.Models.DreamDaemonVisibility.
           nullable: true
+          readOnly: true
         currentPort:
           type: integer
           description: The port the running Tgstation.Server.Api.Models.Response.DreamDaemonResponse instance is set to.
           format: int32
           nullable: true
+          readOnly: true
         currentTopicPort:
           type: integer
           description: The Tgstation.Server.Api.Models.EngineType.OpenDream topic port the running Tgstation.Server.Api.Models.Response.DreamDaemonResponse instance is set to.
           format: int32
           nullable: true
+          readOnly: true
         currentAllowWebclient:
           type: boolean
           description: The webclient status the running Tgstation.Server.Api.Models.Response.DreamDaemonResponse instance is set to.
           nullable: true
+          readOnly: true
         immediateMemoryUsage:
           type: integer
           description: The amount of RAM in use by the game server in bytes.
           format: int64
           nullable: true
+          readOnly: true
         sessionId:
           type: integer
           description: An incrementing ID for representing current server execution.
           format: int64
           nullable: true
+          readOnly: true
         launchTime:
           type: string
           description: When the current server execution was started.
           format: date-time
           nullable: true
+          readOnly: true
         clientCount:
           type: integer
           description: The last known count of connected players. Requires Tgstation.Server.Api.Models.Internal.DreamDaemonLaunchParameters.HealthCheckSeconds to not be 0 and a game server interop version >= 5.10.0 to populate.
           format: int32
           nullable: true
+          readOnly: true
         softRestart:
           type: boolean
           description: If the server is undergoing a soft reset. This may be automatically set by changes to other fields.
           nullable: true
+          readOnly: true
         softShutdown:
           type: boolean
           description: If the server is undergoing a soft shutdown.
           nullable: true
+          readOnly: true
         autoStart:
           type: boolean
           description: If the watchdog starts when it's Tgstation.Server.Api.Models.Instance starts.
           nullable: true
+          readOnly: true
         allowWebClient:
           type: boolean
           description: If the BYOND web client can be used to connect to the game server. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
+          readOnly: true
         startProfiler:
           type: boolean
           description: If -profile is passed in on the DreamDaemon command line. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
+          readOnly: true
         visibility:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonVisibility'
           description: The Tgstation.Server.Api.Models.DreamDaemonVisibility level of DreamDaemon. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
+          readOnly: true
         securityLevel:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonSecurity'
           description: The Tgstation.Server.Api.Models.DreamDaemonSecurity level of DreamDaemon. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
+          readOnly: true
         port:
           maximum: 65535
           minimum: 1
@@ -3884,11 +3948,13 @@ components:
           description: The port DreamDaemon uses. This should be publically accessible.
           format: int32
           nullable: true
+          readOnly: true
         openDreamTopicPort:
           type: integer
           description: The port used by Tgstation.Server.Api.Models.EngineType.OpenDream for its topic port.
           format: int32
           nullable: true
+          readOnly: true
         startupTimeout:
           maximum: 4294967295
           minimum: 1
@@ -3896,15 +3962,18 @@ components:
           description: The DreamDaemon startup timeout in seconds.
           format: int32
           nullable: true
+          readOnly: true
         healthCheckSeconds:
           type: integer
           description: The number of seconds between each watchdog health check. 0 disables.
           format: int32
           nullable: true
+          readOnly: true
         dumpOnHealthCheckRestart:
           type: boolean
           description: If a process core dump should be created prior to restarting the watchdog due to health check failure.
           nullable: true
+          readOnly: true
         topicRequestTimeout:
           maximum: 4294967295
           minimum: 1
@@ -3912,25 +3981,30 @@ components:
           description: The timeout for sending and receiving BYOND topics in milliseconds.
           format: int32
           nullable: true
+          readOnly: true
         additionalParameters:
           maxLength: 10000
           minLength: 0
           type: string
           description: Parameters string for DreamDaemon.
           nullable: true
+          readOnly: true
         logOutput:
           type: boolean
           description: If process output/error text should be logged.
           nullable: true
+          readOnly: true
         mapThreads:
           type: integer
           description: If DreamDaemon supports it, the value added as the -map-threads parameter. 0 uses the default BYOND value. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           format: int32
           nullable: true
+          readOnly: true
         minidumps:
           type: boolean
           description: If minidumps should be taken instead of full dumps.
           nullable: true
+          readOnly: true
       additionalProperties: false
       description: Represents an instance of BYOND's DreamDaemon game server. Create action starts the server. Delete action shuts down the server.
     DreamDaemonRights:
@@ -4018,6 +4092,7 @@ components:
           type: string
           description: The name of the .dme file the server tries to compile with without the extension.
           nullable: true
+          readOnly: true
         apiValidationPort:
           maximum: 65535
           minimum: 1
@@ -4025,32 +4100,38 @@ components:
           description: The port used during compilation to validate the DMAPI.
           format: int32
           nullable: true
+          readOnly: true
         apiValidationSecurityLevel:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonSecurity'
           description: The Tgstation.Server.Api.Models.DreamDaemonSecurity level used to validate the DMAPI.
           nullable: true
+          readOnly: true
         requireDMApiValidation:
           type: boolean
           description: If API validation should be required for a deployment to succeed. Must not be set on mutation if Tgstation.Server.Api.Models.Internal.DreamMakerSettings.DMApiValidationMode is set.
           nullable: true
+          readOnly: true
           deprecated: true
         dmApiValidationMode:
           allOf:
           - $ref: '#/components/schemas/DMApiValidationMode'
           description: The current Tgstation.Server.Api.Models.DMApiValidationMode. Must not be set on mutation if Tgstation.Server.Api.Models.Internal.DreamMakerSettings.RequireDMApiValidation is set.
           nullable: true
+          readOnly: true
         timeout:
           type: string
           description: Amount of time before an in-progress deployment is cancelled.
           format: date-span
           nullable: true
+          readOnly: true
         compilerAdditionalArguments:
           maxLength: 10000
           minLength: 0
           type: string
           description: Additional arguments added to the compiler command line.
           nullable: true
+          readOnly: true
       additionalProperties: false
       description: A request to the DreamMaker controller.
     DreamMakerResponse:
@@ -4062,34 +4143,41 @@ components:
           type: string
           description: The name of the .dme file the server tries to compile with without the extension.
           nullable: true
+          readOnly: true
         apiValidationPort:
           maximum: 65535
           minimum: 1
           type: integer
           description: The port used during compilation to validate the DMAPI.
           format: int32
+          readOnly: true
         apiValidationSecurityLevel:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonSecurity'
           description: The Tgstation.Server.Api.Models.DreamDaemonSecurity level used to validate the DMAPI.
+          readOnly: true
         requireDMApiValidation:
           type: boolean
           description: If API validation should be required for a deployment to succeed. Must not be set on mutation if Tgstation.Server.Api.Models.Internal.DreamMakerSettings.DMApiValidationMode is set.
+          readOnly: true
           deprecated: true
         dmApiValidationMode:
           allOf:
           - $ref: '#/components/schemas/DMApiValidationMode'
           description: The current Tgstation.Server.Api.Models.DMApiValidationMode. Must not be set on mutation if Tgstation.Server.Api.Models.Internal.DreamMakerSettings.RequireDMApiValidation is set.
+          readOnly: true
         timeout:
           type: string
           description: Amount of time before an in-progress deployment is cancelled.
           format: date-span
+          readOnly: true
         compilerAdditionalArguments:
           maxLength: 10000
           minLength: 0
           type: string
           description: Additional arguments added to the compiler command line.
           nullable: true
+          readOnly: true
       additionalProperties: false
       description: A request to the DreamMaker controller.
     DreamMakerRights:
@@ -4128,9 +4216,11 @@ components:
           - $ref: '#/components/schemas/JobResponse'
           description: The Tgstation.Server.Api.Models.Response.JobResponse being used to install a new Tgstation.Server.Api.Models.EngineVersion.
           nullable: true
+          readOnly: true
         fileTicket:
           type: string
           nullable: true
+          readOnly: true
       additionalProperties: false
       description: Represents an engine installation job. Tgstation.Server.Api.Models.Response.FileTicketResponse.FileTicket is used to upload custom version zip files.
     EngineResponse:
@@ -4140,6 +4230,7 @@ components:
           allOf:
           - $ref: '#/components/schemas/EngineVersion'
           description: The represented Tgstation.Server.Api.Models.EngineVersion. If null that indicates none were found.
+          readOnly: true
       additionalProperties: false
       description: Represents an installed Tgstation.Server.Api.Models.EngineVersion.
     EngineRights:
@@ -4187,17 +4278,20 @@ components:
           type: string
           description: The System.Version of the engine. Currently only valid when Tgstation.Server.Api.Models.EngineVersion.Engine is Tgstation.Server.Api.Models.EngineType.Byond.
           nullable: true
+          readOnly: true
         sourceSHA:
           maxLength: 40
           minLength: 40
           type: string
           description: The git commit SHA of the engine. Currently only valid when Tgstation.Server.Api.Models.EngineVersion.Engine is Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
+          readOnly: true
         customIteration:
           type: integer
           description: The revision of the custom build.
           format: int32
           nullable: true
+          readOnly: true
       additionalProperties: false
       description: Information about an engine installation.
     EngineVersionDeleteRequest:
@@ -4208,6 +4302,7 @@ components:
           - $ref: '#/components/schemas/EngineVersion'
           description: The Tgstation.Server.Api.Models.EngineVersion to delete.
           nullable: true
+          readOnly: true
       additionalProperties: false
       description: A request to delete a specific Tgstation.Server.Api.Models.Request.EngineVersionDeleteRequest.EngineVersion.
     EngineVersionRequest:
@@ -4218,10 +4313,12 @@ components:
           - $ref: '#/components/schemas/EngineVersion'
           description: The Tgstation.Server.Api.Models.EngineVersion to switch to.
           nullable: true
+          readOnly: true
         uploadCustomZip:
           type: boolean
           description: If a custom BYOND version is to be uploaded.
           nullable: true
+          readOnly: true
       additionalProperties: false
       description: A request to switch to a given Tgstation.Server.Api.Models.Request.EngineVersionRequest.EngineVersion.
     EntityId:
@@ -4345,6 +4442,7 @@ components:
       - 106
       - 107
       - 108
+      - 109
       type: integer
       description: Types of Tgstation.Server.Api.Models.Response.ErrorMessageResponses that the API may return.
       format: int32
@@ -4458,23 +4556,28 @@ components:
       - DotnetDiagnosticsFailure
       - DeploymentWrongDme
       - RepoTokenUsernameMismatch
+      - RemoteGatewaysNotImplemented
     ErrorMessageResponse:
       type: object
       properties:
         serverApiVersion:
           type: string
           description: The version of the API the server is using.
+          readOnly: true
         message:
           type: string
           description: A human readable description of the error.
+          readOnly: true
         additionalData:
           type: string
           description: Additional data associated with the error message.
           nullable: true
+          readOnly: true
         errorCode:
           allOf:
           - $ref: '#/components/schemas/ErrorCode'
           description: The Tgstation.Server.Api.Models.Response.ErrorMessageResponse.ErrorCode of the Tgstation.Server.Api.Models.Response.ErrorMessageResponse.
+          readOnly: true
       additionalProperties: false
       description: Represents an error message returned by the server.
     InstanceCreateRequest:
@@ -4489,22 +4592,26 @@ components:
           - $ref: '#/components/schemas/ConfigurationType'
           description: If Tgstation.Server.Api.Models.IConfigurationFiles can be used on the Tgstation.Server.Api.Models.Instance.
           nullable: true
+          readOnly: true
         autoUpdateInterval:
           type: integer
           description: The time interval in minutes the repository is automatically pulled and compiles. 0 disables.
           format: int32
           nullable: true
+          readOnly: true
         autoUpdateCron:
           maxLength: 10000
           minLength: 0
           type: string
           description: A cron expression indicating when auto-updates should trigger. Must be a valid 6 part cron schedule (SECONDS MINUTES HOURS DAY/MONTH MONTH DAY/WEEK). Empty System.String disables.
           nullable: true
+          readOnly: true
         chatBotLimit:
           type: integer
           description: The maximum number of chat bots the Tgstation.Server.Api.Models.Instance may contain.
           format: int32
           nullable: true
+          readOnly: true
         name:
           maxLength: 100
           minLength: 1
@@ -4554,36 +4661,43 @@ components:
           - $ref: '#/components/schemas/InstancePermissionSetRights'
           description: The Tgstation.Server.Api.Rights.InstancePermissionSetRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
           nullable: true
+          readOnly: true
         engineRights:
           allOf:
           - $ref: '#/components/schemas/EngineRights'
           description: The Tgstation.Server.Api.Rights.EngineRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
           nullable: true
+          readOnly: true
         dreamDaemonRights:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonRights'
           description: The Tgstation.Server.Api.Rights.DreamDaemonRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
           nullable: true
+          readOnly: true
         dreamMakerRights:
           allOf:
           - $ref: '#/components/schemas/DreamMakerRights'
           description: The Tgstation.Server.Api.Rights.DreamMakerRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
           nullable: true
+          readOnly: true
         repositoryRights:
           allOf:
           - $ref: '#/components/schemas/RepositoryRights'
           description: The Tgstation.Server.Api.Rights.RepositoryRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
           nullable: true
+          readOnly: true
         chatBotRights:
           allOf:
           - $ref: '#/components/schemas/ChatBotRights'
           description: The Tgstation.Server.Api.Rights.ChatBotRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
           nullable: true
+          readOnly: true
         configurationRights:
           allOf:
           - $ref: '#/components/schemas/ConfigurationRights'
           description: The Tgstation.Server.Api.Rights.ConfigurationRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
           nullable: true
+          readOnly: true
       additionalProperties: false
       description: A request to update an instance permission set.
     InstancePermissionSetResponse:
@@ -4597,30 +4711,37 @@ components:
           allOf:
           - $ref: '#/components/schemas/InstancePermissionSetRights'
           description: The Tgstation.Server.Api.Rights.InstancePermissionSetRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
+          readOnly: true
         engineRights:
           allOf:
           - $ref: '#/components/schemas/EngineRights'
           description: The Tgstation.Server.Api.Rights.EngineRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
+          readOnly: true
         dreamDaemonRights:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonRights'
           description: The Tgstation.Server.Api.Rights.DreamDaemonRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
+          readOnly: true
         dreamMakerRights:
           allOf:
           - $ref: '#/components/schemas/DreamMakerRights'
           description: The Tgstation.Server.Api.Rights.DreamMakerRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
+          readOnly: true
         repositoryRights:
           allOf:
           - $ref: '#/components/schemas/RepositoryRights'
           description: The Tgstation.Server.Api.Rights.RepositoryRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
+          readOnly: true
         chatBotRights:
           allOf:
           - $ref: '#/components/schemas/ChatBotRights'
           description: The Tgstation.Server.Api.Rights.ChatBotRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
+          readOnly: true
         configurationRights:
           allOf:
           - $ref: '#/components/schemas/ConfigurationRights'
           description: The Tgstation.Server.Api.Rights.ConfigurationRights of the Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
+          readOnly: true
       additionalProperties: false
       description: A response containing an instance permission set.
     InstancePermissionSetRights:
@@ -4645,9 +4766,11 @@ components:
           - $ref: '#/components/schemas/JobResponse'
           description: The Tgstation.Server.Api.Models.Response.JobResponse representing a change of Tgstation.Server.Api.Models.Instance.Path.
           nullable: true
+          readOnly: true
         accessible:
           type: boolean
           description: If the querying user may access this instance.
+          readOnly: true
         path:
           minLength: 1
           type: string
@@ -4659,19 +4782,23 @@ components:
           allOf:
           - $ref: '#/components/schemas/ConfigurationType'
           description: If Tgstation.Server.Api.Models.IConfigurationFiles can be used on the Tgstation.Server.Api.Models.Instance.
+          readOnly: true
         autoUpdateInterval:
           type: integer
           description: The time interval in minutes the repository is automatically pulled and compiles. 0 disables.
           format: int32
+          readOnly: true
         autoUpdateCron:
           maxLength: 10000
           minLength: 0
           type: string
           description: A cron expression indicating when auto-updates should trigger. Must be a valid 6 part cron schedule (SECONDS MINUTES HOURS DAY/MONTH MONTH DAY/WEEK). Empty System.String disables.
+          readOnly: true
         chatBotLimit:
           type: integer
           description: The maximum number of chat bots the Tgstation.Server.Api.Models.Instance may contain.
           format: int32
+          readOnly: true
         name:
           maxLength: 100
           minLength: 1
@@ -4700,22 +4827,26 @@ components:
           - $ref: '#/components/schemas/ConfigurationType'
           description: If Tgstation.Server.Api.Models.IConfigurationFiles can be used on the Tgstation.Server.Api.Models.Instance.
           nullable: true
+          readOnly: true
         autoUpdateInterval:
           type: integer
           description: The time interval in minutes the repository is automatically pulled and compiles. 0 disables.
           format: int32
           nullable: true
+          readOnly: true
         autoUpdateCron:
           maxLength: 10000
           minLength: 0
           type: string
           description: A cron expression indicating when auto-updates should trigger. Must be a valid 6 part cron schedule (SECONDS MINUTES HOURS DAY/MONTH MONTH DAY/WEEK). Empty System.String disables.
           nullable: true
+          readOnly: true
         chatBotLimit:
           type: integer
           description: The maximum number of chat bots the Tgstation.Server.Api.Models.Instance may contain.
           format: int32
           nullable: true
+          readOnly: true
         name:
           maxLength: 100
           minLength: 1
@@ -4777,63 +4908,77 @@ components:
           type: integer
           description: The Tgstation.Server.Api.Models.EntityId.Id of the Tgstation.Server.Api.Models.Instance.
           format: int64
+          readOnly: true
         startedBy:
           allOf:
           - $ref: '#/components/schemas/ShallowUserResponse'
           description: The Tgstation.Server.Api.Models.Response.UserResponse that started the job.
+          readOnly: true
         cancelledBy:
           allOf:
           - $ref: '#/components/schemas/ShallowUserResponse'
           description: The Tgstation.Server.Api.Models.Response.UserResponse that cancelled the job.
           nullable: true
+          readOnly: true
         progress:
           type: integer
           description: Optional progress between 0 and 100 inclusive.
           format: int32
           nullable: true
+          readOnly: true
         stage:
           type: string
           description: Optional description of the job's current .
           nullable: true
+          readOnly: true
         jobCode:
           allOf:
           - $ref: '#/components/schemas/JobCode'
           description: The Tgstation.Server.Api.Models.JobCode.
+          readOnly: true
         description:
           minLength: 1
           type: string
           description: English description of the Tgstation.Server.Api.Models.Internal.Job.
+          readOnly: true
         errorCode:
           allOf:
           - $ref: '#/components/schemas/ErrorCode'
           description: The Tgstation.Server.Api.Models.ErrorCode associated with the Tgstation.Server.Api.Models.Internal.Job if any.
           nullable: true
+          readOnly: true
         exceptionDetails:
           type: string
           description: Details of any exceptions caught during the Tgstation.Server.Api.Models.Internal.Job.
           nullable: true
+          readOnly: true
         startedAt:
           type: string
           description: When the Tgstation.Server.Api.Models.Internal.Job was started.
           format: date-time
+          readOnly: true
         stoppedAt:
           type: string
           description: When the Tgstation.Server.Api.Models.Internal.Job stopped.
           format: date-time
           nullable: true
+          readOnly: true
         cancelled:
           type: boolean
           description: If the Tgstation.Server.Api.Models.Internal.Job was cancelled.
+          readOnly: true
         cancelRightsType:
           allOf:
           - $ref: '#/components/schemas/RightsType'
           description: The Tgstation.Server.Api.Rights.RightsType of Tgstation.Server.Api.Models.Internal.Job.CancelRight if it can be cancelled.
           nullable: true
+          readOnly: true
         cancelRight:
           type: integer
           description: The N:Tgstation.Server.Api.Rights required to cancel the Tgstation.Server.Api.Models.Internal.Job.
           format: int64
           nullable: true
+          readOnly: true
         id:
           type: integer
           description: The ID of the entity.
@@ -4846,13 +4991,16 @@ components:
         name:
           type: string
           description: The name of the log file.
+          readOnly: true
         lastModified:
           type: string
           description: The System.DateTimeOffset of when the log file was modified.
           format: date-time
+          readOnly: true
         fileTicket:
           type: string
           description: The ticket to use to access the Tgstation.Server.Api.Routes.Transfer controller.
+          readOnly: true
       additionalProperties: false
       description: Represents a server log file.
     OAuthConnection:
@@ -4862,6 +5010,7 @@ components:
           allOf:
           - $ref: '#/components/schemas/OAuthProvider'
           description: The Tgstation.Server.Api.Models.OAuthProvider of the Tgstation.Server.Api.Models.OAuthConnection.
+          readOnly: true
         externalUserId:
           maxLength: 100
           minLength: 1
@@ -4890,15 +5039,18 @@ components:
         clientId:
           type: string
           description: The client ID.
+          readOnly: true
         redirectUri:
           type: string
           description: The redirect URL.
           format: uri
+          readOnly: true
         serverUrl:
           type: string
           description: The server URL.
           format: uri
           nullable: true
+          readOnly: true
       additionalProperties: false
       description: Public information about a given Tgstation.Server.Api.Models.OAuthProvider.
     PaginatedChatBotResponse:
@@ -4909,18 +5061,22 @@ components:
           items:
             $ref: '#/components/schemas/ChatBotResponse'
           description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+          readOnly: true
         totalPages:
           type: integer
           description: The total number of pages in the query.
           format: int32
+          readOnly: true
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
+          readOnly: true
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
+          readOnly: true
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedCompileJobResponse:
@@ -4931,18 +5087,22 @@ components:
           items:
             $ref: '#/components/schemas/CompileJobResponse'
           description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+          readOnly: true
         totalPages:
           type: integer
           description: The total number of pages in the query.
           format: int32
+          readOnly: true
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
+          readOnly: true
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
+          readOnly: true
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedConfigurationFileResponse:
@@ -4953,18 +5113,22 @@ components:
           items:
             $ref: '#/components/schemas/ConfigurationFileResponse'
           description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+          readOnly: true
         totalPages:
           type: integer
           description: The total number of pages in the query.
           format: int32
+          readOnly: true
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
+          readOnly: true
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
+          readOnly: true
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedEngineResponse:
@@ -4975,18 +5139,22 @@ components:
           items:
             $ref: '#/components/schemas/EngineResponse'
           description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+          readOnly: true
         totalPages:
           type: integer
           description: The total number of pages in the query.
           format: int32
+          readOnly: true
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
+          readOnly: true
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
+          readOnly: true
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedInstancePermissionSetResponse:
@@ -4997,18 +5165,22 @@ components:
           items:
             $ref: '#/components/schemas/InstancePermissionSetResponse'
           description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+          readOnly: true
         totalPages:
           type: integer
           description: The total number of pages in the query.
           format: int32
+          readOnly: true
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
+          readOnly: true
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
+          readOnly: true
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedInstanceResponse:
@@ -5019,18 +5191,22 @@ components:
           items:
             $ref: '#/components/schemas/InstanceResponse'
           description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+          readOnly: true
         totalPages:
           type: integer
           description: The total number of pages in the query.
           format: int32
+          readOnly: true
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
+          readOnly: true
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
+          readOnly: true
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedJobResponse:
@@ -5041,18 +5217,22 @@ components:
           items:
             $ref: '#/components/schemas/JobResponse'
           description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+          readOnly: true
         totalPages:
           type: integer
           description: The total number of pages in the query.
           format: int32
+          readOnly: true
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
+          readOnly: true
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
+          readOnly: true
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedLogFileResponse:
@@ -5063,18 +5243,22 @@ components:
           items:
             $ref: '#/components/schemas/LogFileResponse'
           description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+          readOnly: true
         totalPages:
           type: integer
           description: The total number of pages in the query.
           format: int32
+          readOnly: true
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
+          readOnly: true
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
+          readOnly: true
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedUserGroupResponse:
@@ -5085,18 +5269,22 @@ components:
           items:
             $ref: '#/components/schemas/UserGroupResponse'
           description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+          readOnly: true
         totalPages:
           type: integer
           description: The total number of pages in the query.
           format: int32
+          readOnly: true
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
+          readOnly: true
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
+          readOnly: true
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedUserResponse:
@@ -5107,18 +5295,22 @@ components:
           items:
             $ref: '#/components/schemas/UserResponse'
           description: The System.Collections.Generic.ICollection`1 of the returned <typeparamref name="TModel" />s.
+          readOnly: true
         totalPages:
           type: integer
           description: The total number of pages in the query.
           format: int32
+          readOnly: true
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
+          readOnly: true
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
+          readOnly: true
       additionalProperties: false
       description: Represents a paginated set of models.
     PermissionSet:
@@ -5128,15 +5320,16 @@ components:
           type: integer
           format: int64
           nullable: true
-          readOnly: true
         administrationRights:
           allOf:
           - $ref: '#/components/schemas/AdministrationRights'
           description: The Tgstation.Server.Api.Rights.AdministrationRights for the user.
+          readOnly: true
         instanceManagerRights:
           allOf:
           - $ref: '#/components/schemas/InstanceManagerRights'
           description: The Tgstation.Server.Api.Rights.InstanceManagerRights for the user.
+          readOnly: true
       additionalProperties: false
       description: Represents a set of server permissions.
     RemoteGitProvider:
@@ -5164,12 +5357,14 @@ components:
           type: string
           description: The branch or tag HEAD points to.
           nullable: true
+          readOnly: true
         committerName:
           maxLength: 10000
           minLength: 0
           type: string
           description: The name of the committer.
           nullable: true
+          readOnly: true
         committerEmail:
           maxLength: 10000
           minLength: 0
@@ -5177,46 +5372,56 @@ components:
           description: The e-mail of the committer.
           format: email
           nullable: true
+          readOnly: true
         accessUser:
           maxLength: 10000
           minLength: 0
           type: string
           description: The username to access the git repository with. If using a TGS encoded app private key for Tgstation.Server.Api.Models.RepositorySettings.AccessToken, this should be the app's name.
           nullable: true
+          readOnly: true
         accessToken:
           maxLength: 10000
           minLength: 0
           type: string
           description: The token/password to access the git repository with. Can also be a TGS encoded app private key. Tgstation.Server.Api.Models.RepositorySettings.TgsAppPrivateKeyPrefix for details.
           nullable: true
+          readOnly: true
         pushTestMergeCommits:
           type: boolean
           description: If commits created from testmerges are pushed to the remote. Requires Tgstation.Server.Api.Models.RepositorySettings.AccessUser and Tgstation.Server.Api.Models.RepositorySettings.AccessToken to be set to function.
           nullable: true
+          readOnly: true
         createGitHubDeployments:
           type: boolean
           description: If GitHub deployments should be created. Requires Tgstation.Server.Api.Models.RepositorySettings.AccessUser, Tgstation.Server.Api.Models.RepositorySettings.AccessToken, and Tgstation.Server.Api.Models.RepositorySettings.PushTestMergeCommits to be set to function.
           nullable: true
+          readOnly: true
         showTestMergeCommitters:
           type: boolean
           description: If test merge commits are signed with the username of the person who merged it. Note this only affects future commits.
           nullable: true
+          readOnly: true
         autoUpdatesKeepTestMerges:
           type: boolean
           description: If test merge commits should be kept when auto updating. May cause merge conflicts which will block the update.
           nullable: true
+          readOnly: true
         autoUpdatesSynchronize:
           type: boolean
           description: If synchronization should occur when auto updating. Requries Tgstation.Server.Api.Models.RepositorySettings.AccessUser and Tgstation.Server.Api.Models.RepositorySettings.AccessToken to be set to function.
           nullable: true
+          readOnly: true
         postTestMergeComment:
           type: boolean
           description: If test merging should create a comment. Requires Tgstation.Server.Api.Models.RepositorySettings.AccessToken to be set to function.
           nullable: true
+          readOnly: true
         updateSubmodules:
           type: boolean
           description: Do the equivalent of a `git submodule update --init` alongside any resets to origin, checkouts, or test merge additions. Note that this action is recursive ONLY during cloning.
           nullable: true
+          readOnly: true
       additionalProperties: false
       description: Represents a request to clone the repository.
     RepositoryResponse:
@@ -5227,70 +5432,87 @@ components:
           description: The origin URL. If null, the git repository does not currently exist on the server.
           format: uri
           nullable: true
+          readOnly: true
         revisionInformation:
           allOf:
           - $ref: '#/components/schemas/RevisionInformation'
           description: The current Tgstation.Server.Api.Models.RevisionInformation.
           nullable: true
+          readOnly: true
         remoteGitProvider:
           allOf:
           - $ref: '#/components/schemas/RemoteGitProvider'
           nullable: true
+          readOnly: true
         remoteRepositoryOwner:
           type: string
           nullable: true
+          readOnly: true
         remoteRepositoryName:
           type: string
           nullable: true
+          readOnly: true
         activeJob:
           allOf:
           - $ref: '#/components/schemas/JobResponse'
           description: The Tgstation.Server.Api.Models.Response.JobResponse started by the request, if any.
           nullable: true
+          readOnly: true
         reference:
           maxLength: 10000
           minLength: 0
           type: string
           description: The branch or tag HEAD points to.
           nullable: true
+          readOnly: true
         committerName:
           maxLength: 10000
           minLength: 0
           type: string
           description: The name of the committer.
+          readOnly: true
         committerEmail:
           maxLength: 10000
           minLength: 0
           type: string
           description: The e-mail of the committer.
           format: email
+          readOnly: true
         accessUser:
           maxLength: 10000
           minLength: 0
           type: string
           description: The username to access the git repository with. If using a TGS encoded app private key for Tgstation.Server.Api.Models.RepositorySettings.AccessToken, this should be the app's name.
           nullable: true
+          readOnly: true
         pushTestMergeCommits:
           type: boolean
           description: If commits created from testmerges are pushed to the remote. Requires Tgstation.Server.Api.Models.RepositorySettings.AccessUser and Tgstation.Server.Api.Models.RepositorySettings.AccessToken to be set to function.
+          readOnly: true
         createGitHubDeployments:
           type: boolean
           description: If GitHub deployments should be created. Requires Tgstation.Server.Api.Models.RepositorySettings.AccessUser, Tgstation.Server.Api.Models.RepositorySettings.AccessToken, and Tgstation.Server.Api.Models.RepositorySettings.PushTestMergeCommits to be set to function.
+          readOnly: true
         showTestMergeCommitters:
           type: boolean
           description: If test merge commits are signed with the username of the person who merged it. Note this only affects future commits.
+          readOnly: true
         autoUpdatesKeepTestMerges:
           type: boolean
           description: If test merge commits should be kept when auto updating. May cause merge conflicts which will block the update.
+          readOnly: true
         autoUpdatesSynchronize:
           type: boolean
           description: If synchronization should occur when auto updating. Requries Tgstation.Server.Api.Models.RepositorySettings.AccessUser and Tgstation.Server.Api.Models.RepositorySettings.AccessToken to be set to function.
+          readOnly: true
         postTestMergeComment:
           type: boolean
           description: If test merging should create a comment. Requires Tgstation.Server.Api.Models.RepositorySettings.AccessToken to be set to function.
+          readOnly: true
         updateSubmodules:
           type: boolean
           description: Do the equivalent of a `git submodule update --init` alongside any resets to origin, checkouts, or test merge additions. Note that this action is recursive ONLY during cloning.
+          readOnly: true
       additionalProperties: false
       description: Represents a git repository.
     RepositoryRights:
@@ -5340,28 +5562,33 @@ components:
           type: string
           description: The commit HEAD should point to.
           nullable: true
+          readOnly: true
         updateFromOrigin:
           type: boolean
           description: Do the equivalent of a `git pull`. Will attempt to merge unless Tgstation.Server.Api.Models.Internal.RepositoryApiBase.Reference is also specified in which case a hard reset will be performed after checking out.
           nullable: true
+          readOnly: true
         newTestMerges:
           type: array
           items:
             $ref: '#/components/schemas/TestMergeParameters'
           description: Tgstation.Server.Api.Models.TestMergeParameters for new Tgstation.Server.Api.Models.TestMerges. Note that merges that conflict will not be performed.
           nullable: true
+          readOnly: true
         reference:
           maxLength: 10000
           minLength: 0
           type: string
           description: The branch or tag HEAD points to.
           nullable: true
+          readOnly: true
         committerName:
           maxLength: 10000
           minLength: 0
           type: string
           description: The name of the committer.
           nullable: true
+          readOnly: true
         committerEmail:
           maxLength: 10000
           minLength: 0
@@ -5369,46 +5596,56 @@ components:
           description: The e-mail of the committer.
           format: email
           nullable: true
+          readOnly: true
         accessUser:
           maxLength: 10000
           minLength: 0
           type: string
           description: The username to access the git repository with. If using a TGS encoded app private key for Tgstation.Server.Api.Models.RepositorySettings.AccessToken, this should be the app's name.
           nullable: true
+          readOnly: true
         accessToken:
           maxLength: 10000
           minLength: 0
           type: string
           description: The token/password to access the git repository with. Can also be a TGS encoded app private key. Tgstation.Server.Api.Models.RepositorySettings.TgsAppPrivateKeyPrefix for details.
           nullable: true
+          readOnly: true
         pushTestMergeCommits:
           type: boolean
           description: If commits created from testmerges are pushed to the remote. Requires Tgstation.Server.Api.Models.RepositorySettings.AccessUser and Tgstation.Server.Api.Models.RepositorySettings.AccessToken to be set to function.
           nullable: true
+          readOnly: true
         createGitHubDeployments:
           type: boolean
           description: If GitHub deployments should be created. Requires Tgstation.Server.Api.Models.RepositorySettings.AccessUser, Tgstation.Server.Api.Models.RepositorySettings.AccessToken, and Tgstation.Server.Api.Models.RepositorySettings.PushTestMergeCommits to be set to function.
           nullable: true
+          readOnly: true
         showTestMergeCommitters:
           type: boolean
           description: If test merge commits are signed with the username of the person who merged it. Note this only affects future commits.
           nullable: true
+          readOnly: true
         autoUpdatesKeepTestMerges:
           type: boolean
           description: If test merge commits should be kept when auto updating. May cause merge conflicts which will block the update.
           nullable: true
+          readOnly: true
         autoUpdatesSynchronize:
           type: boolean
           description: If synchronization should occur when auto updating. Requries Tgstation.Server.Api.Models.RepositorySettings.AccessUser and Tgstation.Server.Api.Models.RepositorySettings.AccessToken to be set to function.
           nullable: true
+          readOnly: true
         postTestMergeComment:
           type: boolean
           description: If test merging should create a comment. Requires Tgstation.Server.Api.Models.RepositorySettings.AccessToken to be set to function.
           nullable: true
+          readOnly: true
         updateSubmodules:
           type: boolean
           description: Do the equivalent of a `git submodule update --init` alongside any resets to origin, checkouts, or test merge additions. Note that this action is recursive ONLY during cloning.
           nullable: true
+          readOnly: true
       additionalProperties: false
       description: Represents a request to change the repository.
     RevisionInformation:
@@ -5419,30 +5656,36 @@ components:
           - $ref: '#/components/schemas/TestMerge'
           description: The Tgstation.Server.Api.Models.TestMerge that was created with this Tgstation.Server.Api.Models.RevisionInformation.
           nullable: true
+          readOnly: true
         activeTestMerges:
           type: array
           items:
             $ref: '#/components/schemas/TestMerge'
           description: The Tgstation.Server.Api.Models.TestMerges active in the Tgstation.Server.Api.Models.RevisionInformation.
+          readOnly: true
         compileJobs:
           type: array
           items:
             $ref: '#/components/schemas/EntityId'
           description: The Tgstation.Server.Api.Models.Internal.CompileJobs made from the Tgstation.Server.Api.Models.RevisionInformation.
+          readOnly: true
         commitSha:
           maxLength: 40
           minLength: 0
           type: string
           description: The revision SHA.
+          readOnly: true
         timestamp:
           type: string
           description: The timestamp of the revision.
           format: date-time
+          readOnly: true
         originCommitSha:
           maxLength: 40
           minLength: 0
           type: string
           description: The SHA of the most recent remote commit.
+          readOnly: true
       additionalProperties: false
     RightsType:
       enum:
@@ -5474,24 +5717,19 @@ components:
         version:
           type: string
           description: The version of the host.
+          readOnly: true
         apiVersion:
           type: string
           description: The N:Tgstation.Server.Api version of the host.
+          readOnly: true
         dmApiVersion:
           type: string
           description: The DMAPI interop version the server uses.
+          readOnly: true
         windowsHost:
           type: boolean
           description: If the server is running on a windows operating system.
-        updateInProgress:
-          type: boolean
-          description: If there is a server update in progress.
-        swarmServers:
-          type: array
-          items:
-            $ref: '#/components/schemas/SwarmServerResponse'
-          description: A System.Collections.Generic.ICollection`1 of connected Tgstation.Server.Api.Models.Response.SwarmServerResponses.
-          nullable: true
+          readOnly: true
         oAuthProviderInfos:
           type: object
           properties:
@@ -5507,28 +5745,45 @@ components:
               $ref: '#/components/schemas/OAuthProviderInfo'
           additionalProperties: false
           description: Map of Tgstation.Server.Api.Models.OAuthProvider to the Tgstation.Server.Api.Models.OAuthProviderInfo for them.
+          readOnly: true
+        updateInProgress:
+          type: boolean
+          description: If there is a server update in progress.
+          readOnly: true
+        swarmServers:
+          type: array
+          items:
+            $ref: '#/components/schemas/SwarmServerResponse'
+          description: A System.Collections.Generic.ICollection`1 of connected Tgstation.Server.Api.Models.Response.SwarmServerResponses.
+          nullable: true
+          readOnly: true
         minimumPasswordLength:
           type: integer
           description: Minimum length of database user passwords.
           format: int32
+          readOnly: true
         instanceLimit:
           type: integer
           description: The maximum number of Tgstation.Server.Api.Models.Instances allowed.
           format: int32
+          readOnly: true
         userLimit:
           type: integer
           description: The maximum number of users allowed.
           format: int32
+          readOnly: true
         userGroupLimit:
           type: integer
           description: The maximum number of user groups allowed.
           format: int32
+          readOnly: true
         validInstancePaths:
           type: array
           items:
             type: string
           description: Limits the locations instances may be created or attached from.
           nullable: true
+          readOnly: true
       additionalProperties: false
       description: Represents basic server information.
     ServerUpdateRequest:
@@ -5541,6 +5796,7 @@ components:
           type: boolean
           description: If the user will provide the server update package .zip file via file transfer as opposed to TGS retrieving it from GitHub.
           nullable: true
+          readOnly: true
       additionalProperties: false
       description: Represents a request to update TGS.
     ServerUpdateResponse:
@@ -5549,9 +5805,11 @@ components:
         newVersion:
           type: string
           description: The version of tgstation-server pending update.
+          readOnly: true
         fileTicket:
           type: string
           description: The ticket to use to access the Tgstation.Server.Api.Routes.Transfer controller.
+          readOnly: true
       additionalProperties: false
       description: A response to a Tgstation.Server.Api.Models.Request.ServerUpdateRequest.
     ShallowUserResponse:
@@ -5571,18 +5829,22 @@ components:
         controller:
           type: boolean
           description: If the Tgstation.Server.Api.Models.Response.SwarmServerResponse is the controller.
+          readOnly: true
         address:
           type: string
           description: The public address of the server.
           format: uri
+          readOnly: true
         publicAddress:
           type: string
           description: The address the swarm server can be publically accessed.
           format: uri
+          readOnly: true
         identifier:
           minLength: 1
           type: string
           description: The server's identifier.
+          readOnly: true
       additionalProperties: false
     TestMerge:
       type: object
@@ -5591,45 +5853,55 @@ components:
           allOf:
           - $ref: '#/components/schemas/ShallowUserResponse'
           description: The Tgstation.Server.Api.Models.NamedEntity of the user who created the Tgstation.Server.Api.Models.TestMerge.
+          readOnly: true
         id:
           type: integer
           description: The ID of the Tgstation.Server.Api.Models.Internal.TestMergeApiBase.
           format: int64
+          readOnly: true
         mergedAt:
           type: string
           description: When the Tgstation.Server.Api.Models.Internal.TestMergeApiBase was created.
           format: date-time
+          readOnly: true
         titleAtMerge:
           minLength: 1
           type: string
           description: The title of the test merge source.
+          readOnly: true
         bodyAtMerge:
           minLength: 1
           type: string
           description: The body of the test merge source.
+          readOnly: true
         url:
           minLength: 1
           type: string
           description: The URL of the test merge source.
+          readOnly: true
         author:
           minLength: 1
           type: string
           description: The author of the test merge source.
+          readOnly: true
         number:
           type: integer
           description: The number of the test merge source.
           format: int32
+          readOnly: true
         targetCommitSha:
           maxLength: 40
           minLength: 0
           type: string
           description: The sha of the test merge revision to merge. If not specified, the latest commit from the source will be used.
+          readOnly: true
         comment:
           maxLength: 10000
           minLength: 0
           type: string
           description: Optional comment about the test.
           nullable: true
+          readOnly: true
       additionalProperties: false
     TestMergeParameters:
       type: object
@@ -5638,18 +5910,21 @@ components:
           type: integer
           description: The number of the test merge source.
           format: int32
+          readOnly: true
         targetCommitSha:
           maxLength: 40
           minLength: 0
           type: string
           description: The sha of the test merge revision to merge. If not specified, the latest commit from the source will be used.
           nullable: true
+          readOnly: true
         comment:
           maxLength: 10000
           minLength: 0
           type: string
           description: Optional comment about the test.
           nullable: true
+          readOnly: true
       additionalProperties: false
       description: Parameters for creating a Tgstation.Server.Api.Models.TestMerge.
     TokenResponse:
@@ -5658,6 +5933,7 @@ components:
         bearer:
           type: string
           description: The value of the JWT.
+          readOnly: true
       additionalProperties: false
       description: Represents a JWT returned by the API.
     UserCreateRequest:
@@ -5668,32 +5944,38 @@ components:
           type: string
           description: Cleartext password of the user.
           nullable: true
+          readOnly: true
         oAuthConnections:
           type: array
           items:
             $ref: '#/components/schemas/OAuthConnection'
           description: List of Tgstation.Server.Api.Models.OAuthConnections associated with the user.
           nullable: true
+          readOnly: true
         permissionSet:
           allOf:
           - $ref: '#/components/schemas/PermissionSet'
           description: The Tgstation.Server.Api.Models.PermissionSet directly associated with the user.
           nullable: true
+          readOnly: true
         group:
           allOf:
           - $ref: '#/components/schemas/UserGroup'
           description: The Tgstation.Server.Api.Models.Internal.UserGroup asociated with the user, if any.
           nullable: true
+          readOnly: true
         enabled:
           type: boolean
           description: If the Tgstation.Server.Api.Models.Internal.UserModelBase is enabled since users cannot be deleted. System users cannot be disabled.
           nullable: true
+          readOnly: true
         systemIdentifier:
           maxLength: 100
           minLength: 1
           type: string
           description: The SID/UID of the Tgstation.Server.Api.Models.Internal.UserModelBase on Windows/POSIX respectively.
           nullable: true
+          readOnly: true
         name:
           type: string
           nullable: true
@@ -5709,6 +5991,7 @@ components:
           allOf:
           - $ref: '#/components/schemas/PermissionSet'
           description: The Tgstation.Server.Api.Models.PermissionSet of the Tgstation.Server.Api.Models.Internal.UserGroup.
+          readOnly: true
         name:
           maxLength: 100
           minLength: 1
@@ -5727,6 +6010,7 @@ components:
           - $ref: '#/components/schemas/PermissionSet'
           description: The Tgstation.Server.Api.Models.PermissionSet of the Tgstation.Server.Api.Models.Internal.UserGroup.
           nullable: true
+          readOnly: true
         name:
           maxLength: 100
           minLength: 1
@@ -5742,6 +6026,7 @@ components:
           items:
             $ref: '#/components/schemas/ShallowUserResponse'
           description: The Tgstation.Server.Api.Models.UserNames the Tgstation.Server.Api.Models.Response.UserGroupResponse has.
+          readOnly: true
         id:
           type: integer
           format: int64
@@ -5749,6 +6034,7 @@ components:
           allOf:
           - $ref: '#/components/schemas/PermissionSet'
           description: The Tgstation.Server.Api.Models.PermissionSet of the Tgstation.Server.Api.Models.Internal.UserGroup.
+          readOnly: true
         name:
           maxLength: 100
           minLength: 1
@@ -5766,6 +6052,7 @@ components:
           - $ref: '#/components/schemas/PermissionSet'
           description: The Tgstation.Server.Api.Models.PermissionSet of the Tgstation.Server.Api.Models.Internal.UserGroup.
           nullable: true
+          readOnly: true
         name:
           maxLength: 100
           minLength: 1
@@ -5781,35 +6068,40 @@ components:
           allOf:
           - $ref: '#/components/schemas/ShallowUserResponse'
           description: The Tgstation.Server.Api.Models.Response.UserResponse who created this Tgstation.Server.Api.Models.Response.UserResponse.
+          readOnly: true
         oAuthConnections:
           type: array
           items:
             $ref: '#/components/schemas/OAuthConnection'
           description: List of Tgstation.Server.Api.Models.OAuthConnections associated with the user.
+          readOnly: true
         permissionSet:
           allOf:
           - $ref: '#/components/schemas/PermissionSet'
           description: The Tgstation.Server.Api.Models.PermissionSet directly associated with the user.
           nullable: true
+          readOnly: true
         group:
           allOf:
           - $ref: '#/components/schemas/UserGroup'
           description: The Tgstation.Server.Api.Models.Internal.UserGroup asociated with the user, if any.
           nullable: true
+          readOnly: true
         enabled:
           type: boolean
           description: If the Tgstation.Server.Api.Models.Internal.UserModelBase is enabled since users cannot be deleted. System users cannot be disabled.
+          readOnly: true
         createdAt:
           type: string
           description: When the Tgstation.Server.Api.Models.Internal.UserModelBase was created.
           format: date-time
-          readOnly: true
         systemIdentifier:
           maxLength: 100
           minLength: 1
           type: string
           description: The SID/UID of the Tgstation.Server.Api.Models.Internal.UserModelBase on Windows/POSIX respectively.
           nullable: true
+          readOnly: true
         name:
           type: string
         id:
@@ -5825,32 +6117,38 @@ components:
           type: string
           description: Cleartext password of the user.
           nullable: true
+          readOnly: true
         oAuthConnections:
           type: array
           items:
             $ref: '#/components/schemas/OAuthConnection'
           description: List of Tgstation.Server.Api.Models.OAuthConnections associated with the user.
           nullable: true
+          readOnly: true
         permissionSet:
           allOf:
           - $ref: '#/components/schemas/PermissionSet'
           description: The Tgstation.Server.Api.Models.PermissionSet directly associated with the user.
           nullable: true
+          readOnly: true
         group:
           allOf:
           - $ref: '#/components/schemas/UserGroup'
           description: The Tgstation.Server.Api.Models.Internal.UserGroup asociated with the user, if any.
           nullable: true
+          readOnly: true
         enabled:
           type: boolean
           description: If the Tgstation.Server.Api.Models.Internal.UserModelBase is enabled since users cannot be deleted. System users cannot be disabled.
           nullable: true
+          readOnly: true
         systemIdentifier:
           maxLength: 100
           minLength: 1
           type: string
           description: The SID/UID of the Tgstation.Server.Api.Models.Internal.UserModelBase on Windows/POSIX respectively.
           nullable: true
+          readOnly: true
         name:
           type: string
           nullable: true
@@ -5929,7 +6227,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/10.9.0
+      example: Tgstation.Server.Api/10.10.0
     User-Agent:
       name: User-Agent
       in: header
