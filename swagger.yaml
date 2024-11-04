@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 10.10.0
+  version: 10.12.0
 paths:
   /api/Administration:
     get:
@@ -59,8 +59,6 @@ paths:
           $ref: '#/components/responses/503'
         501:
           $ref: '#/components/responses/501'
-      security:
-      - Token_Authorization_Scheme: []
     post:
       tags:
       - Administration
@@ -140,8 +138,6 @@ paths:
           $ref: '#/components/responses/503'
         501:
           $ref: '#/components/responses/501'
-      security:
-      - Token_Authorization_Scheme: []
     delete:
       tags:
       - Administration
@@ -175,8 +171,6 @@ paths:
           $ref: '#/components/responses/503'
         501:
           $ref: '#/components/responses/501'
-      security:
-      - Token_Authorization_Scheme: []
   /api/Administration/Logs:
     get:
       tags:
@@ -350,6 +344,44 @@ paths:
       security:
       - Password_Login_Scheme: []
         OAuth_Login_Scheme: []
+  /api/oauth_gateway:
+    post:
+      tags:
+      - ApiRoot
+      summary: Attempt to authenticate a Tgstation.Server.Host.Models.User using Tgstation.Server.Host.Controllers.ApiController.ApiHeaders.
+      operationId: ApiRootController.CreateOAuthGatewayToken
+      parameters:
+      - $ref: '#/components/parameters/Api'
+      - $ref: '#/components/parameters/User-Agent'
+      responses:
+        200:
+          description: Tgstation.Server.Api.Models.Response.OAuthGatewayResponse generated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthGatewayResponse'
+        429:
+          description: OAuth authentication failed due to rate limiting.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        401:
+          description: OAuth authentication failed.
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        409:
+          $ref: '#/components/responses/409'
+        406:
+          $ref: '#/components/responses/406'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+        501:
+          $ref: '#/components/responses/501'
   /api/Chat:
     put:
       tags:
@@ -4600,7 +4632,7 @@ components:
           nullable: true
           readOnly: true
         autoUpdateCron:
-          maxLength: 10000
+          maxLength: 1000
           minLength: 0
           type: string
           description: A cron expression indicating when auto-updates should trigger. Must be a valid 6 part cron schedule (SECONDS MINUTES HOURS DAY/MONTH MONTH DAY/WEEK). Empty System.String disables.
@@ -4610,6 +4642,20 @@ components:
           type: integer
           description: The maximum number of chat bots the Tgstation.Server.Api.Models.Instance may contain.
           format: int32
+          nullable: true
+          readOnly: true
+        autoStartCron:
+          maxLength: 1000
+          minLength: 0
+          type: string
+          description: A cron expression indicating when the game server should start. Must be a valid 6 part cron schedule (SECONDS MINUTES HOURS DAY/MONTH MONTH DAY/WEEK). Empty System.String disables.
+          nullable: true
+          readOnly: true
+        autoStopCron:
+          maxLength: 1000
+          minLength: 0
+          type: string
+          description: A cron expression indicating when the game server should stop. Must be a valid 6 part cron schedule (SECONDS MINUTES HOURS DAY/MONTH MONTH DAY/WEEK). Empty System.String disables.
           nullable: true
           readOnly: true
         name:
@@ -4633,6 +4679,8 @@ components:
       - 256
       - 512
       - 1024
+      - 2048
+      - 4096
       type: integer
       description: Rights for managing Tgstation.Server.Api.Models.Instances.
       format: int64
@@ -4649,6 +4697,8 @@ components:
       - SetAutoUpdate
       - SetChatBotLimit
       - GrantPermissions
+      - SetAutoStart
+      - SetAutoStop
     InstancePermissionSetRequest:
       type: object
       properties:
@@ -4789,7 +4839,7 @@ components:
           format: int32
           readOnly: true
         autoUpdateCron:
-          maxLength: 10000
+          maxLength: 1000
           minLength: 0
           type: string
           description: A cron expression indicating when auto-updates should trigger. Must be a valid 6 part cron schedule (SECONDS MINUTES HOURS DAY/MONTH MONTH DAY/WEEK). Empty System.String disables.
@@ -4798,6 +4848,18 @@ components:
           type: integer
           description: The maximum number of chat bots the Tgstation.Server.Api.Models.Instance may contain.
           format: int32
+          readOnly: true
+        autoStartCron:
+          maxLength: 1000
+          minLength: 0
+          type: string
+          description: A cron expression indicating when the game server should start. Must be a valid 6 part cron schedule (SECONDS MINUTES HOURS DAY/MONTH MONTH DAY/WEEK). Empty System.String disables.
+          readOnly: true
+        autoStopCron:
+          maxLength: 1000
+          minLength: 0
+          type: string
+          description: A cron expression indicating when the game server should stop. Must be a valid 6 part cron schedule (SECONDS MINUTES HOURS DAY/MONTH MONTH DAY/WEEK). Empty System.String disables.
           readOnly: true
         name:
           maxLength: 100
@@ -4835,7 +4897,7 @@ components:
           nullable: true
           readOnly: true
         autoUpdateCron:
-          maxLength: 10000
+          maxLength: 1000
           minLength: 0
           type: string
           description: A cron expression indicating when auto-updates should trigger. Must be a valid 6 part cron schedule (SECONDS MINUTES HOURS DAY/MONTH MONTH DAY/WEEK). Empty System.String disables.
@@ -4845,6 +4907,20 @@ components:
           type: integer
           description: The maximum number of chat bots the Tgstation.Server.Api.Models.Instance may contain.
           format: int32
+          nullable: true
+          readOnly: true
+        autoStartCron:
+          maxLength: 1000
+          minLength: 0
+          type: string
+          description: A cron expression indicating when the game server should start. Must be a valid 6 part cron schedule (SECONDS MINUTES HOURS DAY/MONTH MONTH DAY/WEEK). Empty System.String disables.
+          nullable: true
+          readOnly: true
+        autoStopCron:
+          maxLength: 1000
+          minLength: 0
+          type: string
+          description: A cron expression indicating when the game server should stop. Must be a valid 6 part cron schedule (SECONDS MINUTES HOURS DAY/MONTH MONTH DAY/WEEK). Empty System.String disables.
           nullable: true
           readOnly: true
         name:
@@ -5018,6 +5094,15 @@ components:
           description: The ID of the user in the Tgstation.Server.Api.Models.OAuthConnection.Provider.
       additionalProperties: false
       description: Represents a valid OAuth connection.
+    OAuthGatewayResponse:
+      type: object
+      properties:
+        accessCode:
+          type: string
+          description: The user's access token for the requested OAuth service.
+          readOnly: true
+      additionalProperties: false
+      description: Success result for an OAuth gateway login attempt.
     OAuthProvider:
       enum:
       - GitHub
@@ -5050,6 +5135,10 @@ components:
           description: The server URL.
           format: uri
           nullable: true
+          readOnly: true
+        gatewayOnly:
+          type: boolean
+          description: If true the OAuth provider may only be used for gateway authentication. If false the OAuth provider may be used for server logins or gateway authentication. If null the OAuth provider may only be used for server logins.
           readOnly: true
       additionalProperties: false
       description: Public information about a given Tgstation.Server.Api.Models.OAuthProvider.
@@ -6227,7 +6316,7 @@ components:
       schema:
         type: string
         format: productheader
-      example: Tgstation.Server.Api/10.10.0
+      example: Tgstation.Server.Api/10.12.0
     User-Agent:
       name: User-Agent
       in: header
