@@ -1,13 +1,15 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Octokit;
-using System;
+﻿using System;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+using Octokit;
 
 namespace Tgstation.Server.ApiUpdater
 {
@@ -24,8 +26,8 @@ namespace Tgstation.Server.ApiUpdater
 			var apiAsset = latestApiRelease.Assets.First(x => x.Name.Equals("swagger.json", StringComparison.Ordinal));
 			Console.WriteLine("Downloading json...");
 
-			using var webClient = new WebClient();
-			return await webClient.DownloadDataTaskAsync(new Uri(apiAsset.BrowserDownloadUrl));
+			using var webClient = new HttpClient();
+			return await webClient.GetByteArrayAsync(new Uri(apiAsset.BrowserDownloadUrl));
 		}
 
 		static async Task Main(string[] args)
