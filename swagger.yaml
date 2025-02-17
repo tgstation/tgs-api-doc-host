@@ -8,13 +8,13 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 10.12.0
+  version: 10.12.1
 paths:
   /api/Administration:
     get:
       tags:
       - Administration
-      summary: Get Tgstation.Server.Api.Models.Response.AdministrationResponse server information.
+      summary: Get AdministrationResponse server information.
       operationId: AdministrationController.Read
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -26,7 +26,7 @@ paths:
           type: boolean
       responses:
         200:
-          description: Retrieved Tgstation.Server.Api.Models.Response.AdministrationResponse data successfully.
+          description: Retrieved AdministrationResponse data successfully.
           content:
             application/json:
               schema:
@@ -68,7 +68,7 @@ paths:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.ServerUpdateRequest.
+        description: The ServerUpdateRequest.
         content:
           application/json-patch+json:
             schema:
@@ -175,7 +175,7 @@ paths:
     get:
       tags:
       - Administration
-      summary: List Tgstation.Server.Api.Models.Response.LogFileResponses present.
+      summary: List LogFileResponses present.
       operationId: AdministrationController.ListLogs
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -225,7 +225,7 @@ paths:
     get:
       tags:
       - Administration
-      summary: Download a Tgstation.Server.Api.Models.Response.LogFileResponse.
+      summary: Download a LogFileResponse.
       operationId: AdministrationController.GetLog
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -238,7 +238,7 @@ paths:
           type: string
       responses:
         200:
-          description: Downloaded Tgstation.Server.Api.Models.Response.LogFileResponse successfully.
+          description: Downloaded LogFileResponse successfully.
           content:
             application/json:
               schema:
@@ -269,14 +269,14 @@ paths:
     get:
       tags:
       - ApiRoot
-      summary: Main page of the Tgstation.Server.Host.Core.Application.
+      summary: Main page of the Application.
       operationId: ApiRootController.ServerInfo
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
       responses:
         200:
-          description: Tgstation.Server.Api.Models.Response.ServerInformationResponse retrieved successfully.
+          description: ServerInformationResponse retrieved successfully.
           content:
             application/json:
               schema:
@@ -300,7 +300,7 @@ paths:
     post:
       tags:
       - ApiRoot
-      summary: Attempt to authenticate a Tgstation.Server.Host.Models.User using Tgstation.Server.Host.Controllers.ApiController.ApiHeaders.
+      summary: Attempt to authenticate a User using ApiHeaders.
       operationId: ApiRootController.CreateToken
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -314,7 +314,7 @@ paths:
         example: Discord
       responses:
         200:
-          description: User logged in and Tgstation.Server.Api.Models.Response.TokenResponse generated successfully.
+          description: User logged in and TokenResponse generated successfully.
           content:
             application/json:
               schema:
@@ -348,14 +348,14 @@ paths:
     post:
       tags:
       - ApiRoot
-      summary: Attempt to authenticate a Tgstation.Server.Host.Models.User using Tgstation.Server.Host.Controllers.ApiController.ApiHeaders.
+      summary: Attempt to authenticate a User using ApiHeaders.
       operationId: ApiRootController.CreateOAuthGatewayToken
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
       responses:
         200:
-          description: Tgstation.Server.Api.Models.Response.OAuthGatewayResponse generated successfully.
+          description: OAuthGatewayResponse generated successfully.
           content:
             application/json:
               schema:
@@ -393,7 +393,7 @@ paths:
       - $ref: '#/components/parameters/User-Agent'
       - $ref: '#/components/parameters/Instance'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.ChatBotCreateRequest.
+        description: The ChatBotCreateRequest.
         content:
           application/json-patch+json:
             schema:
@@ -418,7 +418,7 @@ paths:
         required: true
       responses:
         201:
-          description: Created Tgstation.Server.Host.Models.ChatBot successfully.
+          description: Created ChatBot successfully.
           content:
             application/json:
               schema:
@@ -451,7 +451,7 @@ paths:
       - $ref: '#/components/parameters/User-Agent'
       - $ref: '#/components/parameters/Instance'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.ChatBotUpdateRequest.
+        description: The ChatBotUpdateRequest.
         content:
           application/json-patch+json:
             schema:
@@ -482,9 +482,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/ChatBotResponse'
         204:
-          description: Update applied successfully. Tgstation.Server.Host.Models.ChatBot not returned based on user permissions.
+          description: Update applied successfully. ChatBot not returned based on user permissions.
         410:
-          description: The Tgstation.Server.Host.Models.ChatBot with the given ID does not exist in this instance.
+          description: The ChatBot with the given ID does not exist in this instance.
           content:
             application/json:
               schema:
@@ -511,7 +511,7 @@ paths:
     delete:
       tags:
       - Chat
-      summary: Delete a Tgstation.Server.Host.Models.ChatBot.
+      summary: Delete a ChatBot.
       operationId: ChatController.Delete
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -519,7 +519,7 @@ paths:
       - $ref: '#/components/parameters/Instance'
       - name: id
         in: path
-        description: The Tgstation.Server.Api.Models.EntityId.Id to delete.
+        description: The Id to delete.
         required: true
         schema:
           type: integer
@@ -548,7 +548,7 @@ paths:
     get:
       tags:
       - Chat
-      summary: Get a specific Tgstation.Server.Host.Models.ChatBot.
+      summary: Get a specific ChatBot.
       operationId: ChatController.GetId
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -556,20 +556,20 @@ paths:
       - $ref: '#/components/parameters/Instance'
       - name: id
         in: path
-        description: The Tgstation.Server.Api.Models.EntityId.Id to retrieve.
+        description: The Id to retrieve.
         required: true
         schema:
           type: integer
           format: int64
       responses:
         200:
-          description: Retrieved Tgstation.Server.Host.Models.ChatBot successfully.
+          description: Retrieved ChatBot successfully.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ChatBotResponse'
         410:
-          description: The Tgstation.Server.Host.Models.ChatBot with the given ID does not exist in this instance.
+          description: The ChatBot with the given ID does not exist in this instance.
           content:
             application/json:
               schema:
@@ -596,7 +596,7 @@ paths:
     get:
       tags:
       - Chat
-      summary: List Tgstation.Server.Host.Models.ChatBots.
+      summary: List ChatBots.
       operationId: ChatController.List
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -650,7 +650,7 @@ paths:
       - $ref: '#/components/parameters/User-Agent'
       - $ref: '#/components/parameters/Instance'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.ConfigurationFileRequest representing the file.
+        description: The ConfigurationFileRequest representing the file.
         content:
           application/json-patch+json:
             schema:
@@ -714,7 +714,7 @@ paths:
       - $ref: '#/components/parameters/User-Agent'
       - $ref: '#/components/parameters/Instance'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.ConfigurationFileRequest representing the directory.
+        description: The ConfigurationFileRequest representing the directory.
         content:
           application/json-patch+json:
             schema:
@@ -782,7 +782,7 @@ paths:
       - $ref: '#/components/parameters/User-Agent'
       - $ref: '#/components/parameters/Instance'
       requestBody:
-        description: A Tgstation.Server.Api.Models.Request.ConfigurationFileRequest representing the path to the directory to delete.
+        description: A ConfigurationFileRequest representing the path to the directory to delete.
         content:
           application/json-patch+json:
             schema:
@@ -1037,7 +1037,7 @@ paths:
       - $ref: '#/components/parameters/Instance'
       responses:
         200:
-          description: Read Tgstation.Server.Api.Models.Response.DreamDaemonResponse information successfully.
+          description: Read DreamDaemonResponse information successfully.
           content:
             application/json:
               schema:
@@ -1106,7 +1106,7 @@ paths:
       - $ref: '#/components/parameters/User-Agent'
       - $ref: '#/components/parameters/Instance'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.DreamDaemonRequest with updated settings.
+        description: The DreamDaemonRequest with updated settings.
         content:
           application/json-patch+json:
             schema:
@@ -1163,7 +1163,7 @@ paths:
     patch:
       tags:
       - DreamDaemon
-      summary: Creates a Tgstation.Server.Api.Models.Response.JobResponse to restart the Watchdog. It will not start if it wasn't already running.
+      summary: Creates a JobResponse to restart the Watchdog. It will not start if it wasn't already running.
       operationId: DreamDaemonController.Restart
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -1171,7 +1171,7 @@ paths:
       - $ref: '#/components/parameters/Instance'
       responses:
         202:
-          description: Restart Tgstation.Server.Api.Models.Response.JobResponse started successfully.
+          description: Restart JobResponse started successfully.
           content:
             application/json:
               schema:
@@ -1198,7 +1198,7 @@ paths:
     patch:
       tags:
       - DreamDaemon
-      summary: Creates a Tgstation.Server.Api.Models.Response.JobResponse to generate a DreamDaemon process dump.
+      summary: Creates a JobResponse to generate a DreamDaemon process dump.
       operationId: DreamDaemonController.CreateDump
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -1206,7 +1206,7 @@ paths:
       - $ref: '#/components/parameters/Instance'
       responses:
         202:
-          description: Dump Tgstation.Server.Api.Models.Response.JobResponse started successfully.
+          description: Dump JobResponse started successfully.
           content:
             application/json:
               schema:
@@ -1275,7 +1275,7 @@ paths:
       - $ref: '#/components/parameters/Instance'
       responses:
         202:
-          description: Created deployment Tgstation.Server.Api.Models.Response.JobResponse successfully.
+          description: Created deployment JobResponse successfully.
           content:
             application/json:
               schema:
@@ -1308,7 +1308,7 @@ paths:
       - $ref: '#/components/parameters/User-Agent'
       - $ref: '#/components/parameters/Instance'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.DreamMakerRequest.
+        description: The DreamMakerRequest.
         content:
           application/json-patch+json:
             schema:
@@ -1333,13 +1333,13 @@ paths:
         required: true
       responses:
         200:
-          description: Changes applied successfully. The updated Tgstation.Server.Host.Models.DreamMakerSettings will be returned.
+          description: Changes applied successfully. The updated DreamMakerSettings will be returned.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DreamMakerResponse'
         204:
-          description: Changes applied successfully. The updated Tgstation.Server.Host.Models.DreamMakerSettings will be not be returned due to permissions.
+          description: Changes applied successfully. The updated DreamMakerSettings will be not be returned due to permissions.
         410:
           description: The database entity for the requested instance could not be retrieved. The instance was likely detached.
           content:
@@ -1368,7 +1368,7 @@ paths:
     get:
       tags:
       - DreamMaker
-      summary: Get a Tgstation.Server.Host.Models.CompileJob specified by a given id.
+      summary: Get a CompileJob specified by a given id.
       operationId: DreamMakerController.GetId
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -1376,20 +1376,20 @@ paths:
       - $ref: '#/components/parameters/Instance'
       - name: id
         in: path
-        description: The Tgstation.Server.Api.Models.EntityId.Id.
+        description: The Id.
         required: true
         schema:
           type: integer
           format: int64
       responses:
         200:
-          description: Tgstation.Server.Host.Models.CompileJob retrieved successfully.
+          description: CompileJob retrieved successfully.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CompileJobResponse'
         404:
-          description: Specified Tgstation.Server.Host.Models.CompileJob ID does not exist in this instance.
+          description: Specified CompileJob ID does not exist in this instance.
           content:
             application/json:
               schema:
@@ -1416,7 +1416,7 @@ paths:
     get:
       tags:
       - DreamMaker
-      summary: List all Tgstation.Server.Host.Models.CompileJobTgstation.Server.Api.Models.EntityIds for the instance.
+      summary: List all EntityIds for the instance.
       operationId: DreamMakerController.List
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -1436,7 +1436,7 @@ paths:
           format: int32
       responses:
         200:
-          description: Retrieved Tgstation.Server.Api.Models.EntityIds successfully.
+          description: Retrieved EntityIds successfully.
           content:
             application/json:
               schema:
@@ -1463,7 +1463,7 @@ paths:
     get:
       tags:
       - Engine
-      summary: Gets the active Tgstation.Server.Api.Models.EngineVersion.
+      summary: Gets the active EngineVersion.
       operationId: EngineController.Read
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -1508,7 +1508,7 @@ paths:
       - $ref: '#/components/parameters/User-Agent'
       - $ref: '#/components/parameters/Instance'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.EngineVersionRequest containing the System.Version to switch to.
+        description: The EngineVersionRequest containing the System.Version to switch to.
         content:
           application/json-patch+json:
             schema:
@@ -1539,7 +1539,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/EngineInstallResponse'
         202:
-          description: Created Tgstation.Server.Host.Models.Job to install and switch active engine version successfully.
+          description: Created Job to install and switch active engine version successfully.
           content:
             application/json:
               schema:
@@ -1572,7 +1572,7 @@ paths:
       - $ref: '#/components/parameters/User-Agent'
       - $ref: '#/components/parameters/Instance'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.EngineVersionDeleteRequest containing the System.Version to delete.
+        description: The EngineVersionDeleteRequest containing the System.Version to delete.
         content:
           application/json-patch+json:
             schema:
@@ -1597,7 +1597,7 @@ paths:
         required: true
       responses:
         202:
-          description: Created Tgstation.Server.Host.Models.Job to delete target version successfully.
+          description: Created Job to delete target version successfully.
           content:
             application/json:
               schema:
@@ -1609,7 +1609,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         410:
-          description: The Tgstation.Server.Api.Models.EngineVersion specified was not installed.
+          description: The EngineVersion specified was not installed.
           content:
             application/json:
               schema:
@@ -1634,7 +1634,7 @@ paths:
     get:
       tags:
       - Engine
-      summary: Lists installed Tgstation.Server.Api.Models.EngineVersions.
+      summary: Lists installed EngineVersions.
       operationId: EngineController.List
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -1681,13 +1681,13 @@ paths:
     put:
       tags:
       - Instance
-      summary: Create or attach an Tgstation.Server.Api.Models.Instance.
+      summary: Create or attach an Instance.
       operationId: InstanceController.Create
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.InstanceCreateRequest.
+        description: The InstanceCreateRequest.
         content:
           application/json-patch+json:
             schema:
@@ -1744,13 +1744,13 @@ paths:
     post:
       tags:
       - Instance
-      summary: Modify an Tgstation.Server.Api.Models.Instance's settings.
+      summary: Modify an Instance's settings.
       operationId: InstanceController.Update
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
       requestBody:
-        description: The updated Tgstation.Server.Api.Models.Instance settings.
+        description: The updated Instance settings.
         content:
           application/json-patch+json:
             schema:
@@ -1814,14 +1814,14 @@ paths:
     delete:
       tags:
       - Instance
-      summary: Detach an Tgstation.Server.Api.Models.Instance with the given id.
+      summary: Detach an Instance with the given id.
       operationId: InstanceController.Delete
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
       - name: id
         in: path
-        description: The Tgstation.Server.Api.Models.EntityId.Id of the instance to detach.
+        description: The Id of the instance to detach.
         required: true
         schema:
           type: integer
@@ -1856,21 +1856,21 @@ paths:
     get:
       tags:
       - Instance
-      summary: Get a specific Tgstation.Server.Api.Models.Instance.
+      summary: Get a specific Instance.
       operationId: InstanceController.GetId
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
       - name: id
         in: path
-        description: The instance Tgstation.Server.Api.Models.EntityId.Id to retrieve.
+        description: The instance Id to retrieve.
         required: true
         schema:
           type: integer
           format: int64
       responses:
         200:
-          description: Retrieved Tgstation.Server.Api.Models.Instance successfully.
+          description: Retrieved Instance successfully.
           content:
             application/json:
               schema:
@@ -1909,7 +1909,7 @@ paths:
       - $ref: '#/components/parameters/User-Agent'
       - name: id
         in: path
-        description: The instance Tgstation.Server.Api.Models.EntityId.Id to give permissions on.
+        description: The instance Id to give permissions on.
         required: true
         schema:
           type: integer
@@ -1945,7 +1945,7 @@ paths:
     get:
       tags:
       - Instance
-      summary: List Tgstation.Server.Api.Models.Instances.
+      summary: List Instances.
       operationId: InstanceController.List
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -1964,7 +1964,7 @@ paths:
           format: int32
       responses:
         200:
-          description: Retrieved Tgstation.Server.Api.Models.Instances successfully.
+          description: Retrieved Instances successfully.
           content:
             application/json:
               schema:
@@ -1991,14 +1991,14 @@ paths:
     put:
       tags:
       - InstancePermissionSet
-      summary: Create an Tgstation.Server.Host.Models.InstancePermissionSet.
+      summary: Create an InstancePermissionSet.
       operationId: InstancePermissionSetController.Create
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
       - $ref: '#/components/parameters/Instance'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.InstancePermissionSetRequest.
+        description: The InstancePermissionSetRequest.
         content:
           application/json-patch+json:
             schema:
@@ -2023,13 +2023,13 @@ paths:
         required: true
       responses:
         201:
-          description: Tgstation.Server.Host.Models.InstancePermissionSet created successfully.
+          description: InstancePermissionSet created successfully.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/InstancePermissionSetResponse'
         410:
-          description: The Tgstation.Server.Api.Models.PermissionSet does not exist.
+          description: The PermissionSet does not exist.
           content:
             application/json:
               schema:
@@ -2055,14 +2055,14 @@ paths:
     post:
       tags:
       - InstancePermissionSet
-      summary: Update the permissions for an Tgstation.Server.Host.Models.InstancePermissionSet.
+      summary: Update the permissions for an InstancePermissionSet.
       operationId: InstancePermissionSetController.Update
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
       - $ref: '#/components/parameters/Instance'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.InstancePermissionSetRequest.
+        description: The InstancePermissionSetRequest.
         content:
           application/json-patch+json:
             schema:
@@ -2087,13 +2087,13 @@ paths:
         required: true
       responses:
         200:
-          description: Tgstation.Server.Host.Models.InstancePermissionSet updated successfully.
+          description: InstancePermissionSet updated successfully.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/InstancePermissionSetResponse'
         410:
-          description: The requested Tgstation.Server.Host.Models.InstancePermissionSet does not currently exist.
+          description: The requested InstancePermissionSet does not currently exist.
           content:
             application/json:
               schema:
@@ -2119,7 +2119,7 @@ paths:
     get:
       tags:
       - InstancePermissionSet
-      summary: Read the active Tgstation.Server.Host.Models.InstancePermissionSet.
+      summary: Read the active InstancePermissionSet.
       operationId: InstancePermissionSetController.Read
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -2127,7 +2127,7 @@ paths:
       - $ref: '#/components/parameters/Instance'
       responses:
         200:
-          description: Tgstation.Server.Host.Models.InstancePermissionSet retrieved successfully.
+          description: InstancePermissionSet retrieved successfully.
           content:
             application/json:
               schema:
@@ -2154,7 +2154,7 @@ paths:
     get:
       tags:
       - InstancePermissionSet
-      summary: Lists Tgstation.Server.Host.Models.InstancePermissionSets for the instance.
+      summary: Lists InstancePermissionSets for the instance.
       operationId: InstancePermissionSetController.List
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -2174,7 +2174,7 @@ paths:
           format: int32
       responses:
         200:
-          description: Retrieved Tgstation.Server.Host.Models.InstancePermissionSets successfully.
+          description: Retrieved InstancePermissionSets successfully.
           content:
             application/json:
               schema:
@@ -2201,7 +2201,7 @@ paths:
     get:
       tags:
       - InstancePermissionSet
-      summary: Gets a specific Tgstation.Server.Api.Models.Internal.InstancePermissionSet.
+      summary: Gets a specific InstancePermissionSet.
       operationId: InstancePermissionSetController.GetId
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -2209,20 +2209,20 @@ paths:
       - $ref: '#/components/parameters/Instance'
       - name: id
         in: path
-        description: The Tgstation.Server.Api.Models.Internal.InstancePermissionSet.PermissionSetId.
+        description: The PermissionSetId.
         required: true
         schema:
           type: integer
           format: int64
       responses:
         200:
-          description: Retrieve Tgstation.Server.Api.Models.Internal.InstancePermissionSet successfully.
+          description: Retrieve InstancePermissionSet successfully.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/InstancePermissionSetResponse'
         410:
-          description: The requested Tgstation.Server.Api.Models.Internal.InstancePermissionSet does not currently exist.
+          description: The requested InstancePermissionSet does not currently exist.
           content:
             application/json:
               schema:
@@ -2248,7 +2248,7 @@ paths:
     delete:
       tags:
       - InstancePermissionSet
-      summary: Delete an Tgstation.Server.Host.Models.InstancePermissionSet.
+      summary: Delete an InstancePermissionSet.
       operationId: InstancePermissionSetController.Delete
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -2256,16 +2256,16 @@ paths:
       - $ref: '#/components/parameters/Instance'
       - name: id
         in: path
-        description: The Tgstation.Server.Api.Models.Internal.InstancePermissionSet.PermissionSetId to delete.
+        description: The PermissionSetId to delete.
         required: true
         schema:
           type: integer
           format: int64
       responses:
         204:
-          description: Target Tgstation.Server.Host.Models.InstancePermissionSet deleted.
+          description: Target InstancePermissionSet deleted.
         410:
-          description: Target Tgstation.Server.Host.Models.InstancePermissionSet or no longer exists.
+          description: Target InstancePermissionSet or no longer exists.
           content:
             application/json:
               schema:
@@ -2292,7 +2292,7 @@ paths:
     get:
       tags:
       - Job
-      summary: Get active Tgstation.Server.Api.Models.Response.JobResponses for the instance.
+      summary: Get active JobResponses for the instance.
       operationId: JobController.Read
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -2312,7 +2312,7 @@ paths:
           format: int32
       responses:
         200:
-          description: Retrieved active Tgstation.Server.Host.Models.Jobs successfully.
+          description: Retrieved active Jobs successfully.
           content:
             application/json:
               schema:
@@ -2339,7 +2339,7 @@ paths:
     get:
       tags:
       - Job
-      summary: List all Tgstation.Server.Api.Models.Response.JobResponse for the instance in reverse creation order.
+      summary: List all JobResponse for the instance in reverse creation order.
       operationId: JobController.List
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -2359,7 +2359,7 @@ paths:
           format: int32
       responses:
         200:
-          description: Retrieved Tgstation.Server.Host.Models.JobTgstation.Server.Api.Models.EntityIds successfully.
+          description: Retrieved EntityIds successfully.
           content:
             application/json:
               schema:
@@ -2386,7 +2386,7 @@ paths:
     delete:
       tags:
       - Job
-      summary: Cancel a running Tgstation.Server.Api.Models.Response.JobResponse.
+      summary: Cancel a running JobResponse.
       operationId: JobController.Delete
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -2394,26 +2394,26 @@ paths:
       - $ref: '#/components/parameters/Instance'
       - name: id
         in: path
-        description: The Tgstation.Server.Api.Models.EntityId.Id of the Tgstation.Server.Api.Models.Response.JobResponse to cancel.
+        description: The Id of the JobResponse to cancel.
         required: true
         schema:
           type: integer
           format: int64
       responses:
         202:
-          description: Tgstation.Server.Host.Models.Job cancellation requested successfully.
+          description: Job cancellation requested successfully.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JobResponse'
         404:
-          description: Tgstation.Server.Host.Models.Job does not exist in this instance.
+          description: Job does not exist in this instance.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         410:
-          description: Tgstation.Server.Host.Models.Job could not be found in the job manager. Has it already completed?.
+          description: Job could not be found in the job manager. Has it already completed?.
         400:
           $ref: '#/components/responses/400'
         401:
@@ -2435,7 +2435,7 @@ paths:
     get:
       tags:
       - Job
-      summary: Get a specific Tgstation.Server.Api.Models.Response.JobResponse.
+      summary: Get a specific JobResponse.
       operationId: JobController.GetId
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -2443,20 +2443,20 @@ paths:
       - $ref: '#/components/parameters/Instance'
       - name: id
         in: path
-        description: The Tgstation.Server.Api.Models.EntityId.Id of the Tgstation.Server.Api.Models.Response.JobResponse to retrieve.
+        description: The Id of the JobResponse to retrieve.
         required: true
         schema:
           type: integer
           format: int64
       responses:
         200:
-          description: Retrieved Tgstation.Server.Host.Models.Job successfully.
+          description: Retrieved Job successfully.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JobResponse'
         404:
-          description: Tgstation.Server.Host.Models.Job does not exist in this instance.
+          description: Job does not exist in this instance.
           content:
             application/json:
               schema:
@@ -2490,7 +2490,7 @@ paths:
       - $ref: '#/components/parameters/User-Agent'
       - $ref: '#/components/parameters/Instance'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.RepositoryCreateRequest.
+        description: The RepositoryCreateRequest.
         content:
           application/json-patch+json:
             schema:
@@ -2515,7 +2515,7 @@ paths:
         required: true
       responses:
         201:
-          description: The repository was created successfully and the Tgstation.Server.Api.Models.Response.JobResponse to clone it has begun.
+          description: The repository was created successfully and the JobResponse to clone it has begun.
           content:
             application/json:
               schema:
@@ -2680,7 +2680,7 @@ paths:
       - $ref: '#/components/parameters/User-Agent'
       - $ref: '#/components/parameters/Instance'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.RepositoryUpdateRequest.
+        description: The RepositoryUpdateRequest.
         content:
           application/json-patch+json:
             schema:
@@ -2711,7 +2711,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RepositoryResponse'
         202:
-          description: Updated the repository settings successfully and a Tgstation.Server.Api.Models.Response.JobResponse was created to make the requested git changes.
+          description: Updated the repository settings successfully and a JobResponse was created to make the requested git changes.
           content:
             application/json:
               schema:
@@ -2751,7 +2751,7 @@ paths:
       - $ref: '#/components/parameters/User-Agent'
       - name: ticket
         in: query
-        description: The Tgstation.Server.Api.Models.Response.FileTicketResponse.FileTicket for the download.
+        description: The FileTicket for the download.
         required: true
         schema:
           type: string
@@ -2798,7 +2798,7 @@ paths:
       - $ref: '#/components/parameters/User-Agent'
       - name: ticket
         in: query
-        description: The Tgstation.Server.Api.Models.Response.FileTicketResponse.FileTicket for the upload.
+        description: The FileTicket for the upload.
         required: true
         schema:
           type: string
@@ -2839,13 +2839,13 @@ paths:
     put:
       tags:
       - User
-      summary: Create a new Tgstation.Server.Host.Models.User.
+      summary: Create a new User.
       operationId: UserController.Create
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.UserCreateRequest.
+        description: The UserCreateRequest.
         content:
           application/json-patch+json:
             schema:
@@ -2870,7 +2870,7 @@ paths:
         required: true
       responses:
         201:
-          description: Tgstation.Server.Host.Models.User created successfully.
+          description: User created successfully.
           content:
             application/json:
               schema:
@@ -2896,13 +2896,13 @@ paths:
     post:
       tags:
       - User
-      summary: Update a Tgstation.Server.Host.Models.User.
+      summary: Update a User.
       operationId: UserController.Update
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.UserUpdateRequest.
+        description: The UserUpdateRequest.
         content:
           application/json-patch+json:
             schema:
@@ -2927,7 +2927,7 @@ paths:
         required: true
       responses:
         200:
-          description: Tgstation.Server.Host.Models.User updated successfully. Not returned due to lack of permissions.
+          description: User updated successfully. Not returned due to lack of permissions.
           content:
             application/json:
               schema:
@@ -2935,13 +2935,13 @@ paths:
         204:
           description: No Content
         404:
-          description: Requested Tgstation.Server.Api.Models.EntityId.Id does not exist.
+          description: Requested Id does not exist.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         410:
-          description: Requested Tgstation.Server.Api.Models.Internal.UserApiBase.Group does not exist.
+          description: Requested Group does not exist.
           content:
             application/json:
               schema:
@@ -2965,14 +2965,14 @@ paths:
     get:
       tags:
       - User
-      summary: Get information about the current Tgstation.Server.Host.Models.User.
+      summary: Get information about the current User.
       operationId: UserController.Read
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
       responses:
         200:
-          description: The Tgstation.Server.Host.Models.User was retrieved successfully.
+          description: The User was retrieved successfully.
           content:
             application/json:
               schema:
@@ -2997,7 +2997,7 @@ paths:
     get:
       tags:
       - User
-      summary: List all Tgstation.Server.Host.Models.Users in the server.
+      summary: List all Users in the server.
       operationId: UserController.List
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -3016,7 +3016,7 @@ paths:
           format: int32
       responses:
         200:
-          description: Retrieved Tgstation.Server.Host.Models.Users successfully.
+          description: Retrieved Users successfully.
           content:
             application/json:
               schema:
@@ -3041,27 +3041,27 @@ paths:
     get:
       tags:
       - User
-      summary: Get a specific Tgstation.Server.Host.Models.User.
+      summary: Get a specific User.
       operationId: UserController.GetId
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
       - name: id
         in: path
-        description: The Tgstation.Server.Api.Models.EntityId.Id to retrieve.
+        description: The Id to retrieve.
         required: true
         schema:
           type: integer
           format: int64
       responses:
         200:
-          description: The Tgstation.Server.Host.Models.User was retrieved successfully.
+          description: The User was retrieved successfully.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponse'
         404:
-          description: The Tgstation.Server.Host.Models.User does not exist.
+          description: The User does not exist.
           content:
             application/json:
               schema:
@@ -3088,13 +3088,13 @@ paths:
     put:
       tags:
       - UserGroup
-      summary: Create a new Tgstation.Server.Host.Models.UserGroup.
+      summary: Create a new UserGroup.
       operationId: UserGroupController.Create
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.UserGroupCreateRequest.
+        description: The UserGroupCreateRequest.
         content:
           application/json-patch+json:
             schema:
@@ -3119,7 +3119,7 @@ paths:
         required: true
       responses:
         201:
-          description: Tgstation.Server.Host.Models.UserGroup created successfully.
+          description: UserGroup created successfully.
           content:
             application/json:
               schema:
@@ -3145,13 +3145,13 @@ paths:
     post:
       tags:
       - UserGroup
-      summary: Update a Tgstation.Server.Host.Models.UserGroup.
+      summary: Update a UserGroup.
       operationId: UserGroupController.Update
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
       requestBody:
-        description: The Tgstation.Server.Api.Models.Request.UserGroupUpdateRequest.
+        description: The UserGroupUpdateRequest.
         content:
           application/json-patch+json:
             schema:
@@ -3176,13 +3176,13 @@ paths:
         required: true
       responses:
         200:
-          description: Tgstation.Server.Host.Models.UserGroup updated successfully.
+          description: UserGroup updated successfully.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserGroupResponse'
         410:
-          description: The requested Tgstation.Server.Host.Models.UserGroup does not currently exist.
+          description: The requested UserGroup does not currently exist.
         400:
           $ref: '#/components/responses/400'
         401:
@@ -3205,27 +3205,27 @@ paths:
     get:
       tags:
       - UserGroup
-      summary: Gets a specific Tgstation.Server.Host.Models.UserGroup.
+      summary: Gets a specific UserGroup.
       operationId: UserGroupController.GetId
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
       - name: id
         in: path
-        description: The Tgstation.Server.Api.Models.EntityId.Id of the Tgstation.Server.Api.Models.Response.UserGroupResponse.
+        description: The Id of the UserGroupResponse.
         required: true
         schema:
           type: integer
           format: int64
       responses:
         200:
-          description: Retrieve Tgstation.Server.Host.Models.UserGroup successfully.
+          description: Retrieve UserGroup successfully.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserGroupResponse'
         410:
-          description: The requested Tgstation.Server.Host.Models.UserGroup does not currently exist.
+          description: The requested UserGroup does not currently exist.
           content:
             application/json:
               schema:
@@ -3249,29 +3249,29 @@ paths:
     delete:
       tags:
       - UserGroup
-      summary: Delete a Tgstation.Server.Host.Models.UserGroup.
+      summary: Delete a UserGroup.
       operationId: UserGroupController.Delete
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
       - name: id
         in: path
-        description: The Tgstation.Server.Api.Models.EntityId.Id of the Tgstation.Server.Host.Models.UserGroup to delete.
+        description: The Id of the UserGroup to delete.
         required: true
         schema:
           type: integer
           format: int64
       responses:
         204:
-          description: Tgstation.Server.Host.Models.UserGroup was deleted.
+          description: UserGroup was deleted.
         409:
-          description: The Tgstation.Server.Host.Models.UserGroup is not empty.
+          description: The UserGroup is not empty.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         410:
-          description: The Tgstation.Server.Host.Models.UserGroup didn't exist.
+          description: The UserGroup didn't exist.
           content:
             application/json:
               schema:
@@ -3296,7 +3296,7 @@ paths:
     get:
       tags:
       - UserGroup
-      summary: Lists all Tgstation.Server.Host.Models.UserGroups.
+      summary: Lists all UserGroups.
       operationId: UserGroupController.List
       parameters:
       - $ref: '#/components/parameters/Api'
@@ -3315,7 +3315,7 @@ paths:
           format: int32
       responses:
         200:
-          description: Retrieved Tgstation.Server.Host.Models.UserGroups successfully.
+          description: Retrieved UserGroups successfully.
           content:
             application/json:
               schema:
@@ -3346,10 +3346,12 @@ components:
           description: The GitHub repository the server is built to receive updates from.
           format: uri
           readOnly: true
+          example: https://github.com/tgstation/tgstation
         latestVersion:
           type: string
           description: The latest available version of the Tgstation.Server.Host assembly from the upstream repository. If System.Version.Major is less than 4 the update cannot be applied due to API changes.
           readOnly: true
+          example: 1.0.0
         generatedAt:
           type: string
           description: This response is cached. This field indicates the System.DateTimeOffset the Tgstation.Server.Api.Models.Internal.UpdateInformation was generated.
@@ -3404,12 +3406,14 @@ components:
           format: int32
           nullable: true
           readOnly: true
+          example: 60
         channelLimit:
           type: integer
           description: The maximum number of Tgstation.Server.Api.Models.ChatChannels the Tgstation.Server.Api.Models.Internal.ChatBotSettings may contain.
           format: int32
           nullable: true
           readOnly: true
+          example: 5
         provider:
           allOf:
           - $ref: '#/components/schemas/ChatProvider'
@@ -3424,6 +3428,7 @@ components:
           minLength: 1
           type: string
           description: The name of the entity represented by the Tgstation.Server.Api.Models.NamedEntity.
+          example: MyThingyName
       additionalProperties: false
       description: Represents a request to update a chat bot.
     ChatBotResponse:
@@ -3446,11 +3451,13 @@ components:
           description: The time interval in minutes the chat bot attempts to reconnect if Tgstation.Server.Api.Models.Internal.ChatBotSettings.Enabled and disconnected. Must not be zero.
           format: int32
           readOnly: true
+          example: 60
         channelLimit:
           type: integer
           description: The maximum number of Tgstation.Server.Api.Models.ChatChannels the Tgstation.Server.Api.Models.Internal.ChatBotSettings may contain.
           format: int32
           readOnly: true
+          example: 5
         provider:
           allOf:
           - $ref: '#/components/schemas/ChatProvider'
@@ -3466,10 +3473,12 @@ components:
           minLength: 1
           type: string
           description: The name of the entity represented by the Tgstation.Server.Api.Models.NamedEntity.
+          example: MyThingyName
         id:
           type: integer
           description: The ID of the entity.
           format: int64
+          example: 1
       additionalProperties: false
       description: Represents a chat bot response.
     ChatBotRights:
@@ -3525,12 +3534,14 @@ components:
           format: int32
           nullable: true
           readOnly: true
+          example: 60
         channelLimit:
           type: integer
           description: The maximum number of Tgstation.Server.Api.Models.ChatChannels the Tgstation.Server.Api.Models.Internal.ChatBotSettings may contain.
           format: int32
           nullable: true
           readOnly: true
+          example: 5
         provider:
           allOf:
           - $ref: '#/components/schemas/ChatProvider'
@@ -3548,10 +3559,12 @@ components:
           type: string
           description: The name of the entity represented by the Tgstation.Server.Api.Models.NamedEntity.
           nullable: true
+          example: MyThingyName
         id:
           type: integer
           description: The ID of the entity.
           format: int64
+          example: 1
       additionalProperties: false
       description: Represents a request to update a chat bot.
     ChatChannel:
@@ -3568,18 +3581,22 @@ components:
 
             For Tgstation.Server.Api.Models.ChatProvider.Discord, it's the stringified Discord channel snowflake.
           readOnly: true
+          example: 124823852418
         isAdminChannel:
           type: boolean
           description: If the Tgstation.Server.Api.Models.ChatChannel is an admin channel.
           readOnly: true
+          example: false
         isWatchdogChannel:
           type: boolean
           description: If the Tgstation.Server.Api.Models.ChatChannel is a watchdog channel.
           readOnly: true
+          example: false
         isUpdatesChannel:
           type: boolean
           description: If the Tgstation.Server.Api.Models.ChatChannel is an updates channel.
           readOnly: true
+          example: false
         isSystemChannel:
           type: boolean
           description: If the Tgstation.Server.Api.Models.ChatChannel received system messages.
@@ -3591,6 +3608,7 @@ components:
           description: A custom tag users can define to group channels together.
           nullable: true
           readOnly: true
+          example: system-channel-only
       additionalProperties: false
       description: Indicates a chat channel.
     ChatProvider:
@@ -3631,6 +3649,7 @@ components:
           type: string
           description: The .dme file used for compilation.
           readOnly: true
+          example: tgstation.dme
         output:
           minLength: 1
           type: string
@@ -3652,10 +3671,12 @@ components:
           description: The DMAPI System.Version.
           nullable: true
           readOnly: true
+          example: 7.3.0
         id:
           type: integer
           description: The ID of the entity.
           format: int64
+          example: 1
       additionalProperties: false
     ConfigurationFileRequest:
       type: object
@@ -3747,6 +3768,7 @@ components:
           format: int64
           nullable: true
           readOnly: true
+          example: 1
         launchTime:
           type: string
           description: When the current server execution was started.
@@ -3759,11 +3781,13 @@ components:
           format: int32
           nullable: true
           readOnly: true
+          example: 30
         softRestart:
           type: boolean
           description: If the server is undergoing a soft reset. This may be automatically set by changes to other fields.
           nullable: true
           readOnly: true
+          example: false
         softShutdown:
           type: boolean
           description: If the server is undergoing a soft shutdown.
@@ -3779,6 +3803,7 @@ components:
           description: If the BYOND web client can be used to connect to the game server. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
           readOnly: true
+          example: false
         startProfiler:
           type: boolean
           description: If -profile is passed in on the DreamDaemon command line. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
@@ -3790,12 +3815,14 @@ components:
           description: The Tgstation.Server.Api.Models.DreamDaemonVisibility level of DreamDaemon. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
           readOnly: true
+          example: 2
         securityLevel:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonSecurity'
           description: The Tgstation.Server.Api.Models.DreamDaemonSecurity level of DreamDaemon. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
           readOnly: true
+          example: 1
         port:
           maximum: 65535
           minimum: 1
@@ -3804,12 +3831,14 @@ components:
           format: int32
           nullable: true
           readOnly: true
+          example: 1337
         openDreamTopicPort:
           type: integer
           description: The port used by Tgstation.Server.Api.Models.EngineType.OpenDream for its topic port.
           format: int32
           nullable: true
           readOnly: true
+          example: 2337
         startupTimeout:
           maximum: 4294967295
           minimum: 1
@@ -3818,12 +3847,14 @@ components:
           format: int32
           nullable: true
           readOnly: true
+          example: 5
         healthCheckSeconds:
           type: integer
           description: The number of seconds between each watchdog health check. 0 disables.
           format: int32
           nullable: true
           readOnly: true
+          example: 5
         dumpOnHealthCheckRestart:
           type: boolean
           description: If a process core dump should be created prior to restarting the watchdog due to health check failure.
@@ -3837,6 +3868,7 @@ components:
           format: int32
           nullable: true
           readOnly: true
+          example: 500
         additionalParameters:
           maxLength: 10000
           minLength: 0
@@ -3883,47 +3915,55 @@ components:
           description: The current Tgstation.Server.Api.Models.WatchdogStatus.
           nullable: true
           readOnly: true
+          example: 2
         currentSecurity:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonSecurity'
           description: The current Tgstation.Server.Api.Models.DreamDaemonSecurity. May be upgraded. due to requirements of Tgstation.Server.Api.Models.Response.DreamDaemonResponse.ActiveCompileJob.
           nullable: true
           readOnly: true
+          example: 1
         currentVisibility:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonVisibility'
           description: The current Tgstation.Server.Api.Models.DreamDaemonVisibility.
           nullable: true
           readOnly: true
+          example: 2
         currentPort:
           type: integer
           description: The port the running Tgstation.Server.Api.Models.Response.DreamDaemonResponse instance is set to.
           format: int32
           nullable: true
           readOnly: true
+          example: 1337
         currentTopicPort:
           type: integer
           description: The Tgstation.Server.Api.Models.EngineType.OpenDream topic port the running Tgstation.Server.Api.Models.Response.DreamDaemonResponse instance is set to.
           format: int32
           nullable: true
           readOnly: true
+          example: 3000
         currentAllowWebclient:
           type: boolean
           description: The webclient status the running Tgstation.Server.Api.Models.Response.DreamDaemonResponse instance is set to.
           nullable: true
           readOnly: true
+          example: false
         immediateMemoryUsage:
           type: integer
           description: The amount of RAM in use by the game server in bytes.
           format: int64
           nullable: true
           readOnly: true
+          example: 1073741824
         sessionId:
           type: integer
           description: An incrementing ID for representing current server execution.
           format: int64
           nullable: true
           readOnly: true
+          example: 1
         launchTime:
           type: string
           description: When the current server execution was started.
@@ -3936,11 +3976,13 @@ components:
           format: int32
           nullable: true
           readOnly: true
+          example: 30
         softRestart:
           type: boolean
           description: If the server is undergoing a soft reset. This may be automatically set by changes to other fields.
           nullable: true
           readOnly: true
+          example: false
         softShutdown:
           type: boolean
           description: If the server is undergoing a soft shutdown.
@@ -3956,6 +3998,7 @@ components:
           description: If the BYOND web client can be used to connect to the game server. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
           readOnly: true
+          example: false
         startProfiler:
           type: boolean
           description: If -profile is passed in on the DreamDaemon command line. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
@@ -3967,12 +4010,14 @@ components:
           description: The Tgstation.Server.Api.Models.DreamDaemonVisibility level of DreamDaemon. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
           readOnly: true
+          example: 2
         securityLevel:
           allOf:
           - $ref: '#/components/schemas/DreamDaemonSecurity'
           description: The Tgstation.Server.Api.Models.DreamDaemonSecurity level of DreamDaemon. No-op for Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
           readOnly: true
+          example: 1
         port:
           maximum: 65535
           minimum: 1
@@ -3981,12 +4026,14 @@ components:
           format: int32
           nullable: true
           readOnly: true
+          example: 1337
         openDreamTopicPort:
           type: integer
           description: The port used by Tgstation.Server.Api.Models.EngineType.OpenDream for its topic port.
           format: int32
           nullable: true
           readOnly: true
+          example: 2337
         startupTimeout:
           maximum: 4294967295
           minimum: 1
@@ -3995,12 +4042,14 @@ components:
           format: int32
           nullable: true
           readOnly: true
+          example: 5
         healthCheckSeconds:
           type: integer
           description: The number of seconds between each watchdog health check. 0 disables.
           format: int32
           nullable: true
           readOnly: true
+          example: 5
         dumpOnHealthCheckRestart:
           type: boolean
           description: If a process core dump should be created prior to restarting the watchdog due to health check failure.
@@ -4014,6 +4063,7 @@ components:
           format: int32
           nullable: true
           readOnly: true
+          example: 500
         additionalParameters:
           maxLength: 10000
           minLength: 0
@@ -4311,6 +4361,7 @@ components:
           description: The System.Version of the engine. Currently only valid when Tgstation.Server.Api.Models.EngineVersion.Engine is Tgstation.Server.Api.Models.EngineType.Byond.
           nullable: true
           readOnly: true
+          example: 516.1651.0
         sourceSHA:
           maxLength: 40
           minLength: 40
@@ -4318,6 +4369,7 @@ components:
           description: The git commit SHA of the engine. Currently only valid when Tgstation.Server.Api.Models.EngineVersion.Engine is Tgstation.Server.Api.Models.EngineType.OpenDream.
           nullable: true
           readOnly: true
+          example: caa1e1f400c8b6a535e03cff28cf57f919e9378c
         customIteration:
           type: integer
           description: The revision of the custom build.
@@ -4361,6 +4413,7 @@ components:
           description: The ID of the entity.
           format: int64
           nullable: true
+          example: 1
       additionalProperties: false
       description: Common base of entities with IDs.
     ErrorCode:
@@ -4596,15 +4649,18 @@ components:
           type: string
           description: The version of the API the server is using.
           readOnly: true
+          example: 9.3.0
         message:
           type: string
-          description: A human readable description of the error.
+          description: A human-readable description of the error.
           readOnly: true
+          example: Oopsie woopsie, we did a fucky wucky!
         additionalData:
           type: string
           description: Additional data associated with the error message.
           nullable: true
           readOnly: true
+          example: Error at thing.app.dependency.class.function in line 32
         errorCode:
           allOf:
           - $ref: '#/components/schemas/ErrorCode'
@@ -4663,6 +4719,7 @@ components:
           minLength: 1
           type: string
           description: The name of the entity represented by the Tgstation.Server.Api.Models.NamedEntity.
+          example: MyThingyName
       additionalProperties: false
       description: A request to create an Tgstation.Server.Api.Models.Instance.
     InstanceManagerRights:
@@ -4866,10 +4923,12 @@ components:
           minLength: 1
           type: string
           description: The name of the entity represented by the Tgstation.Server.Api.Models.NamedEntity.
+          example: MyThingyName
         id:
           type: integer
           description: The ID of the entity.
           format: int64
+          example: 1
       additionalProperties: false
       description: Server response for Tgstation.Server.Api.Models.Instances.
     InstanceUpdateRequest:
@@ -4929,10 +4988,12 @@ components:
           type: string
           description: The name of the entity represented by the Tgstation.Server.Api.Models.NamedEntity.
           nullable: true
+          example: MyThingyName
         id:
           type: integer
           description: The ID of the entity.
           format: int64
+          example: 1
       additionalProperties: false
       description: A request to update an Tgstation.Server.Api.Models.Instance.
     JobCode:
@@ -4985,6 +5046,7 @@ components:
           description: The Tgstation.Server.Api.Models.EntityId.Id of the Tgstation.Server.Api.Models.Instance.
           format: int64
           readOnly: true
+          example: 1
         startedBy:
           allOf:
           - $ref: '#/components/schemas/ShallowUserResponse'
@@ -5002,11 +5064,13 @@ components:
           format: int32
           nullable: true
           readOnly: true
+          example: 25
         stage:
           type: string
-          description: Optional description of the job's current .
+          description: Optional description of the job's current progress.
           nullable: true
           readOnly: true
+          example: Doing something important
         jobCode:
           allOf:
           - $ref: '#/components/schemas/JobCode'
@@ -5017,6 +5081,7 @@ components:
           type: string
           description: English description of the Tgstation.Server.Api.Models.Internal.Job.
           readOnly: true
+          example: Installing and configuring important objects.
         errorCode:
           allOf:
           - $ref: '#/components/schemas/ErrorCode'
@@ -5043,6 +5108,7 @@ components:
           type: boolean
           description: If the Tgstation.Server.Api.Models.Internal.Job was cancelled.
           readOnly: true
+          example: false
         cancelRightsType:
           allOf:
           - $ref: '#/components/schemas/RightsType'
@@ -5059,6 +5125,7 @@ components:
           type: integer
           description: The ID of the entity.
           format: int64
+          example: 1
       additionalProperties: false
       description: Represents a long running job on the server. Model is read-only, updates attempt to cancel the job.
     LogFileResponse:
@@ -5068,6 +5135,7 @@ components:
           type: string
           description: The name of the log file.
           readOnly: true
+          example: tgs-20250118.log
         lastModified:
           type: string
           description: The System.DateTimeOffset of when the log file was modified.
@@ -5156,16 +5224,19 @@ components:
           description: The total number of pages in the query.
           format: int32
           readOnly: true
+          example: 5
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
           readOnly: true
+          example: 20
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
           readOnly: true
+          example: 100
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedCompileJobResponse:
@@ -5182,16 +5253,19 @@ components:
           description: The total number of pages in the query.
           format: int32
           readOnly: true
+          example: 5
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
           readOnly: true
+          example: 20
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
           readOnly: true
+          example: 100
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedConfigurationFileResponse:
@@ -5208,16 +5282,19 @@ components:
           description: The total number of pages in the query.
           format: int32
           readOnly: true
+          example: 5
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
           readOnly: true
+          example: 20
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
           readOnly: true
+          example: 100
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedEngineResponse:
@@ -5234,16 +5311,19 @@ components:
           description: The total number of pages in the query.
           format: int32
           readOnly: true
+          example: 5
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
           readOnly: true
+          example: 20
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
           readOnly: true
+          example: 100
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedInstancePermissionSetResponse:
@@ -5260,16 +5340,19 @@ components:
           description: The total number of pages in the query.
           format: int32
           readOnly: true
+          example: 5
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
           readOnly: true
+          example: 20
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
           readOnly: true
+          example: 100
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedInstanceResponse:
@@ -5286,16 +5369,19 @@ components:
           description: The total number of pages in the query.
           format: int32
           readOnly: true
+          example: 5
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
           readOnly: true
+          example: 20
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
           readOnly: true
+          example: 100
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedJobResponse:
@@ -5312,16 +5398,19 @@ components:
           description: The total number of pages in the query.
           format: int32
           readOnly: true
+          example: 5
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
           readOnly: true
+          example: 20
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
           readOnly: true
+          example: 100
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedLogFileResponse:
@@ -5338,16 +5427,19 @@ components:
           description: The total number of pages in the query.
           format: int32
           readOnly: true
+          example: 5
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
           readOnly: true
+          example: 20
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
           readOnly: true
+          example: 100
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedUserGroupResponse:
@@ -5364,16 +5456,19 @@ components:
           description: The total number of pages in the query.
           format: int32
           readOnly: true
+          example: 5
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
           readOnly: true
+          example: 20
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
           readOnly: true
+          example: 100
       additionalProperties: false
       description: Represents a paginated set of models.
     PaginatedUserResponse:
@@ -5390,16 +5485,19 @@ components:
           description: The total number of pages in the query.
           format: int32
           readOnly: true
+          example: 5
         pageSize:
           type: integer
           description: The current size of pages in the query.
           format: int32
           readOnly: true
+          example: 20
         totalItems:
           type: integer
           description: The total items across all pages.
           format: int32
           readOnly: true
+          example: 100
       additionalProperties: false
       description: Represents a paginated set of models.
     PermissionSet:
@@ -5807,14 +5905,17 @@ components:
           type: string
           description: The version of the host.
           readOnly: true
+          example: 6.12.3
         apiVersion:
           type: string
           description: The N:Tgstation.Server.Api version of the host.
           readOnly: true
+          example: 10.12.0
         dmApiVersion:
           type: string
           description: The DMAPI interop version the server uses.
           readOnly: true
+          example: 7.3.0
         windowsHost:
           type: boolean
           description: If the server is running on a windows operating system.
@@ -5839,6 +5940,7 @@ components:
           type: boolean
           description: If there is a server update in progress.
           readOnly: true
+          example: false
         swarmServers:
           type: array
           items:
@@ -5851,21 +5953,25 @@ components:
           description: Minimum length of database user passwords.
           format: int32
           readOnly: true
+          example: 20
         instanceLimit:
           type: integer
           description: The maximum number of Tgstation.Server.Api.Models.Instances allowed.
           format: int32
           readOnly: true
+          example: 100
         userLimit:
           type: integer
           description: The maximum number of users allowed.
           format: int32
           readOnly: true
+          example: 100
         userGroupLimit:
           type: integer
           description: The maximum number of user groups allowed.
           format: int32
           readOnly: true
+          example: 50
         validInstancePaths:
           type: array
           items:
@@ -5873,6 +5979,9 @@ components:
           description: Limits the locations instances may be created or attached from.
           nullable: true
           readOnly: true
+          example:
+          - /home/tgstation-server/my-server-1
+          - /home/tgstation-server/my-server-2
       additionalProperties: false
       description: Represents basic server information.
     ServerUpdateRequest:
@@ -5881,6 +5990,7 @@ components:
         newVersion:
           type: string
           description: Changes the version of tgstation-server to the given version from the upstream repository.
+          example: 6.12.3
         uploadZip:
           type: boolean
           description: If the user will provide the server update package .zip file via file transfer as opposed to TGS retrieving it from GitHub.
@@ -5895,6 +6005,7 @@ components:
           type: string
           description: The version of tgstation-server pending update.
           readOnly: true
+          example: 6.12.3
         fileTicket:
           type: string
           description: The ticket to use to access the Tgstation.Server.Api.Routes.Transfer controller.
@@ -5906,10 +6017,12 @@ components:
       properties:
         name:
           type: string
+          example: Admin
         id:
           type: integer
           description: The ID of the entity.
           format: int64
+          example: 1
       additionalProperties: false
       description: Base class for user names.
     SwarmServerResponse:
@@ -5919,6 +6032,7 @@ components:
           type: boolean
           description: If the Tgstation.Server.Api.Models.Response.SwarmServerResponse is the controller.
           readOnly: true
+          example: false
         address:
           type: string
           description: The public address of the server.
@@ -5934,6 +6048,7 @@ components:
           type: string
           description: The server's identifier.
           readOnly: true
+          example: myserver-us-east
       additionalProperties: false
     TestMerge:
       type: object
@@ -5948,6 +6063,7 @@ components:
           description: The ID of the Tgstation.Server.Api.Models.Internal.TestMergeApiBase.
           format: int64
           readOnly: true
+          example: 1
         mergedAt:
           type: string
           description: When the Tgstation.Server.Api.Models.Internal.TestMergeApiBase was created.
@@ -5958,32 +6074,38 @@ components:
           type: string
           description: The title of the test merge source.
           readOnly: true
+          example: Fixes and Breaks everything
         bodyAtMerge:
           minLength: 1
           type: string
           description: The body of the test merge source.
           readOnly: true
+          example: '# GitHub markdown\n\rI assume?'
         url:
           minLength: 1
           type: string
           description: The URL of the test merge source.
           readOnly: true
+          example: https://github.com/tgstation/tgstation/pull/31026
         author:
           minLength: 1
           type: string
           description: The author of the test merge source.
           readOnly: true
+          example: MrStonedOne
         number:
           type: integer
           description: The number of the test merge source.
           format: int32
           readOnly: true
+          example: 31026
         targetCommitSha:
           maxLength: 40
-          minLength: 0
+          minLength: 40
           type: string
           description: The sha of the test merge revision to merge. If not specified, the latest commit from the source will be used.
           readOnly: true
+          example: caa1e1f400c8b6a535e03cff28cf57f919e9378c
         comment:
           maxLength: 10000
           minLength: 0
@@ -5991,6 +6113,7 @@ components:
           description: Optional comment about the test.
           nullable: true
           readOnly: true
+          example: this will fix everything -Admin
       additionalProperties: false
     TestMergeParameters:
       type: object
@@ -6000,13 +6123,15 @@ components:
           description: The number of the test merge source.
           format: int32
           readOnly: true
+          example: 31026
         targetCommitSha:
           maxLength: 40
-          minLength: 0
+          minLength: 40
           type: string
           description: The sha of the test merge revision to merge. If not specified, the latest commit from the source will be used.
           nullable: true
           readOnly: true
+          example: caa1e1f400c8b6a535e03cff28cf57f919e9378c
         comment:
           maxLength: 10000
           minLength: 0
@@ -6014,6 +6139,7 @@ components:
           description: Optional comment about the test.
           nullable: true
           readOnly: true
+          example: this will fix everything -Admin
       additionalProperties: false
       description: Parameters for creating a Tgstation.Server.Api.Models.TestMerge.
     TokenResponse:
@@ -6023,6 +6149,7 @@ components:
           type: string
           description: The value of the JWT.
           readOnly: true
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwibmJmIjoxNzM3MDkzNDgwLCJleHAiOjE3MzcwOTQzODAsImlhdCI6MTczNzA5MzQ4MCwiaXNzIjoiVGdzdGF0aW9uLlNlcnZlci5Ib3N0IiwiYXVkIjoiVGdzdGF0aW9uLlNlcnZlci5BcGkifQ.v64KX34_YOpH-HCbwqlx1p8u-MNbb4L6a9qEyXhcNcU
       additionalProperties: false
       description: Represents a JWT returned by the API.
     UserCreateRequest:
@@ -6068,6 +6195,7 @@ components:
         name:
           type: string
           nullable: true
+          example: Admin
       additionalProperties: false
       description: For creating a user.
     UserGroup:
@@ -6086,6 +6214,7 @@ components:
           minLength: 1
           type: string
           description: The name of the entity represented by the Tgstation.Server.Api.Models.NamedEntity.
+          example: MyThingyName
       additionalProperties: false
       description: Represents a group of users.
     UserGroupCreateRequest:
@@ -6105,6 +6234,7 @@ components:
           minLength: 1
           type: string
           description: The name of the entity represented by the Tgstation.Server.Api.Models.NamedEntity.
+          example: MyThingyName
       additionalProperties: false
       description: Request to create a user group.
     UserGroupResponse:
@@ -6129,6 +6259,7 @@ components:
           minLength: 1
           type: string
           description: The name of the entity represented by the Tgstation.Server.Api.Models.NamedEntity.
+          example: MyThingyName
       additionalProperties: false
     UserGroupUpdateRequest:
       type: object
@@ -6148,6 +6279,7 @@ components:
           type: string
           description: The name of the entity represented by the Tgstation.Server.Api.Models.NamedEntity.
           nullable: true
+          example: MyThingyName
       additionalProperties: false
       description: Request to update a user group.
     UserResponse:
@@ -6193,10 +6325,12 @@ components:
           readOnly: true
         name:
           type: string
+          example: Admin
         id:
           type: integer
           description: The ID of the entity.
           format: int64
+          example: 1
       additionalProperties: false
     UserUpdateRequest:
       type: object
@@ -6241,10 +6375,12 @@ components:
         name:
           type: string
           nullable: true
+          example: Admin
         id:
           type: integer
           description: The ID of the entity.
           format: int64
+          example: 1
       additionalProperties: false
       description: For editing a given user.
     WatchdogStatus:
@@ -6315,8 +6451,7 @@ components:
       style: simple
       schema:
         type: string
-        format: productheader
-      example: Tgstation.Server.Api/10.12.0
+      example: Tgstation.Server.Api/10.12.1
     User-Agent:
       name: User-Agent
       in: header
@@ -6325,17 +6460,19 @@ components:
       style: simple
       schema:
         type: string
-        format: productheader
       example: Your-user-agent/1.0.0.0
   securitySchemes:
     Password_Login_Scheme:
       type: http
+      description: Username & Password authentication to obtain an JWT token when doing a (POST /api).
       scheme: Basic
     OAuth_Login_Scheme:
       type: http
+      description: OAuth2 based authentication.
       scheme: OAuth
     Token_Authorization_Scheme:
       type: http
+      description: JWT Bearer token generated by the server (POST /api). You need this for most endpoints to work.
       scheme: Bearer
       bearerFormat: JWT
 externalDocs:
