@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 10.12.1
+  version: 10.13.0
 paths:
   /api/Administration:
     get:
@@ -3381,7 +3381,7 @@ components:
       - EditOwnPassword
       - ReadUsers
       - DownloadLogs
-      - EditOwnOAuthConnections
+      - EditOwnServiceConnections
       - UploadVersion
     ChatBotCreateRequest:
       type: object
@@ -4528,6 +4528,7 @@ components:
       - 107
       - 108
       - 109
+      - 110
       type: integer
       description: Types of Tgstation.Server.Api.Models.Response.ErrorMessageResponses that the API may return.
       format: int32
@@ -4627,7 +4628,7 @@ components:
       - EngineFirewallFail
       - NoPortsAvailable
       - PortNotAvailable
-      - AdminUserCannotOAuth
+      - AdminUserCannotHaveServiceConnection
       - OAuthProviderDisabled
       - FileUploadExpired
       - UserGroupAndPermissionSet
@@ -4642,6 +4643,7 @@ components:
       - DeploymentWrongDme
       - RepoTokenUsernameMismatch
       - RemoteGatewaysNotImplemented
+      - BadUserEditDueToOidcStrictMode
     ErrorMessageResponse:
       type: object
       properties:
@@ -5179,12 +5181,12 @@ components:
       - Keycloak
       - InvisionCommunity
       type: string
-      description: List of OAuth providers supported by TGS.
+      description: List of OAuth2.0 providers supported by TGS that do not support OIDC.
       x-enum-varnames:
       - GitHub
       - Discord
-      - TGForums
-      - Keycloak
+      - DEPRECATED_TGForums
+      - DEPRECATED_Keycloak
       - InvisionCommunity
     OAuthProviderInfo:
       type: object
@@ -5210,6 +5212,43 @@ components:
           readOnly: true
       additionalProperties: false
       description: Public information about a given Tgstation.Server.Api.Models.OAuthProvider.
+    OidcConnection:
+      type: object
+      properties:
+        schemeKey:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: The Tgstation.Server.Api.Models.OidcProviderInfo.SchemeKey of the Tgstation.Server.Api.Models.OidcConnection.
+        externalUserId:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: The ID of the user in the OIDC proivder ("sub" claim).
+      additionalProperties: false
+      description: Represents a valid OIDC connection.
+    OidcProviderInfo:
+      type: object
+      properties:
+        schemeKey:
+          type: string
+          description: The scheme key used to reference the Tgstation.Server.Api.Models.OidcProviderInfo. Unique amongst providers.
+          readOnly: true
+        friendlyName:
+          type: string
+          description: The provider's name as it should be displayed to the user.
+          readOnly: true
+        themeColour:
+          type: string
+          description: Colour that should be used to theme this OIDC provider.
+          readOnly: true
+        themeIconUrl:
+          type: string
+          description: Image URL that should be used to theme this OIDC provider.
+          format: uri
+          readOnly: true
+      additionalProperties: false
+      description: Represents a configured OIDC provider.
     PaginatedChatBotResponse:
       type: object
       properties:
@@ -5936,6 +5975,16 @@ components:
           additionalProperties: false
           description: Map of Tgstation.Server.Api.Models.OAuthProvider to the Tgstation.Server.Api.Models.OAuthProviderInfo for them.
           readOnly: true
+        oidcProviderInfos:
+          type: array
+          items:
+            $ref: '#/components/schemas/OidcProviderInfo'
+          description: List of configured Tgstation.Server.Api.Models.OidcProviderInfos.
+          readOnly: true
+        oidcStrictMode:
+          type: boolean
+          description: If only OIDC logins and registration is allowed.
+          readOnly: true
         updateInProgress:
           type: boolean
           description: If there is a server update in progress.
@@ -6168,6 +6217,13 @@ components:
           description: List of Tgstation.Server.Api.Models.OAuthConnections associated with the user.
           nullable: true
           readOnly: true
+        oidcConnections:
+          type: array
+          items:
+            $ref: '#/components/schemas/OidcConnection'
+          description: List of Tgstation.Server.Api.Models.OidcConnections associated with the user.
+          nullable: true
+          readOnly: true
         permissionSet:
           allOf:
           - $ref: '#/components/schemas/PermissionSet'
@@ -6296,6 +6352,12 @@ components:
             $ref: '#/components/schemas/OAuthConnection'
           description: List of Tgstation.Server.Api.Models.OAuthConnections associated with the user.
           readOnly: true
+        oidcConnections:
+          type: array
+          items:
+            $ref: '#/components/schemas/OidcConnection'
+          description: List of Tgstation.Server.Api.Models.OidcConnections associated with the user.
+          readOnly: true
         permissionSet:
           allOf:
           - $ref: '#/components/schemas/PermissionSet'
@@ -6346,6 +6408,13 @@ components:
           items:
             $ref: '#/components/schemas/OAuthConnection'
           description: List of Tgstation.Server.Api.Models.OAuthConnections associated with the user.
+          nullable: true
+          readOnly: true
+        oidcConnections:
+          type: array
+          items:
+            $ref: '#/components/schemas/OidcConnection'
+          description: List of Tgstation.Server.Api.Models.OidcConnections associated with the user.
           nullable: true
           readOnly: true
         permissionSet:
@@ -6451,7 +6520,7 @@ components:
       style: simple
       schema:
         type: string
-      example: Tgstation.Server.Api/10.12.1
+      example: Tgstation.Server.Api/10.13.0
     User-Agent:
       name: User-Agent
       in: header
