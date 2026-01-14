@@ -1,4 +1,4 @@
-openapi: 3.0.1
+openapi: 3.0.4
 info:
   title: TGS API
   description: A production scale tool for DreamMaker server management
@@ -8,7 +8,7 @@ info:
   license:
     name: AGPL-3.0
     url: https://github.com/tgstation/tgstation-server/blob/dev/LICENSE
-  version: 10.13.0
+  version: 10.14.0
 paths:
   /api/Administration:
     get:
@@ -391,7 +391,6 @@ paths:
       parameters:
       - $ref: '#/components/parameters/Api'
       - $ref: '#/components/parameters/User-Agent'
-      - $ref: '#/components/parameters/Instance'
       requestBody:
         description: The ChatBotCreateRequest.
         content:
@@ -439,8 +438,6 @@ paths:
           $ref: '#/components/responses/503'
         501:
           $ref: '#/components/responses/501'
-      security:
-      - Token_Authorization_Scheme: []
     post:
       tags:
       - Chat
@@ -3082,8 +3079,6 @@ paths:
           $ref: '#/components/responses/503'
         501:
           $ref: '#/components/responses/501'
-      security:
-      - Token_Authorization_Scheme: []
   /api/UserGroup:
     put:
       tags:
@@ -3140,8 +3135,6 @@ paths:
           $ref: '#/components/responses/503'
         501:
           $ref: '#/components/responses/501'
-      security:
-      - Token_Authorization_Scheme: []
     post:
       tags:
       - UserGroup
@@ -3199,8 +3192,6 @@ paths:
           $ref: '#/components/responses/503'
         501:
           $ref: '#/components/responses/501'
-      security:
-      - Token_Authorization_Scheme: []
   /api/UserGroup/{id}:
     get:
       tags:
@@ -3290,8 +3281,6 @@ paths:
           $ref: '#/components/responses/503'
         501:
           $ref: '#/components/responses/501'
-      security:
-      - Token_Authorization_Scheme: []
   /api/UserGroup/List:
     get:
       tags:
@@ -3769,6 +3758,13 @@ components:
           nullable: true
           readOnly: true
           example: 1
+        worldIteration:
+          type: integer
+          description: A incrementing ID for representing current iteration of servers world (i.e. after calling /world/proc/Reboot). Only unique within the current Tgstation.Server.Api.Models.Internal.DreamDaemonApiBase.SessionId. Only tracked in game sessions with the DMAPI enabled.
+          format: int64
+          nullable: true
+          readOnly: true
+          example: 1
         launchTime:
           type: string
           description: When the current server execution was started.
@@ -3960,6 +3956,13 @@ components:
         sessionId:
           type: integer
           description: An incrementing ID for representing current server execution.
+          format: int64
+          nullable: true
+          readOnly: true
+          example: 1
+        worldIteration:
+          type: integer
+          description: A incrementing ID for representing current iteration of servers world (i.e. after calling /world/proc/Reboot). Only unique within the current Tgstation.Server.Api.Models.Internal.DreamDaemonApiBase.SessionId. Only tracked in game sessions with the DMAPI enabled.
           format: int64
           nullable: true
           readOnly: true
@@ -6520,7 +6523,7 @@ components:
       style: simple
       schema:
         type: string
-      example: Tgstation.Server.Api/10.13.0
+      example: Tgstation.Server.Api/10.14.0
     User-Agent:
       name: User-Agent
       in: header
